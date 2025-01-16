@@ -1,13 +1,14 @@
-export type Activity = {
+export type ActivityType = {
   id: number;
   name: string;
-  description: string;
-  duration: number;
-  type: string;
+  color: string;
 };
 
-export type ActivityList = {
+export type Activity = {
   id: number;
   date: Date;
-  activities: Activity[];
+  description: string;
+  duration: number;
+  type: ActivityType;
+  userDuration: string;
 };

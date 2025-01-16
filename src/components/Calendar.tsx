@@ -2,14 +2,10 @@
 
 import { getCalendar } from "@/lib/dates";
 import { useState } from "react";
-import { ActivityList } from "@/lib/types";
 import CalendarDate from "./CalendarDate";
+import { Activity } from "@/lib/types";
 
-export default function CalendarComponent({
-  activities,
-}: {
-  activities: ActivityList[];
-}) {
+export default function Calendar({ activities }: { activities: Activity[] }) {
   const months = [
     "January",
     "February",
@@ -35,7 +31,7 @@ export default function CalendarComponent({
   const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
 
   return (
-    <div className="w-[70%] flex flex-col mx-auto">
+    <div className="w-full flex flex-col mx-auto">
       {/* HEADER */}
       <div className="bg-gray-300 flex flex-row justify-between items-start p-4">
         <div
@@ -89,10 +85,10 @@ export default function CalendarComponent({
         ))}
         {/* DAYS */}
         {dates[currentYear][currentMonth].map((date) => {
-          const todayActivities = activities.find(
-            (activity) => activity.date === date
+          const todayActivities = activities.filter(
+            (activity) =>
+              activity.date.setHours(0, 0, 0, 0) === date.setHours(0, 0, 0, 0)
           );
-          console.log(todayActivities);
           return (
             <CalendarDate
               key={date.toISOString()}
