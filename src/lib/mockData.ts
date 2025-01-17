@@ -1,4 +1,4 @@
-import { Activity, ActivityType } from "./types";
+import { Activity, ActivityType, UserSettings } from "./types";
 
 export const activityTypes: ActivityType[] = [
   {
@@ -27,6 +27,21 @@ export const activityTypes: ActivityType[] = [
     color: "#FDFD96",
   },
 ];
+
+export const userSettings: UserSettings = {
+  userId: 1,
+  userName: "Test User",
+  activities: {
+    activityPriorities: {
+      1: 1,
+      2: 1,
+      3: 1,
+      4: 1,
+      5: 1,
+    },
+    activityTypes: activityTypes,
+  },
+};
 
 export const activities: Activity[] = [
   {

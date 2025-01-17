@@ -5,7 +5,7 @@ import { getActivities } from "@/lib/actions";
 export default async function Page() {
   const activities = await getActivities();
   return (
-    <div className="flex flex-col gap-4 w-[90%] mx-auto py-4">
+    <div className="flex flex-col gap-4">
       <TodayDashboard
         todayActivities={
           activities.filter(

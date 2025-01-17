@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use server";
 
 import { revalidatePath } from "next/cache";
 import { activities } from "./mockData";
-import { Activity } from "./types";
+import { Activity, UserSettings } from "./types";
+import { userSettings } from "./mockData";
 
 export async function getActivities(): Promise<Activity[]> {
   return activities;
@@ -22,8 +24,17 @@ export async function saveActivities(
     activities[index] = newActivity;
   });
 
-  console.log("activities", activities);
-
   revalidatePath("/dashboard");
   return activities;
+}
+
+export async function saveUserSettings(
+  userId: number,
+  settings: UserSettings,
+  prevData: unknown,
+  formData: FormData
+) {
+  userSettings.activities = settings.activities;
+  revalidatePath("/settings");
+  return userSettings;
 }

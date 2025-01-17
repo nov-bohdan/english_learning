@@ -12,3 +12,14 @@ export type Activity = {
   type: ActivityType;
   userDuration: string;
 };
+
+export type UserSettings = {
+  userId: number;
+  userName: string;
+  activities: {
+    activityPriorities: {
+      [id: number]: number;
+    };
+    activityTypes: ActivityType[];
+  };
+};

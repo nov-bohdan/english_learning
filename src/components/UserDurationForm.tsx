@@ -1,5 +1,5 @@
 import { Activity } from "@/lib/types";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 export type ExtendedActivity = Activity & {
   defaultUserDuration: string;
@@ -15,6 +15,14 @@ export default function UserDurationForm({
   activities: ExtendedActivity[];
   setActivities: Dispatch<SetStateAction<ExtendedActivity[]>>;
 }) {
+  const [unsavedChanges, setUnsavedChanges] = useState<boolean>(
+    activities.some((activity) => activity.isDraft)
+  );
+
+  useEffect(() => {
+    setUnsavedChanges(activities.some((activity) => activity.isDraft));
+  }, [activities]);
+
   return (
     <form action={saveAction}>
       <div className="grid xl:grid-cols-3 grid-cols-2">
@@ -22,7 +30,7 @@ export default function UserDurationForm({
           <div key={activity.id}>
             <p className="text-xs ">{activity.description}</p>
             <div
-              className={`w-2/3 bg-slate-400 border-none outline-none p-2 rounded-md flex flex-row justify-between items-center gap-2 ${
+              className={`w-2/3 border-none outline-none p-2 rounded-md flex flex-row justify-between items-center gap-2 ${
                 activities.find((a) => a.id === activity.id)?.isDraft
                   ? "bg-yellow-300"
                   : activities.find((a) => a.id === activity.id)
@@ -64,9 +72,11 @@ export default function UserDurationForm({
           </div>
         ))}
       </div>
-      <button className="bg-blue-500 text-white p-2 rounded-md mt-2">
-        Save
-      </button>
+      {unsavedChanges && (
+        <button className="bg-blue-500 text-white p-2 rounded-md mt-2">
+          Save
+        </button>
+      )}
     </form>
   );
 }
