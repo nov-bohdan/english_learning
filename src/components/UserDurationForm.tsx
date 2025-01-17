@@ -37,9 +37,9 @@ export default function UserDurationForm({
 }) {
   return (
     <form action={saveAction}>
-      <div className="grid xl:grid-cols-3 grid-cols-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3">
         {activities.map((activity) => (
-          <div key={activity.id}>
+          <div key={activity.id} className="flex flex-col items-center">
             <p className="text-xs">{activity.description}</p>
             <div
               className={`w-2/3 border-none outline-none p-2 rounded-md flex flex-row justify-between items-center gap-2 ${determineColor(

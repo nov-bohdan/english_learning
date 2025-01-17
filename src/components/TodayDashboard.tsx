@@ -58,13 +58,13 @@ export default function TodayDashboard({
 
   return (
     <div className="flex flex-row gap-4 w-full">
-      <div className="w-2/3 bg-gray-200 rounded-md p-4">
+      <div className="w-1/2 lg:w-2/3 bg-gray-200 rounded-md p-4">
         <div className="flex flex-col gap-2 items-center">
           <p className="text-xl">Today is {new Date().toLocaleDateString()}</p>
           <p className="text-xl">
             You have {todayActivities.length} activities today
           </p>
-          <div className="grid grid-cols-3 text-xs gap-1">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 text-xs gap-1">
             {todayActivities.map((activity) => (
               <div key={activity.id}>
                 <p
@@ -79,7 +79,7 @@ export default function TodayDashboard({
         </div>
       </div>
 
-      <div className="w-1/3 bg-gray-200 rounded-md p-4">
+      <div className="w-1/2 lg:w-1/3 bg-gray-200 rounded-md p-4 flex flex-col items-center">
         <p className="text-xl">How much time did you spend?</p>
         <UserDurationForm
           saveAction={saveAction}

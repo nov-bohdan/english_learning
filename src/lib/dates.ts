@@ -1,4 +1,6 @@
-export function getCalendar() {
+import { Calendar } from "./types";
+
+export function getCalendar(): Calendar {
   const dates: { [key: string]: { [key: string]: Date[] } } = {};
   for (let year = 2024; year <= 2025; year++) {
     for (let month = 0; month < 12; month++) {

@@ -1,9 +1,10 @@
 "use client";
 
 import { getCalendar } from "@/lib/dates";
-import { useState } from "react";
-import CalendarDate from "./CalendarDate";
+import { useEffect, useState } from "react";
+import MonthView from "./CalendarViews/MonthView";
 import { Activity } from "@/lib/types";
+import WeekView from "./CalendarViews/WeekView";
 
 export default function Calendar({ activities }: { activities: Activity[] }) {
   const months = [
@@ -26,9 +27,19 @@ export default function Calendar({ activities }: { activities: Activity[] }) {
   const [currentYear, setCurrentYear] = useState<number>(
     new Date().getFullYear()
   );
+  const currentDay = new Date().getDate();
 
   const dates = getCalendar();
   const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
+
+  const [isMobile, setIsMobile] = useState<boolean>(false);
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 1080);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   return (
     <div className="w-full flex flex-col mx-auto">
@@ -66,38 +77,23 @@ export default function Calendar({ activities }: { activities: Activity[] }) {
       </div>
       {/* MAIN */}
       {/* DAYS */}
-      <div className="bg-gray-200 flex flex-row justify-around items-start">
-        <div className="border border-gray-300 w-full py-4 text-center">S</div>
-        <div className="border border-gray-300 w-full py-4 text-center">M</div>
-        <div className="border border-gray-300 w-full py-4 text-center">T</div>
-        <div className="border border-gray-300 w-full py-4 text-center">W</div>
-        <div className="border border-gray-300 w-full py-4 text-center">T</div>
-        <div className="border border-gray-300 w-full py-4 text-center">F</div>
-        <div className="border border-gray-300 w-full py-4 text-center">S</div>
-      </div>
-      <div className="bg-gray-100 grid grid-cols-7 text-center">
-        {/* Empty slots for days before the first day of the month */}
-        {Array.from({ length: firstDayOfMonth }).map((_, index) => (
-          <div
-            key={`empty-${index}`}
-            className="border border-gray-200 py-10"
-          ></div>
-        ))}
-        {/* DAYS */}
-        {dates[currentYear][currentMonth].map((date) => {
-          const todayActivities = activities.filter(
-            (activity) =>
-              activity.date.setHours(0, 0, 0, 0) === date.setHours(0, 0, 0, 0)
-          );
-          return (
-            <CalendarDate
-              key={date.toISOString()}
-              date={date}
-              activities={todayActivities}
-            />
-          );
-        })}
-      </div>
+      {isMobile ? (
+        <WeekView
+          activities={activities}
+          currentYear={currentYear}
+          currentMonth={currentMonth}
+          currentDay={currentDay}
+        />
+      ) : (
+        <MonthView
+          firstDayOfMonth={firstDayOfMonth}
+          dates={dates}
+          activities={activities}
+          currentYear={currentYear}
+          currentMonth={currentMonth}
+          currentDay={currentDay}
+        />
+      )}
     </div>
   );
 }

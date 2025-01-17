@@ -23,3 +23,9 @@ export type UserSettings = {
     activityTypes: ActivityType[];
   };
 };
+
+export type Calendar = {
+  [key: string]: {
+    [key: string]: Date[];
+  };
+};
