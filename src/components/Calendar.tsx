@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import MonthView from "./CalendarViews/MonthView";
 import { Activity } from "@/lib/types";
 import WeekView from "./CalendarViews/WeekView";
+import CalendarHeader from "./CalendarHeader";
 
 export default function Calendar({ activities }: { activities: Activity[] }) {
   const months = [
@@ -28,6 +29,16 @@ export default function Calendar({ activities }: { activities: Activity[] }) {
     new Date().getFullYear()
   );
   const currentDay = new Date().getDate();
+  const initialWeek = [
+    new Date(currentYear, currentMonth, currentDay - 3),
+    new Date(currentYear, currentMonth, currentDay - 2),
+    new Date(currentYear, currentMonth, currentDay - 1),
+    new Date(currentYear, currentMonth, currentDay),
+    new Date(currentYear, currentMonth, currentDay + 1),
+    new Date(currentYear, currentMonth, currentDay + 2),
+    new Date(currentYear, currentMonth, currentDay + 3),
+  ];
+  const [currentWeek, setCurrentWeek] = useState<Date[]>(initialWeek);
 
   const dates = getCalendar();
   const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
@@ -38,51 +49,83 @@ export default function Calendar({ activities }: { activities: Activity[] }) {
       setIsMobile(window.innerWidth < 1080);
     };
     window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    window.addEventListener("load", handleResize);
+    handleResize();
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("load", handleResize);
+    };
   }, []);
+
+  const moveToPreviousWeek = () => {
+    setCurrentWeek((currentWeek) => {
+      const newWeek = currentWeek.map((day) => {
+        return new Date(day.getFullYear(), day.getMonth(), day.getDate() - 7);
+      });
+      if (newWeek[0].getMonth() !== currentMonth) {
+        setCurrentMonth(newWeek[0].getMonth());
+      }
+      if (newWeek[0].getFullYear() !== currentYear) {
+        setCurrentYear(newWeek[0].getFullYear());
+      }
+      return newWeek;
+    });
+  };
+
+  const moveToNextWeek = () => {
+    setCurrentWeek((currentWeek) => {
+      const newWeek = currentWeek.map((day) => {
+        return new Date(day.getFullYear(), day.getMonth(), day.getDate() + 7);
+      });
+      if (newWeek[0].getMonth() !== currentMonth) {
+        setCurrentMonth(newWeek[0].getMonth());
+      }
+      if (newWeek[0].getFullYear() !== currentYear) {
+        setCurrentYear(newWeek[0].getFullYear());
+      }
+      return newWeek;
+    });
+  };
+
+  const moveToPreviousMonth = () => {
+    if (currentMonth === 0) {
+      setCurrentMonth(11);
+      setCurrentYear(currentYear - 1);
+    } else {
+      setCurrentMonth(currentMonth - 1);
+    }
+  };
+
+  const moveToNextMonth = () => {
+    if (currentMonth === 11) {
+      setCurrentMonth(0);
+      setCurrentYear(currentYear + 1);
+    } else {
+      setCurrentMonth(currentMonth + 1);
+    }
+  };
 
   return (
     <div className="w-full flex flex-col mx-auto">
       {/* HEADER */}
-      <div className="bg-gray-300 flex flex-row justify-between items-start p-4">
-        <div
-          className="cursor-pointer"
-          onClick={() => {
-            if (currentMonth === 0) {
-              setCurrentMonth(11);
-              setCurrentYear(currentYear - 1);
-            } else {
-              setCurrentMonth(currentMonth - 1);
-            }
-          }}
-        >
-          LEFT
-        </div>
-        <div className="">
-          {months[currentMonth]} {currentYear}
-        </div>
-        <div
-          className="cursor-pointer"
-          onClick={() => {
-            if (currentMonth === 11) {
-              setCurrentMonth(0);
-              setCurrentYear(currentYear + 1);
-            } else {
-              setCurrentMonth(currentMonth + 1);
-            }
-          }}
-        >
-          RIGHT
-        </div>
-      </div>
+      <CalendarHeader
+        currentMonth={currentMonth}
+        currentYear={currentYear}
+        isMobile={isMobile}
+        currentWeek={currentWeek}
+        months={months}
+        moveToPreviousWeek={moveToPreviousWeek}
+        moveToNextWeek={moveToNextWeek}
+        moveToPreviousMonth={moveToPreviousMonth}
+        moveToNextMonth={moveToNextMonth}
+      />
       {/* MAIN */}
       {/* DAYS */}
       {isMobile ? (
         <WeekView
           activities={activities}
-          currentYear={currentYear}
-          currentMonth={currentMonth}
           currentDay={currentDay}
+          currentWeek={currentWeek}
         />
       ) : (
         <MonthView
