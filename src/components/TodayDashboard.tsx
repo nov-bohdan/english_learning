@@ -34,6 +34,28 @@ export default function TodayDashboard({
     }
   }, [saveState]);
 
+  const handleSetDuration = (activity: ExtendedActivity, duration: string) => {
+    setActivities(
+      activities.map((a) =>
+        a.id === activity.id
+          ? {
+              ...a,
+              userDuration: duration,
+              isDraft: duration !== activity.defaultUserDuration,
+            }
+          : a
+      )
+    );
+  };
+
+  const [unsavedChanges, setUnsavedChanges] = useState<boolean>(
+    activities.some((activity) => activity.isDraft)
+  );
+
+  useEffect(() => {
+    setUnsavedChanges(activities.some((activity) => activity.isDraft));
+  }, [activities]);
+
   return (
     <div className="flex flex-row gap-4 w-full">
       <div className="w-2/3 bg-gray-200 rounded-md p-4">
@@ -62,7 +84,8 @@ export default function TodayDashboard({
         <UserDurationForm
           saveAction={saveAction}
           activities={activities}
-          setActivities={setActivities}
+          handleSetDuration={handleSetDuration}
+          unsavedChanges={unsavedChanges}
         />
       </div>
     </div>

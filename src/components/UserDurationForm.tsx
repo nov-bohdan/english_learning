@@ -1,46 +1,51 @@
 import { Activity } from "@/lib/types";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 export type ExtendedActivity = Activity & {
   defaultUserDuration: string;
   isDraft: boolean;
 };
 
+const determineColor = (
+  activities: ExtendedActivity[],
+  activity: ExtendedActivity
+) => {
+  if (activity.isDraft) {
+    return "bg-yellow-300";
+  }
+
+  if (
+    activities.find((a) => a.id === activity.id)?.userDuration &&
+    Number(activities.find((a) => a.id === activity.id)?.userDuration) >=
+      Number(activity.duration)
+  ) {
+    return "bg-green-300";
+  }
+
+  return "bg-red-300";
+};
+
 export default function UserDurationForm({
   saveAction,
   activities,
-  setActivities,
+  handleSetDuration,
+  unsavedChanges,
 }: {
   saveAction: (formData: FormData) => void;
   activities: ExtendedActivity[];
-  setActivities: Dispatch<SetStateAction<ExtendedActivity[]>>;
+  handleSetDuration: (activity: ExtendedActivity, duration: string) => void;
+  unsavedChanges: boolean;
 }) {
-  const [unsavedChanges, setUnsavedChanges] = useState<boolean>(
-    activities.some((activity) => activity.isDraft)
-  );
-
-  useEffect(() => {
-    setUnsavedChanges(activities.some((activity) => activity.isDraft));
-  }, [activities]);
-
   return (
     <form action={saveAction}>
       <div className="grid xl:grid-cols-3 grid-cols-2">
         {activities.map((activity) => (
           <div key={activity.id}>
-            <p className="text-xs ">{activity.description}</p>
+            <p className="text-xs">{activity.description}</p>
             <div
-              className={`w-2/3 border-none outline-none p-2 rounded-md flex flex-row justify-between items-center gap-2 ${
-                activities.find((a) => a.id === activity.id)?.isDraft
-                  ? "bg-yellow-300"
-                  : activities.find((a) => a.id === activity.id)
-                      ?.userDuration &&
-                    Number(
-                      activities.find((a) => a.id === activity.id)?.userDuration
-                    ) >= Number(activity.duration)
-                  ? "bg-green-300"
-                  : "bg-red-300"
-              }`}
+              className={`w-2/3 border-none outline-none p-2 rounded-md flex flex-row justify-between items-center gap-2 ${determineColor(
+                activities,
+                activity
+              )}`}
             >
               <div className="flex flex-row gap-1">
                 <input
@@ -50,17 +55,11 @@ export default function UserDurationForm({
                       ?.userDuration || ""
                   }
                   onChange={(e) => {
-                    setActivities(
-                      activities.map((a) =>
-                        a.id === activity.id
-                          ? {
-                              ...a,
-                              userDuration: e.target.value,
-                              isDraft:
-                                e.target.value !== activity.defaultUserDuration,
-                            }
-                          : a
-                      )
+                    handleSetDuration(
+                      activities.find(
+                        (a) => a.id === activity.id
+                      ) as ExtendedActivity,
+                      e.target.value
                     );
                   }}
                   className="w-2/3 bg-transparent border-none outline-none"
