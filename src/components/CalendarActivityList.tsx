@@ -12,9 +12,15 @@ export default function CalendarActivityList({
           <div
             key={activity.id}
             className="w-full py-2 px-0.5 rounded-md text-xs text-center"
-            style={{ backgroundColor: activity.type.color }}
+            style={{
+              backgroundColor:
+                Number(activity.userDuration) >= Number(activity.duration)
+                  ? "#77DD77"
+                  : "#FFB6C1",
+            }}
           >
-            {activity.type.name} ({activity.duration} min)
+            {activity.type.name} ({activity.userDuration} / {activity.duration}{" "}
+            min)
           </div>
         ))}
       {activities &&

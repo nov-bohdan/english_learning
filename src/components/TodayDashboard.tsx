@@ -70,7 +70,10 @@ export default function TodayDashboard({
                 <p
                   className="w-full py-2 px-2 rounded-md text-xs"
                   style={{
-                    backgroundColor: activity.type.color,
+                    backgroundColor:
+                      Number(activity.userDuration) >= Number(activity.duration)
+                        ? "#77DD77"
+                        : "#FFB6C1",
                   }}
                 >
                   {activity.description} ({activity.duration} min)
