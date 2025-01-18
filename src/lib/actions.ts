@@ -5,27 +5,31 @@ import { revalidatePath } from "next/cache";
 import { activities } from "./mockData";
 import { Activity, UserSettings } from "./types";
 import { userSettings } from "./mockData";
+import dbActivities from "./db/activities";
+import { ExtendedActivity } from "@/components/UserDurationForm";
+import { mapRawActivities } from "./activities";
 
 export async function getActivities(): Promise<Activity[]> {
-  return activities;
+  const activities = await dbActivities.getActivities();
+  return mapRawActivities(activities);
 }
 
-export async function getActivitiesByDate(date: Date) {
-  return activities.find((activity) => activity.date === date);
+export async function getActivitiesByDate(date: Date): Promise<Activity[]> {
+  const activities = await dbActivities.getActivities();
+  return mapRawActivities(activities).filter(
+    (activity) => activity.date === date
+  );
 }
 
 export async function saveActivities(
-  newActivities: Activity[],
+  newActivities: ExtendedActivity[],
   prevData: unknown,
   formData: FormData
 ) {
-  newActivities.forEach((newActivity) => {
-    const index = activities.findIndex((a) => a.id === newActivity.id);
-    activities[index] = newActivity;
-  });
-
+  const activities = await dbActivities.saveActivities(newActivities);
+  const mappedActivities = mapRawActivities(activities);
   revalidatePath("/dashboard");
-  return activities;
+  return mappedActivities;
 }
 
 export async function saveUserSettings(
@@ -34,7 +38,7 @@ export async function saveUserSettings(
   prevData: unknown,
   formData: FormData
 ) {
-  userSettings.activities = settings.activities;
+  userSettings.settings.activities = settings.settings.activities;
   revalidatePath("/settings");
   return userSettings;
 }

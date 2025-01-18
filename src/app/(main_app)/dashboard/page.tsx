@@ -1,11 +1,11 @@
 import Calendar from "@/components/Calendar";
 import TodayDashboard from "@/components/TodayDashboard";
 import { mapRawActivities } from "@/lib/activities";
-import { getActivities } from "@/lib/db/activities";
+import dbActivities from "@/lib/db/activities";
 import { Activity, RawActivity } from "@/lib/types";
 
 export default async function Page() {
-  const activities: RawActivity[] = await getActivities();
+  const activities: RawActivity[] = await dbActivities.getActivities();
   const mappedActivities: Activity[] = mapRawActivities(activities);
   const today = new Date().getDate();
   return (

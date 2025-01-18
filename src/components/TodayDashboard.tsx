@@ -10,7 +10,6 @@ export default function TodayDashboard({
 }: {
   todayActivities: Activity[];
 }) {
-  //   console.log(todayActivities);
   const [activities, setActivities] = useState<ExtendedActivity[]>(
     todayActivities.map((activity) => ({
       ...activity,
@@ -26,7 +25,7 @@ export default function TodayDashboard({
   useEffect(() => {
     if (saveState) {
       setActivities(
-        saveState.map((activity) => ({
+        saveState.map((activity: Activity) => ({
           ...activity,
           defaultUserDuration: activity.userDuration,
           isDraft: false,
