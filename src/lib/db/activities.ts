@@ -7,7 +7,10 @@ import { revalidatePath } from "next/cache";
 const client = dbClient.client;
 
 async function getActivities(): Promise<RawActivity[]> {
-  const { data, error } = await client.from("activities").select("*");
+  const { data, error } = await client
+    .from("activities")
+    .select("*")
+    .order("id", { ascending: true });
   if (error) {
     throw new Error(error.message);
   }
@@ -25,22 +28,28 @@ async function getActivityTypes(): Promise<ActivityType[]> {
 async function saveActivities(activities: ExtendedActivity[]) {
   const savedActivities: RawActivity[] = [];
   try {
+    const requests = [];
     for (const activity of activities) {
       const { type, defaultUserDuration, isDraft, userDuration, ...rest } =
         activity;
-      const { data, error } = await client
-        .from("activities")
-        .update({
-          ...rest,
-          type_id: type.id,
-          user_duration: Number(userDuration),
-        })
-        .eq("id", activity.id)
-        .select();
-      if (error) {
-        throw new Error(error.message);
+      requests.push(
+        client
+          .from("activities")
+          .update({
+            ...rest,
+            type_id: type.id,
+            user_duration: Number(userDuration),
+          })
+          .eq("id", activity.id)
+          .select()
+      );
+    }
+    const responses = await Promise.all(requests);
+    for (const response of responses) {
+      if (response.error) {
+        throw new Error(response.error.message);
       }
-      savedActivities.push(data[0]);
+      savedActivities.push(...response.data);
     }
   } catch (error) {
     console.error(error);
