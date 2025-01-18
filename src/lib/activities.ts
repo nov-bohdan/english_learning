@@ -19,3 +19,15 @@ export function mapRawActivities(rawActivities: RawActivity[]): Activity[] {
     };
   });
 }
+
+export function mapActivitiesToRaw(activities: Activity[]): RawActivity[] {
+  return activities.map((activity) => {
+    const { type, userDuration, ...rest } = activity;
+    return {
+      ...rest,
+      type_id: type.id,
+      user_duration: userDuration,
+      date: activity.date.toISOString(),
+    };
+  });
+}

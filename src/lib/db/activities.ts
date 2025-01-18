@@ -3,6 +3,7 @@ import { dbClient } from "./dbClient";
 import { Activity, ActivityType, RawActivity } from "../types";
 import { ExtendedActivity } from "@/components/UserDurationForm";
 import { revalidatePath } from "next/cache";
+import { mapActivitiesToRaw } from "../activities";
 
 const client = dbClient.client;
 
@@ -30,6 +31,10 @@ async function saveActivities(activities: ExtendedActivity[]) {
   try {
     const requests = [];
     for (const activity of activities) {
+      if (!activity.isDraft) {
+        savedActivities.push(mapActivitiesToRaw([activity])[0]);
+        continue;
+      }
       const { type, defaultUserDuration, isDraft, userDuration, ...rest } =
         activity;
       requests.push(
@@ -55,7 +60,7 @@ async function saveActivities(activities: ExtendedActivity[]) {
     console.error(error);
     throw new Error("Error saving activities");
   }
-  return savedActivities;
+  return savedActivities.sort((a, b) => a.id - b.id);
 }
 
 const dbActivities = {
