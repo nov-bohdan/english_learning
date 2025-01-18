@@ -40,15 +40,14 @@ export default function MonthView({
         {/* DAYS */}
         {dates[currentYear][currentMonth].map((date) => {
           const todayActivities = activities.filter(
-            (activity) =>
-              activity.date.setHours(0, 0, 0, 0) === date.setHours(0, 0, 0, 0)
+            (activity) => activity.date.toISOString() === date.toISOString()
           );
           return (
             <CalendarDate
               key={date.toISOString()}
               date={date}
               activities={todayActivities}
-              isCurrentDay={date.getDate() === currentDay}
+              isCurrentDay={new Date(date).getUTCDate() === currentDay}
             />
           );
         })}

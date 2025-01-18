@@ -29,15 +29,9 @@ export default function Calendar({ activities }: { activities: Activity[] }) {
     new Date().getFullYear()
   );
   const currentDay = new Date().getDate();
-  const initialWeek = [
-    new Date(currentYear, currentMonth, currentDay - 3),
-    new Date(currentYear, currentMonth, currentDay - 2),
-    new Date(currentYear, currentMonth, currentDay - 1),
-    new Date(currentYear, currentMonth, currentDay),
-    new Date(currentYear, currentMonth, currentDay + 1),
-    new Date(currentYear, currentMonth, currentDay + 2),
-    new Date(currentYear, currentMonth, currentDay + 3),
-  ];
+  const initialWeek = Array.from({ length: 7 }, (_, i) => {
+    return new Date(currentYear, currentMonth, currentDay - 3 + i);
+  });
   const [currentWeek, setCurrentWeek] = useState<Date[]>(initialWeek);
 
   const dates = getCalendar();

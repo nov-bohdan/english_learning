@@ -5,18 +5,14 @@ export type ExtendedActivity = Activity & {
   isDraft: boolean;
 };
 
-const determineColor = (
-  activities: ExtendedActivity[],
-  activity: ExtendedActivity
-) => {
+const determineColor = (activity: ExtendedActivity) => {
   if (activity.isDraft) {
     return "bg-yellow-300";
   }
 
   if (
-    activities.find((a) => a.id === activity.id)?.userDuration &&
-    Number(activities.find((a) => a.id === activity.id)?.userDuration) >=
-      Number(activity.duration)
+    activity.userDuration &&
+    Number(activity.userDuration) >= Number(activity.duration)
   ) {
     return "bg-green-300";
   }
@@ -43,24 +39,15 @@ export default function UserDurationForm({
             <p className="text-xs">{activity.description}</p>
             <div
               className={`w-2/3 border-none outline-none p-2 rounded-md flex flex-row justify-between items-center gap-2 ${determineColor(
-                activities,
                 activity
               )}`}
             >
               <div className="flex flex-row gap-1">
                 <input
                   type="text"
-                  value={
-                    activities.find((a) => a.id === activity.id)
-                      ?.userDuration || ""
-                  }
+                  value={activity.userDuration}
                   onChange={(e) => {
-                    handleSetDuration(
-                      activities.find(
-                        (a) => a.id === activity.id
-                      ) as ExtendedActivity,
-                      e.target.value
-                    );
+                    handleSetDuration(activity, e.target.value);
                   }}
                   className="w-2/3 bg-transparent border-none outline-none"
                 />

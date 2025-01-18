@@ -10,6 +10,7 @@ export default function TodayDashboard({
 }: {
   todayActivities: Activity[];
 }) {
+  //   console.log(todayActivities);
   const [activities, setActivities] = useState<ExtendedActivity[]>(
     todayActivities.map((activity) => ({
       ...activity,
@@ -69,7 +70,9 @@ export default function TodayDashboard({
               <div key={activity.id}>
                 <p
                   className="w-full py-2 px-2 rounded-md text-xs"
-                  style={{ backgroundColor: activity.type.color }}
+                  style={{
+                    backgroundColor: activity.type.color,
+                  }}
                 >
                   {activity.description} ({activity.duration} min)
                 </p>

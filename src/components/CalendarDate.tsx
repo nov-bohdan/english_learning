@@ -17,7 +17,9 @@ export default function CalendarDate({
       }`}
     >
       <div className="flex flex-col items-center gap-1">
-        <p className="text-end w-full text-2xl font-bold">{date.getDate()}</p>
+        <p className="text-end w-full text-2xl font-bold">
+          {date.getUTCDate()}
+        </p>
         {activities && <CalendarActivityList activities={activities || []} />}
       </div>
     </div>

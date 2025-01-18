@@ -30,16 +30,18 @@ export const activityTypes: ActivityType[] = [
 
 export const userSettings: UserSettings = {
   userId: 1,
-  userName: "Test User",
-  activities: {
-    activityPriorities: {
-      1: 1,
-      2: 1,
-      3: 1,
-      4: 1,
-      5: 1,
+  settings: {
+    userName: "Test User",
+    activities: {
+      activityPriorities: {
+        1: 1,
+        2: 1,
+        3: 1,
+        4: 1,
+        5: 1,
+      },
+      activityTypes: activityTypes,
     },
-    activityTypes: activityTypes,
   },
 };
 
@@ -57,7 +59,7 @@ export const activities: Activity[] = [
     date: new Date(2025, 0, 16),
     description: "Book A1 (2)",
     duration: 15,
-    type: activityTypes[1],
+    type: activityTypes[0],
     userDuration: "0",
   },
   {
@@ -65,7 +67,7 @@ export const activities: Activity[] = [
     date: new Date(2025, 0, 16),
     description: "Daily phrases book (1)",
     duration: 15,
-    type: activityTypes[2],
+    type: activityTypes[0],
     userDuration: "0",
   },
   {
@@ -73,7 +75,7 @@ export const activities: Activity[] = [
     date: new Date(2025, 0, 16),
     description: "Promova",
     duration: 15,
-    type: activityTypes[3],
+    type: activityTypes[0],
     userDuration: "0",
   },
   {
@@ -81,7 +83,7 @@ export const activities: Activity[] = [
     date: new Date(2025, 0, 16),
     description: "ChatGPT",
     duration: 15,
-    type: activityTypes[4],
+    type: activityTypes[0],
     userDuration: "0",
   },
 ];

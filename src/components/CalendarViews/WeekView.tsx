@@ -18,15 +18,14 @@ export default function WeekView({
         {currentWeek.map((day, index) => {
           const todayActivities = activities.filter(
             (activity) =>
-              activity.date.setHours(0, 0, 0, 0) ===
-              currentWeek[index].setHours(0, 0, 0, 0)
+              activity.date.getUTCDate() === currentWeek[index].getUTCDate()
           );
           return (
             <WeekDateCell
               key={index}
-              day={`${day.getDate()} (${daysOfWeek[day.getDay()]})`}
+              day={`${day.getUTCDate()} (${daysOfWeek[day.getDay()]})`}
               activities={todayActivities}
-              isCurrentDay={currentWeek[index].getDate() === currentDay}
+              isCurrentDay={currentWeek[index].getUTCDate() === currentDay}
             />
           );
         })}

@@ -23,10 +23,15 @@ export default function Settings({
     }
   }, [saveState]);
 
-  const handleSaveActivitySettings = (settings: UserSettings["activities"]) => {
+  const handleSaveActivitySettings = (
+    settings: UserSettings["settings"]["activities"]
+  ) => {
     setSettings((prevSettings) => ({
       ...prevSettings,
-      activities: settings,
+      settings: {
+        ...prevSettings.settings,
+        activities: settings,
+      },
     }));
     setUnsavedChanges(true);
   };
@@ -43,8 +48,8 @@ export default function Settings({
           </h3>
           <div className="flex flex-row gap-2">
             <ActivitySettingsForm
-              activitySettings={settings.activities}
-              activityTypes={settings.activities.activityTypes}
+              activitySettings={settings.settings.activities}
+              activityTypes={settings.settings.activities.activityTypes}
               handleSaveActivitySettings={handleSaveActivitySettings}
             />
           </div>

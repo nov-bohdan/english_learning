@@ -4,6 +4,15 @@ export type ActivityType = {
   color: string;
 };
 
+export type RawActivity = {
+  id: number;
+  date: string;
+  description: string;
+  duration: number;
+  type_id: number;
+  user_duration: string;
+};
+
 export type Activity = {
   id: number;
   date: Date;
@@ -15,12 +24,14 @@ export type Activity = {
 
 export type UserSettings = {
   userId: number;
-  userName: string;
-  activities: {
-    activityPriorities: {
-      [id: number]: number;
+  settings: {
+    userName: string;
+    activities: {
+      activityPriorities: {
+        [id: number]: number;
+      };
+      activityTypes: ActivityType[];
     };
-    activityTypes: ActivityType[];
   };
 };
 

@@ -1,21 +1,23 @@
 import Calendar from "@/components/Calendar";
 import TodayDashboard from "@/components/TodayDashboard";
-import { getActivities } from "@/lib/actions";
+import { mapRawActivities } from "@/lib/activities";
+import { getActivities } from "@/lib/db/activities";
+import { Activity, RawActivity } from "@/lib/types";
 
 export default async function Page() {
-  const activities = await getActivities();
+  const activities: RawActivity[] = await getActivities();
+  const mappedActivities: Activity[] = mapRawActivities(activities);
+  const today = new Date().getDate();
   return (
     <div className="flex flex-col gap-4">
       <TodayDashboard
         todayActivities={
-          activities.filter(
-            (activity) =>
-              activity.date.setHours(0, 0, 0, 0) ===
-              new Date().setHours(0, 0, 0, 0)
+          mappedActivities.filter(
+            (activity) => activity.date.getUTCDate() === today
           ) || []
         }
       />
-      <Calendar activities={activities} />
+      <Calendar activities={mappedActivities} />
     </div>
   );
 }
