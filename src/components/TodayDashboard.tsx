@@ -1,7 +1,7 @@
 "use client";
 
 import { saveActivities } from "@/lib/actions";
-import { Activity } from "@/lib/types";
+import { Activity } from "@/lib/helpers/types";
 import { useActionState, useEffect, useState } from "react";
 import UserDurationForm, { ExtendedActivity } from "./UserDurationForm";
 

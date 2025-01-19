@@ -1,4 +1,4 @@
-import { Activity, ActivityType, UserSettings } from "./types";
+import { Activity, ActivityType, UserSettings } from "./helpers/types";
 
 export const activityTypes: ActivityType[] = [
   {

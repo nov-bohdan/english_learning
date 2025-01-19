@@ -1,4 +1,4 @@
-import { Activity } from "@/lib/types";
+import { Activity } from "@/lib/helpers/types";
 import CalendarActivityList from "../CalendarActivityList";
 
 export default function WeekDateCell({

@@ -3,7 +3,7 @@
 import { getCalendar } from "@/lib/dates";
 import { useEffect, useState } from "react";
 import MonthView from "./CalendarViews/MonthView";
-import { Activity } from "@/lib/types";
+import { Activity } from "@/lib/helpers/types";
 import WeekView from "./CalendarViews/WeekView";
 import CalendarHeader from "./CalendarHeader";
 

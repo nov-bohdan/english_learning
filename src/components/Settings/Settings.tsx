@@ -1,6 +1,6 @@
 "use client";
 
-import { UserSettings } from "@/lib/types";
+import { UserSettings } from "@/lib/helpers/types";
 import ActivitySettingsForm from "./ActivitySettingsForm";
 import { useActionState, useEffect, useState } from "react";
 import { saveUserSettings } from "@/lib/actions";

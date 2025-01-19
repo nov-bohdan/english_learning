@@ -1,4 +1,4 @@
-import { Activity } from "@/lib/types";
+import { Activity } from "@/lib/helpers/types";
 import WeekDateCell from "./WeekDateCell";
 import { normalizeDate } from "@/lib/dates";
 

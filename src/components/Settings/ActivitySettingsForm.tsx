@@ -1,6 +1,6 @@
 "use client";
 
-import { ActivityType, UserSettings } from "../../lib/types";
+import { ActivityType, UserSettings } from "../../lib/helpers/types";
 
 export default function ActivitySettingsForm({
   activitySettings,

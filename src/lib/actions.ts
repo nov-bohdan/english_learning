@@ -3,13 +3,16 @@
 
 import { revalidatePath } from "next/cache";
 import { activities } from "./mockData";
-import { Activity, UserSettings } from "./types";
+import { Activity, UserSettings } from "./helpers/types";
 import { userSettings } from "./mockData";
 import dbActivities from "./db/activities";
 import { ExtendedActivity } from "@/components/UserDurationForm";
-import { mapRawActivities } from "./activities";
+import { mapRawActivities } from "./helpers/activitiesLib";
 import dbUserSettings from "./db/userSettings";
-import { mapRawUserSettings, mapUserSettingsToRaw } from "./userSettingsLib";
+import {
+  mapRawUserSettings,
+  mapUserSettingsToRaw,
+} from "./helpers/userSettingsLib";
 
 export async function getActivities(): Promise<Activity[]> {
   const activities = await dbActivities.getActivities();

@@ -1,4 +1,4 @@
-import { Activity, Calendar } from "@/lib/types";
+import { Activity, Calendar } from "@/lib/helpers/types";
 import CalendarDate from "../CalendarDate";
 import { normalizeDate } from "@/lib/dates";
 

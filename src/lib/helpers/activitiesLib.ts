@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { activityTypes } from "./mockData";
+import { activityTypes } from "../mockData";
 import { Activity, RawActivity } from "./types";
 
 export function mapRawActivities(rawActivities: RawActivity[]): Activity[] {

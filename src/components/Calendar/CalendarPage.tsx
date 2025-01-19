@@ -1,7 +1,7 @@
 "use client";
 
 import TodayDashboard from "../TodayDashboard";
-import { Activity } from "../../lib/types";
+import { Activity } from "../../lib/helpers/types";
 import Calendar from "./Calendar";
 import { useState } from "react";
 import { normalizeDate } from "@/lib/dates";

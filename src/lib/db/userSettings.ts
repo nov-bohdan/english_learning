@@ -1,5 +1,5 @@
 import { dbClient } from "./dbClient";
-import { RawUserSettings } from "../types";
+import { RawUserSettings } from "../helpers/types";
 
 const client = dbClient.client;
 
