@@ -4,27 +4,22 @@ export const activityTypes: ActivityType[] = [
   {
     id: 1,
     name: "Book A1 (1)",
-    color: "#AEC6CF",
   },
   {
     id: 2,
     name: "Book A1 (2)",
-    color: "#FFB6C1",
   },
   {
     id: 3,
     name: "Daily phrases book (1)",
-    color: "#77DD77",
   },
   {
     id: 4,
     name: "Promova",
-    color: "#FF6961",
   },
   {
     id: 5,
     name: "ChatGPT",
-    color: "#FDFD96",
   },
 ];
 

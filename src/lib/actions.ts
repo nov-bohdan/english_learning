@@ -8,6 +8,8 @@ import { userSettings } from "./mockData";
 import dbActivities from "./db/activities";
 import { ExtendedActivity } from "@/components/UserDurationForm";
 import { mapRawActivities } from "./activities";
+import dbUserSettings from "./db/userSettings";
+import { mapRawUserSettings, mapUserSettingsToRaw } from "./userSettingsLib";
 
 export async function getActivities(): Promise<Activity[]> {
   const activities = await dbActivities.getActivities();
@@ -37,8 +39,10 @@ export async function saveUserSettings(
   settings: UserSettings,
   prevData: unknown,
   formData: FormData
-) {
-  userSettings.settings.activities = settings.settings.activities;
+): Promise<UserSettings> {
+  const rawSettings = mapUserSettingsToRaw(settings);
+  const savedSettings = await dbUserSettings.saveSettings(rawSettings);
+  const mappedSettings = mapRawUserSettings(savedSettings);
   revalidatePath("/settings");
-  return userSettings;
+  return mappedSettings;
 }

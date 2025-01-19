@@ -7,9 +7,11 @@ export default function ActivitySettingsForm({
   activityTypes,
   handleSaveActivitySettings,
 }: {
-  activitySettings: UserSettings["activities"];
+  activitySettings: UserSettings["settings"]["activities"];
   activityTypes: ActivityType[];
-  handleSaveActivitySettings: (settings: UserSettings["activities"]) => void;
+  handleSaveActivitySettings: (
+    settings: UserSettings["settings"]["activities"]
+  ) => void;
 }) {
   return (
     <div className="flex flex-col gap-2">

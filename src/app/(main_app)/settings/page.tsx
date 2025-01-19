@@ -1,7 +1,9 @@
 import Settings from "@/components/Settings";
-import { getUserSettings } from "@/lib/db/db";
+import dbUserSettings from "@/lib/db/userSettings";
+import { mapRawUserSettings } from "@/lib/userSettingsLib";
 
 export default async function Page() {
-  const userSettings = await getUserSettings(1);
-  return <Settings userSettings={userSettings} />;
+  const userSettings = await dbUserSettings.getSettings(1);
+  const mappedUserSettings = mapRawUserSettings(userSettings);
+  return <Settings userSettings={mappedUserSettings} />;
 }

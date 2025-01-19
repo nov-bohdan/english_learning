@@ -76,10 +76,41 @@ export default function TodayDashboard({
                         : "#FFB6C1",
                   }}
                 >
-                  {activity.description} ({activity.duration} min)
+                  {activity.description}{" "}
+                  <span className="font-semibold">
+                    ({activity.userDuration} / {activity.duration} min)
+                  </span>
                 </p>
               </div>
             ))}
+          </div>
+          <div className="flex flex-col gap-2 text-left w-full text-sm">
+            <p className="">
+              Total time spent:{" "}
+              {todayActivities.reduce(
+                (acc, activity) => acc + Number(activity.userDuration),
+                0
+              )}{" "}
+              min
+            </p>
+            <p className="">
+              Total time remaining:{" "}
+              {todayActivities.reduce(
+                (acc, activity) => acc + Number(activity.duration),
+                0
+              )}{" "}
+              min
+            </p>
+            <p className="">
+              Completed activities:{" "}
+              {
+                todayActivities.filter(
+                  (activity) =>
+                    Number(activity.userDuration) >= Number(activity.duration)
+                ).length
+              }{" "}
+              / {todayActivities.length}
+            </p>
           </div>
         </div>
       </div>

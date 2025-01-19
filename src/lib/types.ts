@@ -1,7 +1,6 @@
 export type ActivityType = {
   id: number;
   name: string;
-  color: string;
 };
 
 export type RawActivity = {
@@ -20,6 +19,19 @@ export type Activity = {
   duration: number;
   type: ActivityType;
   userDuration: string;
+};
+
+export type RawUserSettings = {
+  user_id: number;
+  settings: {
+    userName: string;
+    activities: {
+      activityPriorities: {
+        [id: number]: number;
+      };
+      activityTypes: ActivityType[];
+    };
+  };
 };
 
 export type UserSettings = {

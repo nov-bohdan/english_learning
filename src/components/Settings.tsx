@@ -12,7 +12,7 @@ export default function Settings({
 }) {
   const [settings, setSettings] = useState<UserSettings>(userSettings);
   const [unsavedChanges, setUnsavedChanges] = useState(false);
-  const [saveState, saveAction] = useActionState(
+  const [saveState, saveAction, isPending] = useActionState(
     saveUserSettings.bind(null, 1, settings),
     null
   );
@@ -20,6 +20,7 @@ export default function Settings({
   useEffect(() => {
     if (saveState) {
       setSettings(saveState);
+      setUnsavedChanges(false);
     }
   }, [saveState]);
 
@@ -57,11 +58,13 @@ export default function Settings({
         {unsavedChanges && (
           <button
             type="submit"
-            className="bg-blue-500 text-white p-2 rounded-md"
+            disabled={isPending}
+            className="bg-blue-500 text-white p-2 rounded-md disabled:opacity-50 disabled:bg-gray-400"
           >
             Save
           </button>
         )}
+        {isPending && <p>Saving...</p>}
       </form>
     </div>
   );

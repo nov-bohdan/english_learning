@@ -19,8 +19,10 @@ export default function CalendarActivityList({
                   : "#FFB6C1",
             }}
           >
-            {activity.type.name} ({activity.userDuration} / {activity.duration}{" "}
-            min)
+            {activity.type.name}{" "}
+            <span className="font-semibold">
+              ({activity.userDuration} / {activity.duration} min)
+            </span>
           </div>
         ))}
       {activities &&
