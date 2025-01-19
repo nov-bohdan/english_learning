@@ -30,7 +30,7 @@ export default function TodayDashboard({
     );
   }, [todayActivities]);
 
-  const [saveState, saveAction] = useActionState(
+  const [saveState, saveAction, isPending] = useActionState(
     saveActivities.bind(null, activities),
     null
   );
@@ -137,6 +137,7 @@ export default function TodayDashboard({
           activities={activities}
           handleSetDuration={handleSetDuration}
           unsavedChanges={unsavedChanges}
+          isPending={isPending}
         />
       </div>
     </div>

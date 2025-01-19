@@ -14,10 +14,10 @@ const determineColor = (activity: ExtendedActivity) => {
     activity.userDuration &&
     Number(activity.userDuration) >= Number(activity.duration)
   ) {
-    return "bg-green-300";
+    return "bg-[#77DD77]";
   }
 
-  return "bg-red-300";
+  return "bg-[#FFB6C1]";
 };
 
 export default function UserDurationForm({
@@ -25,11 +25,13 @@ export default function UserDurationForm({
   activities,
   handleSetDuration,
   unsavedChanges,
+  isPending,
 }: {
   saveAction: (formData: FormData) => void;
   activities: ExtendedActivity[];
   handleSetDuration: (activity: ExtendedActivity, duration: string) => void;
   unsavedChanges: boolean;
+  isPending: boolean;
 }) {
   return (
     <form action={saveAction}>
@@ -59,10 +61,14 @@ export default function UserDurationForm({
         ))}
       </div>
       {unsavedChanges && (
-        <button className="bg-blue-500 text-white p-2 rounded-md mt-2">
+        <button
+          className="bg-blue-500 text-white p-2 rounded-md mt-2 disabled:opacity-50 disabled:bg-gray-400"
+          disabled={isPending}
+        >
           Save
         </button>
       )}
+      {isPending && <p>Saving...</p>}
     </form>
   );
 }
