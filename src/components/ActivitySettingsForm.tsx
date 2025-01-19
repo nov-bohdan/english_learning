@@ -31,9 +31,9 @@ export default function ActivitySettingsForm({
             }}
             className="bg-gray-400 rounded-md p-2 w-20"
           >
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
+            <option value={1}>1</option>
+            <option value={2}>2</option>
+            <option value={3}>3</option>
           </select>
         </div>
       ))}

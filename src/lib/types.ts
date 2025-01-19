@@ -27,9 +27,9 @@ export type RawUserSettings = {
     userName: string;
     activities: {
       activityPriorities: {
-        [id: number]: number;
+        [id: string]: number;
       };
-      activityTypes: ActivityType[];
+      activityTypeIds: number[];
     };
   };
 };

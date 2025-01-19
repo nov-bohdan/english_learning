@@ -11,6 +11,7 @@ export async function getSettings(userId: number): Promise<RawUserSettings> {
   if (error) {
     throw new Error(error.message);
   }
+  console.log(data[0]);
   return data[0] as RawUserSettings;
 }
 

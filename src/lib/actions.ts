@@ -42,7 +42,8 @@ export async function saveUserSettings(
 ): Promise<UserSettings> {
   const rawSettings = mapUserSettingsToRaw(settings);
   const savedSettings = await dbUserSettings.saveSettings(rawSettings);
-  const mappedSettings = mapRawUserSettings(savedSettings);
+  const activityTypes = await dbActivities.getActivityTypes();
+  const mappedSettings = mapRawUserSettings(savedSettings, activityTypes);
   revalidatePath("/settings");
   return mappedSettings;
 }
