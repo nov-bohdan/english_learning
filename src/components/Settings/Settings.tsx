@@ -26,13 +26,16 @@ export default function Settings({
   }, [saveState]);
 
   const handleSaveActivitySettings = (
-    settings: UserSettings["settings"]["activities"]
+    settings: UserSettings["settings"]["activities"]["activityPriorities"]
   ) => {
     setSettings((prevSettings) => ({
       ...prevSettings,
       settings: {
         ...prevSettings.settings,
-        activities: settings,
+        activities: {
+          ...prevSettings.settings.activities,
+          activityPriorities: settings,
+        },
       },
     }));
     setUnsavedChanges(true);
@@ -56,7 +59,7 @@ export default function Settings({
       <h1 className="text-2xl font-bold">Settings</h1>
       <form action={saveAction}>
         <ActivitySettingsForm
-          activitySettings={settings.settings.activities}
+          activitySettings={settings.settings.activities.activityPriorities}
           activityTypes={settings.settings.activities.activityTypes}
           handleSaveActivitySettings={handleSaveActivitySettings}
         />

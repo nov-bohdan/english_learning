@@ -7,10 +7,10 @@ export default function ActivitySettingsForm({
   activityTypes,
   handleSaveActivitySettings,
 }: {
-  activitySettings: UserSettings["settings"]["activities"];
+  activitySettings: UserSettings["settings"]["activities"]["activityPriorities"];
   activityTypes: ActivityType[];
   handleSaveActivitySettings: (
-    settings: UserSettings["settings"]["activities"]
+    settings: UserSettings["settings"]["activities"]["activityPriorities"]
   ) => void;
 }) {
   return (
@@ -24,21 +24,18 @@ export default function ActivitySettingsForm({
         <div key={type.id} className="flex flex-row gap-2 items-center">
           <p>{type.name}</p>
           <select
-            value={activitySettings.activityPriorities[type.id]}
+            value={activitySettings[type.id]}
             onChange={(e) => {
               handleSaveActivitySettings({
                 ...activitySettings,
-                activityPriorities: {
-                  ...activitySettings.activityPriorities,
-                  [type.id]: Number(e.target.value),
-                },
+                [type.id]: Number(e.target.value),
               });
             }}
-            className="bg-gray-400 rounded-md p-2 w-20"
+            className="bg-gray-400 rounded-md p-2 w-26"
           >
-            <option value={1}>1</option>
-            <option value={2}>2</option>
-            <option value={3}>3</option>
+            <option value={1}>Low</option>
+            <option value={2}>Medium</option>
+            <option value={3}>High</option>
           </select>
         </div>
       ))}
