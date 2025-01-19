@@ -4,6 +4,7 @@ import { UserSettings } from "@/lib/types";
 import ActivitySettingsForm from "./ActivitySettingsForm";
 import { useActionState, useEffect, useState } from "react";
 import { saveUserSettings } from "@/lib/actions";
+import AvailableTimeForm from "./AvailableTimeForm";
 
 export default function Settings({
   userSettings,
@@ -37,24 +38,32 @@ export default function Settings({
     setUnsavedChanges(true);
   };
 
+  const handleSaveAvailableTime = (availableTime: {
+    [key: number]: number;
+  }) => {
+    setSettings((prevSettings) => ({
+      ...prevSettings,
+      settings: {
+        ...prevSettings.settings,
+        availableTime: availableTime,
+      },
+    }));
+    setUnsavedChanges(true);
+  };
+
   return (
     <div className="bg-gray-200 rounded-md p-4">
       <h1 className="text-2xl font-bold">Settings</h1>
       <form action={saveAction}>
-        <div className="flex flex-col gap-2">
-          <h2 className="text-lg font-bold">Priority of activities</h2>
-          <h3 className="text-sm text-gray-500">
-            The priority of activities is used to determine how much time you
-            should spend on each activity.
-          </h3>
-          <div className="flex flex-row gap-2">
-            <ActivitySettingsForm
-              activitySettings={settings.settings.activities}
-              activityTypes={settings.settings.activities.activityTypes}
-              handleSaveActivitySettings={handleSaveActivitySettings}
-            />
-          </div>
-        </div>
+        <ActivitySettingsForm
+          activitySettings={settings.settings.activities}
+          activityTypes={settings.settings.activities.activityTypes}
+          handleSaveActivitySettings={handleSaveActivitySettings}
+        />
+        <AvailableTimeForm
+          availableTime={settings.settings.availableTime}
+          handleSaveAvailableTime={handleSaveAvailableTime}
+        />
         {unsavedChanges && (
           <button
             type="submit"

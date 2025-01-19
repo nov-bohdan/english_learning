@@ -108,7 +108,6 @@ export default function Calendar({
   };
 
   const handleClickOnDate = (date: Date) => {
-    console.log(date);
     setSelectedDate(date);
   };
 

@@ -31,6 +31,9 @@ export type RawUserSettings = {
       };
       activityTypeIds: number[];
     };
+    availableTime: {
+      [day: number]: number;
+    };
   };
 };
 
@@ -43,6 +46,9 @@ export type UserSettings = {
         [id: number]: number;
       };
       activityTypes: ActivityType[];
+    };
+    availableTime: {
+      [day: number]: number;
     };
   };
 };

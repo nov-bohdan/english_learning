@@ -1,6 +1,6 @@
 "use client";
 
-import { ActivityType, UserSettings } from "../lib/types";
+import { ActivityType, UserSettings } from "../../lib/types";
 
 export default function ActivitySettingsForm({
   activitySettings,
@@ -15,6 +15,11 @@ export default function ActivitySettingsForm({
 }) {
   return (
     <div className="flex flex-col gap-2">
+      <h2 className="text-lg font-bold">Priority of activities</h2>
+      <h3 className="text-sm text-gray-500">
+        The priority of activities is used to determine how much time you should
+        spend on each activity.
+      </h3>
       {activityTypes.map((type) => (
         <div key={type.id} className="flex flex-row gap-2 items-center">
           <p>{type.name}</p>

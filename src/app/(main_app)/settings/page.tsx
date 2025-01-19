@@ -1,4 +1,4 @@
-import Settings from "@/components/Settings";
+import Settings from "@/components/Settings/Settings";
 import dbUserSettings from "@/lib/db/userSettings";
 import dbActivities from "@/lib/db/activities";
 import { mapRawUserSettings } from "@/lib/userSettingsLib";

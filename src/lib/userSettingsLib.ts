@@ -20,6 +20,7 @@ export function mapRawUserSettings(
           return type;
         }),
       },
+      availableTime: settings.availableTime,
     },
   };
 }
@@ -39,6 +40,7 @@ export function mapUserSettingsToRaw(
           (type) => type.id
         ),
       },
+      availableTime: settings.availableTime,
     },
   };
 }
