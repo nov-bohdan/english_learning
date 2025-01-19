@@ -1,6 +1,6 @@
 import { Activity } from "@/lib/helpers/types";
 import WeekDateCell from "./WeekDateCell";
-import { normalizeDate } from "@/lib/dates";
+import { normalizeDate } from "@/lib/helpers/dates";
 
 export default function WeekView({
   activities,

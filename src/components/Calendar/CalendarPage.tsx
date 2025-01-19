@@ -4,7 +4,7 @@ import TodayDashboard from "../TodayDashboard";
 import { Activity } from "../../lib/helpers/types";
 import Calendar from "./Calendar";
 import { useState } from "react";
-import { normalizeDate } from "@/lib/dates";
+import { normalizeDate } from "@/lib/helpers/dates";
 
 export default function CalendarPage({
   activities,

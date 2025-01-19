@@ -1,6 +1,6 @@
 import { Activity, Calendar } from "@/lib/helpers/types";
 import CalendarDate from "../CalendarDate";
-import { normalizeDate } from "@/lib/dates";
+import { normalizeDate } from "@/lib/helpers/dates";
 
 export default function MonthView({
   firstDayOfMonth,

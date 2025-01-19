@@ -1,6 +1,6 @@
 "use client";
 
-import { getCalendar } from "@/lib/dates";
+import { getCalendar } from "@/lib/helpers/dates";
 import { useEffect, useState } from "react";
 import MonthView from "./CalendarViews/MonthView";
 import { Activity } from "@/lib/helpers/types";
