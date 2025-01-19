@@ -1,5 +1,6 @@
 import { Activity, Calendar } from "@/lib/types";
 import CalendarDate from "../CalendarDate";
+import { normalizeDate } from "@/lib/dates";
 
 export default function MonthView({
   firstDayOfMonth,
@@ -8,6 +9,8 @@ export default function MonthView({
   currentYear,
   currentMonth,
   currentDay,
+  selectedDate,
+  handleClickOnDate,
 }: {
   firstDayOfMonth: number;
   dates: Calendar;
@@ -15,6 +18,8 @@ export default function MonthView({
   currentYear: number;
   currentMonth: number;
   currentDay: number;
+  selectedDate: Date;
+  handleClickOnDate: (date: Date) => void;
 }) {
   const daysOfWeek = ["S", "M", "T", "W", "T", "F", "S"];
   return (
@@ -48,6 +53,19 @@ export default function MonthView({
               date={date}
               activities={todayActivities}
               isCurrentDay={new Date(date).getUTCDate() === currentDay}
+              isSelectedDay={
+                normalizeDate(date).getTime() ===
+                normalizeDate(selectedDate).getTime()
+              }
+              onClick={() =>
+                handleClickOnDate(
+                  new Date(
+                    date.getUTCFullYear(),
+                    date.getUTCMonth(),
+                    date.getUTCDate()
+                  )
+                )
+              }
             />
           );
         })}

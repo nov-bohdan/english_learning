@@ -7,8 +7,10 @@ import UserDurationForm, { ExtendedActivity } from "./UserDurationForm";
 
 export default function TodayDashboard({
   todayActivities,
+  selectedDate,
 }: {
   todayActivities: Activity[];
+  selectedDate: Date;
 }) {
   const [activities, setActivities] = useState<ExtendedActivity[]>(
     todayActivities.map((activity) => ({
@@ -17,6 +19,17 @@ export default function TodayDashboard({
       isDraft: false,
     }))
   );
+
+  useEffect(() => {
+    setActivities(
+      todayActivities.map((activity) => ({
+        ...activity,
+        defaultUserDuration: activity.userDuration,
+        isDraft: false,
+      }))
+    );
+  }, [todayActivities]);
+
   const [saveState, saveAction] = useActionState(
     saveActivities.bind(null, activities),
     null
@@ -60,7 +73,9 @@ export default function TodayDashboard({
     <div className="flex flex-row gap-4 w-full">
       <div className="w-1/2 lg:w-2/3 bg-gray-200 rounded-md p-4">
         <div className="flex flex-col gap-2 items-center">
-          <p className="text-xl">Today is {new Date().toLocaleDateString()}</p>
+          <p className="text-xl">
+            You selected {selectedDate.toLocaleDateString()}
+          </p>
           <p className="text-xl">
             You have {todayActivities.length} activities today
           </p>

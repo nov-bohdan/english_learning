@@ -19,3 +19,13 @@ export function getCalendar(): Calendar {
   }
   return dates;
 }
+
+export function normalizeDate(date: Date) {
+  const normalized = new Date(
+    date.getUTCFullYear(),
+    date.getUTCMonth(),
+    date.getUTCDate()
+  );
+  normalized.setUTCHours(0, 0, 0, 0);
+  return normalized;
+}

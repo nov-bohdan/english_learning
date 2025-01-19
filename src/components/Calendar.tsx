@@ -7,7 +7,15 @@ import { Activity } from "@/lib/types";
 import WeekView from "./CalendarViews/WeekView";
 import CalendarHeader from "./CalendarHeader";
 
-export default function Calendar({ activities }: { activities: Activity[] }) {
+export default function Calendar({
+  activities,
+  selectedDate,
+  setSelectedDate,
+}: {
+  activities: Activity[];
+  selectedDate: Date;
+  setSelectedDate: (date: Date) => void;
+}) {
   const months = [
     "January",
     "February",
@@ -99,6 +107,11 @@ export default function Calendar({ activities }: { activities: Activity[] }) {
     }
   };
 
+  const handleClickOnDate = (date: Date) => {
+    console.log(date);
+    setSelectedDate(date);
+  };
+
   return (
     <div className="w-full flex flex-col mx-auto">
       {/* HEADER */}
@@ -120,6 +133,8 @@ export default function Calendar({ activities }: { activities: Activity[] }) {
           activities={activities}
           currentDay={currentDay}
           currentWeek={currentWeek}
+          selectedDate={selectedDate}
+          handleClickOnDate={handleClickOnDate}
         />
       ) : (
         <MonthView
@@ -129,6 +144,8 @@ export default function Calendar({ activities }: { activities: Activity[] }) {
           currentYear={currentYear}
           currentMonth={currentMonth}
           currentDay={currentDay}
+          selectedDate={selectedDate}
+          handleClickOnDate={handleClickOnDate}
         />
       )}
     </div>

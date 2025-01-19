@@ -4,22 +4,21 @@ export function mapRawUserSettings(
   rawUserSettings: RawUserSettings,
   activityTypes: ActivityType[]
 ): UserSettings {
+  const { settings, ...rest } = rawUserSettings;
   return {
-    ...rawUserSettings,
+    ...rest,
     userId: rawUserSettings.user_id,
     settings: {
-      ...rawUserSettings.settings,
+      ...settings,
       activities: {
-        ...rawUserSettings.settings.activities,
-        activityTypes: rawUserSettings.settings.activities.activityTypeIds.map(
-          (id) => {
-            const type = activityTypes.find((type) => type.id === id);
-            if (!type) {
-              throw new Error(`Activity type with id ${id} not found`);
-            }
-            return type;
+        ...settings.activities,
+        activityTypes: settings.activities.activityTypeIds.map((id) => {
+          const type = activityTypes.find((type) => type.id === id);
+          if (!type) {
+            throw new Error(`Activity type with id ${id} not found`);
           }
-        ),
+          return type;
+        }),
       },
     },
   };

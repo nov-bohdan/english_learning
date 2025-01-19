@@ -1,14 +1,19 @@
 import { Activity } from "@/lib/types";
 import WeekDateCell from "./WeekDateCell";
+import { normalizeDate } from "@/lib/dates";
 
 export default function WeekView({
   activities,
   currentDay,
   currentWeek,
+  selectedDate,
+  handleClickOnDate,
 }: {
   activities: Activity[];
   currentDay: number;
   currentWeek: Date[];
+  selectedDate: Date;
+  handleClickOnDate: (date: Date) => void;
 }) {
   const daysOfWeek = ["S", "M", "T", "W", "T", "F", "S"];
 
@@ -18,7 +23,8 @@ export default function WeekView({
         {currentWeek.map((day, index) => {
           const todayActivities = activities.filter(
             (activity) =>
-              activity.date.getUTCDate() === currentWeek[index].getUTCDate()
+              normalizeDate(activity.date).getTime() ===
+              normalizeDate(currentWeek[index]).getTime()
           );
           return (
             <WeekDateCell
@@ -26,6 +32,11 @@ export default function WeekView({
               day={`${day.getUTCDate()} (${daysOfWeek[day.getDay()]})`}
               activities={todayActivities}
               isCurrentDay={currentWeek[index].getUTCDate() === currentDay}
+              isSelectedDay={
+                normalizeDate(currentWeek[index]).getTime() ===
+                normalizeDate(selectedDate).getTime()
+              }
+              onClick={() => handleClickOnDate(currentWeek[index])}
             />
           );
         })}
