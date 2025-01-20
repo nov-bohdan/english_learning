@@ -47,11 +47,11 @@ export default function TodayDashboard({
   useEffect(() => {
     if (saveState) {
       setActivities(
-        saveState.map((activity: Activity) => ({
+        saveState.map((activity) => ({
           ...activity,
           defaultUserDuration: activity.userDuration,
           isDraft: false,
-          date: activity.date.toISO() || "",
+          date: activity.date,
         }))
       );
     }

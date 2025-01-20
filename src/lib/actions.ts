@@ -18,7 +18,10 @@ export async function saveActivities(
   formData: FormData
 ) {
   const activities = await dbActivities.saveActivities(newActivities);
-  const mappedActivities = mapRawActivities(activities);
+  const mappedActivities = mapRawActivities(activities).map((activity) => ({
+    ...activity,
+    date: activity.date.toISO() || "",
+  }));
   revalidatePath("/dashboard");
   return mappedActivities;
 }
