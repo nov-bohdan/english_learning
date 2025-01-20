@@ -1,6 +1,5 @@
 import { Activity } from "@/lib/helpers/types";
 import WeekDateCell from "./WeekDateCell";
-import { normalizeDate } from "@/lib/helpers/dates";
 import { DateTime } from "luxon";
 
 export default function WeekView({
@@ -22,10 +21,8 @@ export default function WeekView({
     <div className="flex flex-row">
       <div className="bg-white flex flex-col w-full">
         {currentWeek.map((day, index) => {
-          const todayActivities = activities.filter(
-            (activity) =>
-              normalizeDate(activity.date).getTime() ===
-              normalizeDate(currentWeek[index]).getTime()
+          const todayActivities = activities.filter((activity) =>
+            activity.date.hasSame(currentWeek[index], "day")
           );
           return (
             <WeekDateCell
@@ -33,10 +30,7 @@ export default function WeekView({
               day={`${day.day} (${daysOfWeek[day.weekday]})`}
               activities={todayActivities}
               isCurrentDay={currentWeek[index].day === currentDay}
-              isSelectedDay={
-                normalizeDate(currentWeek[index]).getTime() ===
-                normalizeDate(selectedDate).getTime()
-              }
+              isSelectedDay={currentWeek[index].hasSame(selectedDate, "day")}
               onClick={() => handleClickOnDate(currentWeek[index])}
             />
           );

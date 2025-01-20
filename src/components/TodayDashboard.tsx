@@ -14,11 +14,10 @@ export default function TodayDashboard({
   todayActivities: Activity[];
   selectedDate: DateTime;
 }) {
-  const [scheduleActivities, scheduleAction, scheduleIsPending] =
-    useActionState(
-      scheduleActivitiesAction.bind(null, [selectedDate.toString()]),
-      undefined
-    );
+  const [, scheduleAction, scheduleIsPending] = useActionState(
+    scheduleActivitiesAction.bind(null, [selectedDate.toString()]),
+    undefined
+  );
 
   const [activities, setActivities] = useState<ExtendedActivity[]>(
     todayActivities.map((activity) => ({
@@ -55,7 +54,7 @@ export default function TodayDashboard({
     }
   }, [saveState]);
 
-  const handleSetDuration = (activity: ExtendedActivity, duration: string) => {
+  const handleSetDuration = (activity: ExtendedActivity, duration: number) => {
     setActivities(
       activities.map((a) =>
         a.id === activity.id

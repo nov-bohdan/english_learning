@@ -57,7 +57,7 @@ export const scheduleActivitiesAction = async (
         description: activity.description,
         duration: activity.duration,
         type: type,
-        userDuration: "0",
+        userDuration: 0,
       };
     }
   );

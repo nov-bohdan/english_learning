@@ -44,10 +44,10 @@ export default function Calendar({
     "November",
     "December",
   ];
-  const [currentMonth, setCurrentMonth] = useState<number>(
+  const [selectedMonth, setSelectedMonth] = useState<number>(
     DateTime.now().month
   );
-  const [currentYear, setCurrentYear] = useState<number>(DateTime.now().year);
+  const [selectedYear, setSelectedYear] = useState<number>(DateTime.now().year);
   const currentDay = DateTime.now().day;
   const initialWeek = Array.from({ length: 7 }, (_, i) => {
     return DateTime.now().set({ day: currentDay - 3 + i });
@@ -56,8 +56,8 @@ export default function Calendar({
 
   const dates = getCalendar();
   const firstDayOfMonth = DateTime.fromObject({
-    year: currentYear,
-    month: currentMonth,
+    year: selectedYear,
+    month: selectedMonth,
     day: 1,
   }).weekday;
 
@@ -71,11 +71,11 @@ export default function Calendar({
       const newWeek = currentWeek.map((day) => {
         return day.minus({ days: 7 });
       });
-      if (newWeek[0].month !== currentMonth) {
-        setCurrentMonth(newWeek[0].month);
+      if (newWeek[0].month !== selectedMonth) {
+        setSelectedMonth(newWeek[0].month);
       }
-      if (newWeek[0].year !== currentYear) {
-        setCurrentYear(newWeek[0].year);
+      if (newWeek[0].year !== selectedYear) {
+        setSelectedYear(newWeek[0].year);
       }
       return newWeek;
     });
@@ -86,31 +86,31 @@ export default function Calendar({
       const newWeek = currentWeek.map((day) => {
         return day.plus({ days: 7 });
       });
-      if (newWeek[0].month !== currentMonth) {
-        setCurrentMonth(newWeek[0].month);
+      if (newWeek[0].month !== selectedMonth) {
+        setSelectedMonth(newWeek[0].month);
       }
-      if (newWeek[0].year !== currentYear) {
-        setCurrentYear(newWeek[0].year);
+      if (newWeek[0].year !== selectedYear) {
+        setSelectedYear(newWeek[0].year);
       }
       return newWeek;
     });
   };
 
   const moveToPreviousMonth = () => {
-    if (currentMonth === 0) {
-      setCurrentMonth(11);
-      setCurrentYear(currentYear - 1);
+    if (selectedMonth === 0) {
+      setSelectedMonth(11);
+      setSelectedYear(selectedYear - 1);
     } else {
-      setCurrentMonth(currentMonth - 1);
+      setSelectedMonth(selectedMonth - 1);
     }
   };
 
   const moveToNextMonth = () => {
-    if (currentMonth === 11) {
-      setCurrentMonth(0);
-      setCurrentYear(currentYear + 1);
+    if (selectedMonth === 11) {
+      setSelectedMonth(0);
+      setSelectedYear(selectedYear + 1);
     } else {
-      setCurrentMonth(currentMonth + 1);
+      setSelectedMonth(selectedMonth + 1);
     }
   };
 
@@ -122,8 +122,8 @@ export default function Calendar({
     <div className="w-full flex flex-col mx-auto">
       {/* HEADER */}
       <CalendarHeader
-        currentMonth={currentMonth}
-        currentYear={currentYear}
+        currentMonth={selectedMonth}
+        currentYear={selectedYear}
         isMobile={isMobile}
         currentWeek={currentWeek}
         months={months}
@@ -147,8 +147,8 @@ export default function Calendar({
           firstDayOfMonth={firstDayOfMonth}
           dates={dates}
           activities={activities}
-          currentYear={currentYear}
-          currentMonth={currentMonth}
+          currentYear={selectedYear}
+          currentMonth={selectedMonth}
           currentDay={currentDay}
           selectedDate={selectedDate}
           handleClickOnDate={handleClickOnDate}

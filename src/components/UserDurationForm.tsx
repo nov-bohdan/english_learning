@@ -1,7 +1,7 @@
 import { Activity } from "@/lib/helpers/types";
 
 export type ExtendedActivity = Activity & {
-  defaultUserDuration: string;
+  defaultUserDuration: number;
   isDraft: boolean;
 };
 
@@ -29,7 +29,7 @@ export default function UserDurationForm({
 }: {
   saveAction: (formData: FormData) => void;
   activities: ExtendedActivity[];
-  handleSetDuration: (activity: ExtendedActivity, duration: string) => void;
+  handleSetDuration: (activity: ExtendedActivity, duration: number) => void;
   unsavedChanges: boolean;
   isPending: boolean;
 }) {
@@ -46,10 +46,10 @@ export default function UserDurationForm({
             >
               <div className="flex flex-row gap-1">
                 <input
-                  type="text"
+                  type="number"
                   value={activity.userDuration}
                   onChange={(e) => {
-                    handleSetDuration(activity, e.target.value);
+                    handleSetDuration(activity, Number(e.target.value));
                   }}
                   className="w-2/3 bg-transparent border-none outline-none"
                 />

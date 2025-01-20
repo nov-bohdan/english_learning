@@ -15,7 +15,7 @@ async function getActivities(): Promise<RawActivity[]> {
   if (error) {
     throw new Error(error.message);
   }
-  return data as RawActivity[];
+  return data;
 }
 
 async function getActivityTypes(): Promise<ActivityType[]> {
@@ -44,6 +44,7 @@ async function saveActivities(activities: ExtendedActivity[]) {
             ...rest,
             type_id: type.id,
             user_duration: Number(userDuration),
+            date: activity.date.toISO() || undefined,
           })
           .eq("id", activity.id)
           .select()

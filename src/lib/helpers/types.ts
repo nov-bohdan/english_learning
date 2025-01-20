@@ -11,7 +11,7 @@ export type RawActivity = {
   description: string;
   duration: number;
   type_id: number;
-  user_duration: string;
+  user_duration: number;
 };
 
 export type Activity = {
@@ -20,7 +20,7 @@ export type Activity = {
   description: string;
   duration: number;
   type: ActivityType;
-  userDuration: string;
+  userDuration: number;
 };
 
 export type RawUserSettings = {
