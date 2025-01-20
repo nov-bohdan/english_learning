@@ -11,6 +11,7 @@ export default function MonthView({
   currentDay,
   selectedDate,
   handleClickOnDate,
+  availableTimes,
 }: {
   firstDayOfMonth: number;
   dates: Calendar;
@@ -20,6 +21,7 @@ export default function MonthView({
   currentDay: number;
   selectedDate: DateTime;
   handleClickOnDate: (date: DateTime) => void;
+  availableTimes: number[];
 }) {
   const daysOfWeek = ["S", "M", "T", "W", "T", "F", "S"];
   return (
@@ -30,7 +32,7 @@ export default function MonthView({
             key={index}
             className="border border-gray-300 w-full py-4 text-center"
           >
-            {day}
+            {day} ({availableTimes[index]} min)
           </div>
         ))}
       </div>

@@ -37,7 +37,7 @@ export const scheduleActivitiesAction = async (
   const daysToSchedule: DaysToSchedule = datesFormatted.map((date) => {
     const dayOfWeek = date.weekdayLong || "";
     const availableTimeInMinutes =
-      mappedUserSettings.settings.availableTime[date.weekday + 1];
+      mappedUserSettings.settings.availableTime[date.weekday];
     return {
       date: date.toISO() || "",
       dayOfWeek,

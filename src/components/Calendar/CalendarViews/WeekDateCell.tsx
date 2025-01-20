@@ -3,12 +3,14 @@ import CalendarActivityList from "../CalendarActivityList";
 
 export default function WeekDateCell({
   day,
+  availableTime,
   activities,
   isCurrentDay,
   isSelectedDay,
   onClick,
 }: {
   day: string;
+  availableTime: number;
   activities: Activity[];
   isCurrentDay: boolean;
   isSelectedDay: boolean;
@@ -26,7 +28,7 @@ export default function WeekDateCell({
           isCurrentDay ? "bg-blue-100" : "bg-gray-200"
         }`}
       >
-        {day}
+        {day} ({availableTime} min)
       </div>
       <div className="flex flex-col py-4 px-4 w-[70%]">
         <CalendarActivityList activities={activities} />

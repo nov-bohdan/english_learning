@@ -9,8 +9,10 @@ import { mapRawActivities } from "@/lib/helpers/activitiesLib";
 
 export default function CalendarPage({
   rawActivities,
+  availableTimes,
 }: {
   rawActivities: RawActivity[];
+  availableTimes: number[];
 }) {
   const activities: Activity[] = mapRawActivities(rawActivities);
   const [selectedDate, setSelectedDate] = useState<DateTime>(DateTime.now());
@@ -28,6 +30,7 @@ export default function CalendarPage({
         activities={activities}
         selectedDate={selectedDate}
         setSelectedDate={setSelectedDate}
+        availableTimes={availableTimes}
       />
     </div>
   );

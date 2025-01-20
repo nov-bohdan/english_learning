@@ -70,17 +70,14 @@ export type Database = {
       };
       activity_types: {
         Row: {
-          color: string;
           id: number;
           name: string;
         };
         Insert: {
-          color: string;
           id?: number;
           name: string;
         };
         Update: {
-          color?: string;
           id?: number;
           name?: string;
         };

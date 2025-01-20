@@ -36,9 +36,10 @@ export const scheduleActivities = async (
     - Days to schedule: ${JSON.stringify(daysToSchedule)}
     Never add activities that are not in the list of available activity types.
     Always use available time in full. Never exceed the available time.
+    Try to split the time for different activities if available time allows it.
   `;
 
-  //   console.log(prompt);
+  console.log(prompt);
 
   const response = await openai.beta.chat.completions.parse({
     model: "gpt-4o",

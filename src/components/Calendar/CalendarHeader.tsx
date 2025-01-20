@@ -30,7 +30,7 @@ export default function CalendarHeader({
         PREVIOUS
       </div>
       <div className="">
-        {months[currentMonth]}{" "}
+        {months[currentMonth - 1]}{" "}
         {isMobile
           ? `${currentWeek[0].day} - ${currentWeek[6].day}`
           : `| ${currentYear}`}

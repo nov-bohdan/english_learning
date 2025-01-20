@@ -22,12 +22,3 @@ export function getCalendar(): Calendar {
   }
   return dates;
 }
-
-export function normalizeDate(date: DateTime) {
-  const normalized = DateTime.fromObject({
-    year: date.year,
-    month: date.month,
-    day: date.day,
-  });
-  return normalized;
-}

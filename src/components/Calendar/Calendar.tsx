@@ -25,10 +25,12 @@ export default function Calendar({
   activities,
   selectedDate,
   setSelectedDate,
+  availableTimes,
 }: {
   activities: Activity[];
   selectedDate: DateTime;
   setSelectedDate: (date: DateTime) => void;
+  availableTimes: number[];
 }) {
   const months = [
     "January",
@@ -141,6 +143,7 @@ export default function Calendar({
           currentWeek={currentWeek}
           selectedDate={selectedDate}
           handleClickOnDate={handleClickOnDate}
+          availableTimes={availableTimes}
         />
       ) : (
         <MonthView
@@ -152,6 +155,7 @@ export default function Calendar({
           currentDay={currentDay}
           selectedDate={selectedDate}
           handleClickOnDate={handleClickOnDate}
+          availableTimes={availableTimes}
         />
       )}
     </div>
