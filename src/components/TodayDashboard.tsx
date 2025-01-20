@@ -134,7 +134,11 @@ export default function TodayDashboard({
               {todayActivities.reduce(
                 (acc, activity) => acc + Number(activity.duration),
                 0
-              )}{" "}
+              ) -
+                todayActivities.reduce(
+                  (acc, activity) => acc + Number(activity.userDuration),
+                  0
+                )}{" "}
               min
             </p>
             <p className="">
