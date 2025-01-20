@@ -22,6 +22,7 @@ export default function TodayDashboard({
   const [activities, setActivities] = useState<ExtendedActivity[]>(
     todayActivities.map((activity) => ({
       ...activity,
+      date: activity.date.toISO() || "",
       defaultUserDuration: activity.userDuration,
       isDraft: false,
     }))
@@ -33,13 +34,14 @@ export default function TodayDashboard({
         ...activity,
         defaultUserDuration: activity.userDuration,
         isDraft: false,
+        date: activity.date.toISO() || "",
       }))
     );
   }, [todayActivities]);
 
   const [saveState, saveAction, isPending] = useActionState(
     saveActivities.bind(null, activities),
-    null
+    undefined
   );
 
   useEffect(() => {
@@ -49,6 +51,7 @@ export default function TodayDashboard({
           ...activity,
           defaultUserDuration: activity.userDuration,
           isDraft: false,
+          date: activity.date.toISO() || "",
         }))
       );
     }
@@ -109,7 +112,7 @@ export default function TodayDashboard({
                         : "#FFB6C1",
                   }}
                 >
-                  {activity.description}{" "}
+                  {activity.type.name}{" "}
                   <span className="font-semibold">
                     ({activity.userDuration} / {activity.duration} min)
                   </span>

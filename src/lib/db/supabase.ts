@@ -39,7 +39,6 @@ export type Database = {
       activities: {
         Row: {
           date: string;
-          description: string;
           duration: number;
           id: number;
           type_id: number;
@@ -47,7 +46,6 @@ export type Database = {
         };
         Insert: {
           date: string;
-          description: string;
           duration: number;
           id?: number;
           type_id: number;
@@ -55,7 +53,6 @@ export type Database = {
         };
         Update: {
           date?: string;
-          description?: string;
           duration?: number;
           id?: number;
           type_id?: number;

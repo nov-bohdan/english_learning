@@ -7,7 +7,6 @@ const ActivitySchedule = z.object({
   response: z.array(
     z.object({
       date: z.string(),
-      description: z.string(),
       duration: z.number(),
       typeId: z.number(),
       reasonToChoose: z.string(),
@@ -20,8 +19,10 @@ export const scheduleActivities = async (
   activityTypes: ActivityType[],
   activityPriorities: { [activityId: number]: number },
   daysToSchedule: {
-    [day: string]: { dayOfWeek: string; availableTimeInMinutes: number };
-  }
+    date: string;
+    dayOfWeek: string;
+    availableTimeInMinutes: number;
+  }[]
 ) => {
   const prompt = `
     You are a helpful assistant that schedules activities for a user.
@@ -29,10 +30,12 @@ export const scheduleActivities = async (
     You need to schedule the activities for the days to schedule. Here is the information you have:
     - Previous activities: ${JSON.stringify(previousActivities)}
     - Available activity types: ${JSON.stringify(activityTypes)}
-    - Activity priorities: ${JSON.stringify(activityPriorities)}
+    - Activity priorities: ${JSON.stringify(
+      activityPriorities
+    )} [The number is the priority of the activity, the higher the number, the more important the activity is]
     - Days to schedule: ${JSON.stringify(daysToSchedule)}
     Never add activities that are not in the list of available activity types.
-    Always use available time in full.
+    Always use available time in full. Never exceed the available time.
   `;
 
   //   console.log(prompt);

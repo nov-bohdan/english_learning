@@ -1,6 +1,7 @@
 import { Activity } from "@/lib/helpers/types";
 
-export type ExtendedActivity = Activity & {
+export type ExtendedActivity = Omit<Activity, "date"> & {
+  date: string;
   defaultUserDuration: number;
   isDraft: boolean;
 };
@@ -38,7 +39,7 @@ export default function UserDurationForm({
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3">
         {activities.map((activity) => (
           <div key={activity.id} className="flex flex-col items-center">
-            <p className="text-xs">{activity.description}</p>
+            <p className="text-xs">{activity.type.name}</p>
             <div
               className={`w-2/3 border-none outline-none p-2 rounded-md flex flex-row justify-between items-center gap-2 ${determineColor(
                 activity

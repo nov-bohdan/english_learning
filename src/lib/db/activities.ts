@@ -2,7 +2,6 @@
 import { dbClient } from "./dbClient";
 import { Activity, ActivityType, RawActivity } from "../helpers/types";
 import { ExtendedActivity } from "@/components/UserDurationForm";
-import { revalidatePath } from "next/cache";
 import { mapActivitiesToRaw } from "../helpers/activitiesLib";
 
 const client = dbClient.client;
@@ -44,7 +43,7 @@ async function saveActivities(activities: ExtendedActivity[]) {
             ...rest,
             type_id: type.id,
             user_duration: Number(userDuration),
-            date: activity.date.toISO() || undefined,
+            date: activity.date,
           })
           .eq("id", activity.id)
           .select()
@@ -68,7 +67,6 @@ async function newActivities(activities: RawActivity[]) {
   const { data, error } = await client.from("activities").insert(
     activities.map((activity) => ({
       date: activity.date,
-      description: activity.description,
       duration: activity.duration,
       type_id: activity.type_id,
       user_duration: activity.user_duration,

@@ -16,7 +16,6 @@ export const dbClient = {
     const { data, error } = await this.client.from("activities").insert(
       activities.map((activity) => ({
         date: activity.date.toISO() || "",
-        description: activity.description,
         duration: activity.duration,
         type_id: activity.type.id,
         user_duration: Number(activity.userDuration),

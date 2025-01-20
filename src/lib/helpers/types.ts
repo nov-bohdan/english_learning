@@ -8,7 +8,6 @@ export type ActivityType = {
 export type RawActivity = {
   id: number;
   date: string;
-  description: string;
   duration: number;
   type_id: number;
   user_duration: number;
@@ -17,7 +16,6 @@ export type RawActivity = {
 export type Activity = {
   id: number;
   date: DateTime;
-  description: string;
   duration: number;
   type: ActivityType;
   userDuration: number;
@@ -50,7 +48,7 @@ export type UserSettings = {
       activityTypes: ActivityType[];
     };
     availableTime: {
-      [day: number]: number;
+      [dayOfWeek: number]: number;
     };
   };
 };

@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { ExtendedActivity } from "@/components/UserDurationForm";
 import { activityTypes } from "../mockData";
 import { Activity, RawActivity } from "./types";
 import { DateTime } from "luxon";
@@ -21,14 +22,19 @@ export function mapRawActivities(rawActivities: RawActivity[]): Activity[] {
   });
 }
 
-export function mapActivitiesToRaw(activities: Activity[]): RawActivity[] {
+export function mapActivitiesToRaw(
+  activities: ExtendedActivity[] | Activity[]
+): RawActivity[] {
   return activities.map((activity) => {
     const { type, userDuration, ...rest } = activity;
     return {
       ...rest,
       type_id: type.id,
       user_duration: userDuration,
-      date: activity.date.toISO() || "",
+      date:
+        typeof activity.date === "string"
+          ? activity.date
+          : activity.date.toISO() || "",
     };
   });
 }

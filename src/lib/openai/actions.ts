@@ -10,6 +10,16 @@ import { mapRawUserSettings } from "../helpers/userSettingsLib";
 import { scheduleActivities } from "./scheduling";
 import { DateTime } from "luxon";
 
+type DaysToSchedule = {
+  date: string;
+  dayOfWeek: string;
+  availableTimeInMinutes: number;
+}[];
+
+const isValidDate = (date: DateTime, validDates: DateTime[]) => {
+  return validDates.some((validDate) => validDate.hasSame(date, "day"));
+};
+
 export const scheduleActivitiesAction = async (
   dates: string[],
   prevData: unknown,
@@ -24,22 +34,22 @@ export const scheduleActivitiesAction = async (
   const activityTypes = await dbActivities.getActivityTypes();
   const mappedUserSettings = mapRawUserSettings(userSettings, activityTypes);
 
+  const daysToSchedule: DaysToSchedule = datesFormatted.map((date) => {
+    const dayOfWeek = date.weekdayLong || "";
+    const availableTimeInMinutes =
+      mappedUserSettings.settings.availableTime[date.weekday + 1];
+    return {
+      date: date.toISO() || "",
+      dayOfWeek,
+      availableTimeInMinutes,
+    };
+  });
+
   const scheduledActivities = await scheduleActivities(
     mappedActivities,
     activityTypes,
     mappedUserSettings.settings.activities.activityPriorities,
-    datesFormatted.reduce(
-      (acc, date) => {
-        acc[date.toString()] = {
-          dayOfWeek: date.toLocaleString({ weekday: "long" }),
-          availableTimeInMinutes: 120,
-        };
-        return acc;
-      },
-      {} as {
-        [day: string]: { dayOfWeek: string; availableTimeInMinutes: number };
-      }
-    )
+    daysToSchedule
   );
   if (!scheduledActivities) {
     throw new Error("No activities scheduled");
@@ -47,6 +57,9 @@ export const scheduleActivitiesAction = async (
 
   const scheduledActivitiesFormatted: Activity[] = scheduledActivities.map(
     (activity: (typeof scheduledActivities)[0], index: number) => {
+      if (!isValidDate(DateTime.fromISO(activity.date), datesFormatted)) {
+        throw new Error("Activity date is not in the dates array");
+      }
       const type = activityTypes.find((type) => type.id === activity.typeId);
       if (!type) {
         throw new Error("Type not found");
@@ -54,7 +67,6 @@ export const scheduleActivitiesAction = async (
       return {
         id: index,
         date: DateTime.fromISO(activity.date),
-        description: activity.description,
         duration: activity.duration,
         type: type,
         userDuration: 0,
