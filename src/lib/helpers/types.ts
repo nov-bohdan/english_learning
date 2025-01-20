@@ -1,3 +1,5 @@
+import { DateTime } from "luxon";
+
 export type ActivityType = {
   id: number;
   name: string;
@@ -14,7 +16,7 @@ export type RawActivity = {
 
 export type Activity = {
   id: number;
-  date: Date;
+  date: DateTime;
   description: string;
   duration: number;
   type: ActivityType;
@@ -55,6 +57,6 @@ export type UserSettings = {
 
 export type Calendar = {
   [key: string]: {
-    [key: string]: Date[];
+    [key: string]: DateTime[];
   };
 };

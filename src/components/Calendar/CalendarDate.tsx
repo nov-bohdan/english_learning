@@ -1,5 +1,6 @@
 import { Activity } from "@/lib/helpers/types";
 import CalendarActivityList from "./CalendarActivityList";
+import { DateTime } from "luxon";
 
 export default function CalendarDate({
   date,
@@ -8,7 +9,7 @@ export default function CalendarDate({
   isSelectedDay,
   onClick,
 }: {
-  date: Date;
+  date: DateTime;
   activities: Activity[] | undefined;
   isCurrentDay: boolean;
   isSelectedDay: boolean;
@@ -22,9 +23,7 @@ export default function CalendarDate({
       onClick={onClick}
     >
       <div className="flex flex-col items-center gap-1">
-        <p className="text-end w-full text-2xl font-bold">
-          {date.getUTCDate()}
-        </p>
+        <p className="text-end w-full text-2xl font-bold">{date.day}</p>
         {activities && <CalendarActivityList activities={activities || []} />}
       </div>
     </div>

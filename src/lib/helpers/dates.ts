@@ -1,31 +1,33 @@
 import { Calendar } from "./types";
+import { DateTime } from "luxon";
 
 export function getCalendar(): Calendar {
-  const dates: { [key: string]: { [key: string]: Date[] } } = {};
+  const dates: { [key: string]: { [key: string]: DateTime[] } } = {};
   for (let year = 2024; year <= 2025; year++) {
     for (let month = 0; month < 12; month++) {
-      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      const daysInMonth = DateTime.fromObject({ year, month, day: 1 }).endOf(
+        "month"
+      ).day;
       for (let day = 1; day <= daysInMonth; day++) {
-        const date = new Date(Date.UTC(year, month, day));
-        if (!dates[date.getUTCFullYear()]) {
-          dates[date.getUTCFullYear()] = {};
+        const date = DateTime.fromObject({ year, month, day });
+        if (!dates[date.year]) {
+          dates[date.year] = {};
         }
-        if (!dates[date.getUTCFullYear()][date.getUTCMonth()]) {
-          dates[date.getUTCFullYear()][date.getUTCMonth()] = [];
+        if (!dates[date.year][date.month]) {
+          dates[date.year][date.month] = [];
         }
-        dates[date.getUTCFullYear()][date.getUTCMonth()].push(date);
+        dates[date.year][date.month].push(date);
       }
     }
   }
   return dates;
 }
 
-export function normalizeDate(date: Date) {
-  const normalized = new Date(
-    date.getUTCFullYear(),
-    date.getUTCMonth(),
-    date.getUTCDate()
-  );
-  normalized.setUTCHours(0, 0, 0, 0);
+export function normalizeDate(date: DateTime) {
+  const normalized = DateTime.fromObject({
+    year: date.year,
+    month: date.month,
+    day: date.day,
+  });
   return normalized;
 }

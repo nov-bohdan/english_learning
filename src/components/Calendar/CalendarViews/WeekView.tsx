@@ -1,6 +1,7 @@
 import { Activity } from "@/lib/helpers/types";
 import WeekDateCell from "./WeekDateCell";
 import { normalizeDate } from "@/lib/helpers/dates";
+import { DateTime } from "luxon";
 
 export default function WeekView({
   activities,
@@ -11,9 +12,9 @@ export default function WeekView({
 }: {
   activities: Activity[];
   currentDay: number;
-  currentWeek: Date[];
-  selectedDate: Date;
-  handleClickOnDate: (date: Date) => void;
+  currentWeek: DateTime[];
+  selectedDate: DateTime;
+  handleClickOnDate: (date: DateTime) => void;
 }) {
   const daysOfWeek = ["S", "M", "T", "W", "T", "F", "S"];
 
@@ -29,9 +30,9 @@ export default function WeekView({
           return (
             <WeekDateCell
               key={index}
-              day={`${day.getUTCDate()} (${daysOfWeek[day.getDay()]})`}
+              day={`${day.day} (${daysOfWeek[day.weekday]})`}
               activities={todayActivities}
-              isCurrentDay={currentWeek[index].getUTCDate() === currentDay}
+              isCurrentDay={currentWeek[index].day === currentDay}
               isSelectedDay={
                 normalizeDate(currentWeek[index]).getTime() ===
                 normalizeDate(selectedDate).getTime()

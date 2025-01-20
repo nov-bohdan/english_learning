@@ -1,26 +1,25 @@
 "use client";
 
 import TodayDashboard from "../TodayDashboard";
-import { Activity } from "../../lib/helpers/types";
+import { Activity, RawActivity } from "../../lib/helpers/types";
 import Calendar from "./Calendar";
 import { useState } from "react";
-import { normalizeDate } from "@/lib/helpers/dates";
+import { DateTime } from "luxon";
+import { mapRawActivities } from "@/lib/helpers/activitiesLib";
 
 export default function CalendarPage({
-  activities,
+  rawActivities,
 }: {
-  activities: Activity[];
+  rawActivities: RawActivity[];
 }) {
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const activities: Activity[] = mapRawActivities(rawActivities);
+  const [selectedDate, setSelectedDate] = useState<DateTime>(DateTime.now());
   return (
     <div className="flex flex-col gap-4">
       <TodayDashboard
         todayActivities={
           activities.filter((activity) => {
-            return (
-              normalizeDate(activity.date).getTime() ===
-              normalizeDate(selectedDate).getTime()
-            );
+            return activity.date.hasSame(selectedDate, "day");
           }) || []
         }
         selectedDate={selectedDate}

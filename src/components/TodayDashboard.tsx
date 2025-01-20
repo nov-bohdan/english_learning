@@ -4,14 +4,22 @@ import { saveActivities } from "@/lib/actions";
 import { Activity } from "@/lib/helpers/types";
 import { useActionState, useEffect, useState } from "react";
 import UserDurationForm, { ExtendedActivity } from "./UserDurationForm";
+import { scheduleActivitiesAction } from "@/lib/openai/actions";
+import { DateTime } from "luxon";
 
 export default function TodayDashboard({
   todayActivities,
   selectedDate,
 }: {
   todayActivities: Activity[];
-  selectedDate: Date;
+  selectedDate: DateTime;
 }) {
+  const [scheduleActivities, scheduleAction, scheduleIsPending] =
+    useActionState(
+      scheduleActivitiesAction.bind(null, [selectedDate.toString()]),
+      undefined
+    );
+
   const [activities, setActivities] = useState<ExtendedActivity[]>(
     todayActivities.map((activity) => ({
       ...activity,
@@ -74,11 +82,22 @@ export default function TodayDashboard({
       <div className="w-1/2 lg:w-2/3 bg-gray-200 rounded-md p-4">
         <div className="flex flex-col gap-2 items-center">
           <p className="text-xl">
-            You selected {selectedDate.toLocaleDateString()}
+            You selected {selectedDate.toLocaleString()}
           </p>
           <p className="text-xl">
             You have {todayActivities.length} activities today
           </p>
+          {todayActivities.length === 0 && (
+            <form action={scheduleAction}>
+              <button
+                type="submit"
+                className="bg-blue-500 text-white px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-400"
+                disabled={scheduleIsPending}
+              >
+                Schedule activities
+              </button>
+            </form>
+          )}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 text-xs gap-1">
             {todayActivities.map((activity) => (
               <div key={activity.id}>

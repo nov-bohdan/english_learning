@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { activityTypes } from "../mockData";
 import { Activity, RawActivity } from "./types";
+import { DateTime } from "luxon";
 
 export function mapRawActivities(rawActivities: RawActivity[]): Activity[] {
   return rawActivities.map((rawActivity) => {
@@ -13,7 +14,7 @@ export function mapRawActivities(rawActivities: RawActivity[]): Activity[] {
     const { type_id, user_duration, ...rest } = rawActivity;
     return {
       ...rest,
-      date: new Date(rawActivity.date),
+      date: DateTime.fromISO(rawActivity.date),
       type: activityType,
       userDuration: user_duration,
     };
@@ -27,7 +28,7 @@ export function mapActivitiesToRaw(activities: Activity[]): RawActivity[] {
       ...rest,
       type_id: type.id,
       user_duration: userDuration,
-      date: activity.date.toISOString(),
+      date: activity.date.toISO() || "",
     };
   });
 }

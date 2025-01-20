@@ -1,6 +1,6 @@
 import { Activity, Calendar } from "@/lib/helpers/types";
 import CalendarDate from "../CalendarDate";
-import { normalizeDate } from "@/lib/helpers/dates";
+import { DateTime } from "luxon";
 
 export default function MonthView({
   firstDayOfMonth,
@@ -18,8 +18,8 @@ export default function MonthView({
   currentYear: number;
   currentMonth: number;
   currentDay: number;
-  selectedDate: Date;
-  handleClickOnDate: (date: Date) => void;
+  selectedDate: DateTime;
+  handleClickOnDate: (date: DateTime) => void;
 }) {
   const daysOfWeek = ["S", "M", "T", "W", "T", "F", "S"];
   return (
@@ -34,6 +34,7 @@ export default function MonthView({
           </div>
         ))}
       </div>
+
       <div className="bg-gray-100 grid grid-cols-7 text-center">
         {/* Empty slots for days before the first day of the month */}
         {Array.from({ length: firstDayOfMonth }).map((_, index) => (
@@ -42,30 +43,27 @@ export default function MonthView({
             className="border border-gray-200 py-10"
           ></div>
         ))}
+
         {/* DAYS */}
         {dates[currentYear][currentMonth].map((date) => {
-          const todayActivities = activities.filter(
-            (activity) => activity.date.toISOString() === date.toISOString()
-          );
+          const todayActivities = activities.filter((activity) => {
+            try {
+              return activity.date.hasSame(date, "day");
+            } catch (error) {
+              console.log(error);
+              console.log(activity.date);
+              console.log(date);
+              return false;
+            }
+          });
           return (
             <CalendarDate
-              key={date.toISOString()}
+              key={date.toString()}
               date={date}
               activities={todayActivities}
-              isCurrentDay={new Date(date).getUTCDate() === currentDay}
-              isSelectedDay={
-                normalizeDate(date).getTime() ===
-                normalizeDate(selectedDate).getTime()
-              }
-              onClick={() =>
-                handleClickOnDate(
-                  new Date(
-                    date.getUTCFullYear(),
-                    date.getUTCMonth(),
-                    date.getUTCDate()
-                  )
-                )
-              }
+              isCurrentDay={date.day === currentDay}
+              isSelectedDay={date.hasSame(selectedDate, "day")}
+              onClick={() => handleClickOnDate(date)}
             />
           );
         })}

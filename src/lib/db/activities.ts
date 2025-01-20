@@ -63,10 +63,27 @@ async function saveActivities(activities: ExtendedActivity[]) {
   return savedActivities.sort((a, b) => a.id - b.id);
 }
 
+async function newActivities(activities: RawActivity[]) {
+  const { data, error } = await client.from("activities").insert(
+    activities.map((activity) => ({
+      date: activity.date,
+      description: activity.description,
+      duration: activity.duration,
+      type_id: activity.type_id,
+      user_duration: activity.user_duration,
+    }))
+  );
+  if (error) {
+    throw new Error(error.message);
+  }
+  return data;
+}
+
 const dbActivities = {
   getActivities,
   getActivityTypes,
   saveActivities,
+  newActivities,
 };
 
 export default dbActivities;

@@ -6,6 +6,20 @@ import MonthView from "./CalendarViews/MonthView";
 import { Activity } from "@/lib/helpers/types";
 import WeekView from "./CalendarViews/WeekView";
 import CalendarHeader from "./CalendarHeader";
+import { DateTime } from "luxon";
+
+const handleScreenSize = (setIsMobile: (isMobile: boolean) => void) => {
+  const handleResize = () => {
+    setIsMobile(window.innerWidth < 1080);
+  };
+  window.addEventListener("resize", handleResize);
+  window.addEventListener("load", handleResize);
+  handleResize();
+  return () => {
+    window.removeEventListener("resize", handleResize);
+    window.removeEventListener("load", handleResize);
+  };
+};
 
 export default function Calendar({
   activities,
@@ -13,8 +27,8 @@ export default function Calendar({
   setSelectedDate,
 }: {
   activities: Activity[];
-  selectedDate: Date;
-  setSelectedDate: (date: Date) => void;
+  selectedDate: DateTime;
+  setSelectedDate: (date: DateTime) => void;
 }) {
   const months = [
     "January",
@@ -31,44 +45,37 @@ export default function Calendar({
     "December",
   ];
   const [currentMonth, setCurrentMonth] = useState<number>(
-    new Date().getMonth()
+    DateTime.now().month
   );
-  const [currentYear, setCurrentYear] = useState<number>(
-    new Date().getFullYear()
-  );
-  const currentDay = new Date().getDate();
+  const [currentYear, setCurrentYear] = useState<number>(DateTime.now().year);
+  const currentDay = DateTime.now().day;
   const initialWeek = Array.from({ length: 7 }, (_, i) => {
-    return new Date(currentYear, currentMonth, currentDay - 3 + i);
+    return DateTime.now().set({ day: currentDay - 3 + i });
   });
-  const [currentWeek, setCurrentWeek] = useState<Date[]>(initialWeek);
+  const [currentWeek, setCurrentWeek] = useState<DateTime[]>(initialWeek);
 
   const dates = getCalendar();
-  const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
+  const firstDayOfMonth = DateTime.fromObject({
+    year: currentYear,
+    month: currentMonth,
+    day: 1,
+  }).weekday;
 
   const [isMobile, setIsMobile] = useState<boolean>(false);
   useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 1080);
-    };
-    window.addEventListener("resize", handleResize);
-    window.addEventListener("load", handleResize);
-    handleResize();
-    return () => {
-      window.removeEventListener("resize", handleResize);
-      window.removeEventListener("load", handleResize);
-    };
+    handleScreenSize(setIsMobile);
   }, []);
 
   const moveToPreviousWeek = () => {
     setCurrentWeek((currentWeek) => {
       const newWeek = currentWeek.map((day) => {
-        return new Date(day.getFullYear(), day.getMonth(), day.getDate() - 7);
+        return day.minus({ days: 7 });
       });
-      if (newWeek[0].getMonth() !== currentMonth) {
-        setCurrentMonth(newWeek[0].getMonth());
+      if (newWeek[0].month !== currentMonth) {
+        setCurrentMonth(newWeek[0].month);
       }
-      if (newWeek[0].getFullYear() !== currentYear) {
-        setCurrentYear(newWeek[0].getFullYear());
+      if (newWeek[0].year !== currentYear) {
+        setCurrentYear(newWeek[0].year);
       }
       return newWeek;
     });
@@ -77,13 +84,13 @@ export default function Calendar({
   const moveToNextWeek = () => {
     setCurrentWeek((currentWeek) => {
       const newWeek = currentWeek.map((day) => {
-        return new Date(day.getFullYear(), day.getMonth(), day.getDate() + 7);
+        return day.plus({ days: 7 });
       });
-      if (newWeek[0].getMonth() !== currentMonth) {
-        setCurrentMonth(newWeek[0].getMonth());
+      if (newWeek[0].month !== currentMonth) {
+        setCurrentMonth(newWeek[0].month);
       }
-      if (newWeek[0].getFullYear() !== currentYear) {
-        setCurrentYear(newWeek[0].getFullYear());
+      if (newWeek[0].year !== currentYear) {
+        setCurrentYear(newWeek[0].year);
       }
       return newWeek;
     });
@@ -107,7 +114,7 @@ export default function Calendar({
     }
   };
 
-  const handleClickOnDate = (date: Date) => {
+  const handleClickOnDate = (date: DateTime) => {
     setSelectedDate(date);
   };
 

@@ -1,3 +1,5 @@
+import { DateTime } from "luxon";
+
 export default function CalendarHeader({
   currentMonth,
   currentYear,
@@ -12,7 +14,7 @@ export default function CalendarHeader({
   currentMonth: number;
   currentYear: number;
   isMobile: boolean;
-  currentWeek: Date[];
+  currentWeek: DateTime[];
   months: string[];
   moveToPreviousWeek: () => void;
   moveToNextWeek: () => void;
@@ -30,9 +32,8 @@ export default function CalendarHeader({
       <div className="">
         {months[currentMonth]}{" "}
         {isMobile
-          ? `${currentWeek[0].getDate()} - ${currentWeek[6].getDate()}`
-          : ""}{" "}
-        | {currentYear}
+          ? `${currentWeek[0].day} - ${currentWeek[6].day}`
+          : `| ${currentYear}`}
       </div>
       <div
         className="cursor-pointer"
