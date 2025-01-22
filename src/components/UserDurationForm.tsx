@@ -47,7 +47,7 @@ export default function UserDurationForm({
             >
               <div className="flex flex-row gap-1">
                 <input
-                  type="number"
+                  type="text"
                   value={activity.userDuration}
                   onChange={(e) => {
                     handleSetDuration(activity, Number(e.target.value));

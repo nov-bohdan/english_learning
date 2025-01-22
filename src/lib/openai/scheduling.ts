@@ -36,7 +36,7 @@ export const scheduleActivities = async (
     - Days to schedule: ${JSON.stringify(daysToSchedule)}
     Never add activities that are not in the list of available activity types.
     Always use available time in full. Never exceed the available time.
-    Try to split the time for different activities if available time allows it.
+    Try to split the time for different activities if available time allows it while keeping at least 15 minutes for each activity.
   `;
 
   console.log(prompt);

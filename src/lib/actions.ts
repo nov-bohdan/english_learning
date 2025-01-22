@@ -39,3 +39,22 @@ export async function saveUserSettings(
   revalidatePath("/settings");
   return mappedSettings;
 }
+
+export async function saveNewActivity(
+  userId: number,
+  prevData: unknown,
+  formData: FormData
+) {
+  const activityName = formData.get("activity_name")?.toString();
+  if (!activityName) {
+    throw new Error("Activity name is required");
+  }
+
+  const newActivity = await dbActivities.addActivityType({
+    id: 0,
+    name: activityName,
+  });
+  await dbUserSettings.addActivityToSettings(userId, newActivity.id);
+  revalidatePath("/settings");
+  return newActivity;
+}

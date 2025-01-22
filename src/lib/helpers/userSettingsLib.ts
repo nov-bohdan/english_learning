@@ -4,6 +4,8 @@ export function mapRawUserSettings(
   rawUserSettings: RawUserSettings,
   activityTypes: ActivityType[]
 ): UserSettings {
+  console.log(rawUserSettings);
+  console.log(activityTypes);
   const { settings, ...rest } = rawUserSettings;
   return {
     ...rest,

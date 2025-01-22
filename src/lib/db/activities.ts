@@ -78,11 +78,35 @@ async function newActivities(activities: RawActivity[]) {
   return data;
 }
 
+async function deleteActivityType(id: number) {
+  const { error } = await client.from("activity_types").delete().eq("id", id);
+  if (error) {
+    throw new Error(error.message);
+  }
+}
+
+async function addActivityType(
+  activityType: ActivityType
+): Promise<ActivityType> {
+  const { data, error } = await client
+    .from("activity_types")
+    .insert({
+      name: activityType.name,
+    })
+    .select();
+  if (error) {
+    throw new Error(error.message);
+  }
+  return data[0];
+}
+
 const dbActivities = {
   getActivities,
   getActivityTypes,
   saveActivities,
   newActivities,
+  deleteActivityType,
+  addActivityType,
 };
 
 export default dbActivities;

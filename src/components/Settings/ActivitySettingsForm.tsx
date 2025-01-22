@@ -6,12 +6,16 @@ export default function ActivitySettingsForm({
   activitySettings,
   activityTypes,
   handleSaveActivitySettings,
+  handleDeleteActivity,
+  isDeleting,
 }: {
   activitySettings: UserSettings["settings"]["activities"]["activityPriorities"];
   activityTypes: ActivityType[];
   handleSaveActivitySettings: (
     settings: UserSettings["settings"]["activities"]["activityPriorities"]
   ) => void;
+  handleDeleteActivity: (id: number) => void;
+  isDeleting: boolean;
 }) {
   return (
     <div className="flex flex-col gap-2">
@@ -37,6 +41,16 @@ export default function ActivitySettingsForm({
             <option value={2}>Medium</option>
             <option value={3}>High</option>
           </select>
+          <button
+            type="button"
+            onClick={() => {
+              handleDeleteActivity(type.id);
+            }}
+            className="bg-red-500 text-white p-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-400"
+            disabled={isDeleting}
+          >
+            Delete
+          </button>
         </div>
       ))}
     </div>

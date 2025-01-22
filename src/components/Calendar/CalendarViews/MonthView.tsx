@@ -32,7 +32,10 @@ export default function MonthView({
             key={index}
             className="border border-gray-300 w-full py-4 text-center"
           >
-            {day} ({availableTimes[index]} min)
+            {day}{" "}
+            <span className="cursor-pointer">
+              ({availableTimes[index]} min)
+            </span>
           </div>
         ))}
       </div>
