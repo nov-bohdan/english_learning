@@ -1,17 +1,12 @@
 import { DateTime } from "luxon";
+import { Database } from "../db/supabase";
 
 export type ActivityType = {
   id: number;
   name: string;
 };
 
-export type RawActivity = {
-  id: number;
-  date: string;
-  duration: number;
-  type_id: number;
-  user_duration: number;
-};
+export type RawActivity = Database["public"]["Tables"]["activities"]["Row"];
 
 export type Activity = {
   id: number;

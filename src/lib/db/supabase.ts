@@ -101,6 +101,39 @@ export type Database = {
         };
         Relationships: [];
       };
+      words: {
+        Row: {
+          collocations: { collocation: string; translation: string }[];
+          definition: { definition: string; translation: string };
+          examples: { example: string; translation: string }[];
+          id: number;
+          part_of_speech: string;
+          synonyms: string[];
+          translation: string;
+          word: string;
+        };
+        Insert: {
+          collocations: { collocation: string; translation: string }[];
+          definition: { definition: string; translation: string };
+          examples: { example: string; translation: string }[];
+          id?: number;
+          part_of_speech: string;
+          synonyms: string[];
+          translation: string;
+          word: string;
+        };
+        Update: {
+          collocations?: { collocation: string; translation: string }[];
+          definition?: { definition: string; translation: string };
+          examples?: { example: string; translation: string }[];
+          id?: number;
+          part_of_speech?: string;
+          synonyms?: string[];
+          translation?: string;
+          word?: string;
+        };
+        Relationships: [];
+      };
     };
     Views: {
       [_ in never]: never;

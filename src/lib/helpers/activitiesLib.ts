@@ -2,6 +2,7 @@
 import { ExtendedActivity } from "@/components/Calendar/UserDurationForm";
 import { Activity, ActivityType, RawActivity } from "./types";
 import { DateTime } from "luxon";
+import { Database } from "../db/supabase";
 
 export function mapRawActivities(
   rawActivities: RawActivity[],

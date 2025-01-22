@@ -10,7 +10,7 @@ export default function Navbar() {
         Calendar
       </Link>
       <Link
-        href="/practice-words"
+        href="/words"
         className="cursor-pointer hover:bg-blue-600 p-2 rounded-md flex flex-col items-center"
       >
         Practice words
