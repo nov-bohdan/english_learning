@@ -90,14 +90,21 @@ export default function TodayDashboard({
             You have {todayActivities.length} activities today
           </p>
           {todayActivities.length === 0 && (
-            <form action={scheduleAction}>
-              <button
-                type="submit"
-                className="bg-blue-500 text-white px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-400"
-                disabled={scheduleIsPending}
-              >
-                Schedule activities
-              </button>
+            <form action={scheduleAction} className="w-full">
+              <div className="flex flex-col gap-2 items-center">
+                <textarea
+                  name="schedule_info"
+                  placeholder="Additional information for the AI to schedule activities"
+                  className="border-2 border-gray-300 rounded-md p-2 w-full md:w-1/2 h-40 md:h-20"
+                />
+                <button
+                  type="submit"
+                  className="bg-blue-500 text-white px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-400"
+                  disabled={scheduleIsPending}
+                >
+                  Schedule activities
+                </button>
+              </div>
             </form>
           )}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 text-xs gap-1">

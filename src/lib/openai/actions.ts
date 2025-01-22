@@ -27,6 +27,7 @@ export const scheduleActivitiesAction = async (
 ) => {
   console.log("scheduleActivitiesAction");
   console.log(dates);
+  const scheduleInfo = formData.get("schedule_info") as string;
   const datesFormatted = dates.map((date) => DateTime.fromISO(date));
   const activities: RawActivity[] = await dbActivities.getActivities();
   const activityTypes: ActivityType[] = await dbActivities.getActivityTypes();
@@ -52,7 +53,8 @@ export const scheduleActivitiesAction = async (
     mappedActivities,
     activityTypes,
     mappedUserSettings.settings.activities.activityPriorities,
-    daysToSchedule
+    daysToSchedule,
+    scheduleInfo
   );
   if (!scheduledActivities) {
     throw new Error("No activities scheduled");

@@ -22,7 +22,8 @@ export const scheduleActivities = async (
     date: string;
     dayOfWeek: string;
     availableTimeInMinutes: number;
-  }[]
+  }[],
+  scheduleInfo: string
 ) => {
   const prompt = `
     You are a helpful assistant that schedules activities for a user.
@@ -37,6 +38,7 @@ export const scheduleActivities = async (
     Never add activities that are not in the list of available activity types.
     Always use available time in full. Never exceed the available time.
     Try to split the time for different activities if available time allows it while keeping at least 15 minutes for each activity.
+    Here is some additional information for the AI to schedule activities: ${scheduleInfo}
   `;
 
   console.log(prompt);
