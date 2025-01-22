@@ -4,7 +4,7 @@
 import { revalidatePath } from "next/cache";
 import { Activity, UserSettings } from "./helpers/types";
 import dbActivities from "./db/activities";
-import { ExtendedActivity } from "@/components/UserDurationForm";
+import { ExtendedActivity } from "@/components/Calendar/UserDurationForm";
 import { mapRawActivities } from "./helpers/activitiesLib";
 import dbUserSettings from "./db/userSettings";
 import {

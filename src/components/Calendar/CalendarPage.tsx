@@ -1,6 +1,6 @@
 "use client";
 
-import TodayDashboard from "../TodayDashboard";
+import TodayDashboard from "./TodayDashboard";
 import { Activity, ActivityType, RawActivity } from "../../lib/helpers/types";
 import Calendar from "./Calendar";
 import { useState } from "react";

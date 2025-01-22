@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { dbClient } from "./dbClient";
 import { Activity, ActivityType, RawActivity } from "../helpers/types";
-import { ExtendedActivity } from "@/components/UserDurationForm";
+import { ExtendedActivity } from "@/components/Calendar/UserDurationForm";
 import { mapActivitiesToRaw } from "../helpers/activitiesLib";
 
 const client = dbClient.client;

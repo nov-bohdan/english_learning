@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { ExtendedActivity } from "@/components/UserDurationForm";
+import { ExtendedActivity } from "@/components/Calendar/UserDurationForm";
 import { Activity, ActivityType, RawActivity } from "./types";
 import { DateTime } from "luxon";
 
