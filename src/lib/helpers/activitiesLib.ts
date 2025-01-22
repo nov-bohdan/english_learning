@@ -1,10 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { ExtendedActivity } from "@/components/UserDurationForm";
-import { activityTypes } from "../mockData";
-import { Activity, RawActivity } from "./types";
+import { Activity, ActivityType, RawActivity } from "./types";
 import { DateTime } from "luxon";
 
-export function mapRawActivities(rawActivities: RawActivity[]): Activity[] {
+export function mapRawActivities(
+  rawActivities: RawActivity[],
+  activityTypes: ActivityType[]
+): Activity[] {
   return rawActivities.map((rawActivity) => {
     const activityType = activityTypes.find(
       (type) => type.id === rawActivity.type_id

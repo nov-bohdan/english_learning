@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import dbActivities from "../db/activities";
 import dbUserSettings from "../db/userSettings";
 import { mapActivitiesToRaw, mapRawActivities } from "../helpers/activitiesLib";
-import { RawActivity, Activity } from "../helpers/types";
+import { RawActivity, Activity, ActivityType } from "../helpers/types";
 import { mapRawUserSettings } from "../helpers/userSettingsLib";
 import { scheduleActivities } from "./scheduling";
 import { DateTime } from "luxon";
@@ -29,9 +29,12 @@ export const scheduleActivitiesAction = async (
   console.log(dates);
   const datesFormatted = dates.map((date) => DateTime.fromISO(date));
   const activities: RawActivity[] = await dbActivities.getActivities();
-  const mappedActivities: Activity[] = mapRawActivities(activities);
+  const activityTypes: ActivityType[] = await dbActivities.getActivityTypes();
+  const mappedActivities: Activity[] = mapRawActivities(
+    activities,
+    activityTypes
+  );
   const userSettings = await dbUserSettings.getSettings(1);
-  const activityTypes = await dbActivities.getActivityTypes();
   const mappedUserSettings = mapRawUserSettings(userSettings, activityTypes);
 
   const daysToSchedule: DaysToSchedule = datesFormatted.map((date) => {
