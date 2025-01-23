@@ -1,12 +1,12 @@
 export default function NewWordForm({
-  wordInfoAction,
-  wordInfoPending,
+  getWordInfoAction,
+  getWordInfoPending,
 }: {
-  wordInfoAction: (payload: FormData) => void;
-  wordInfoPending: boolean;
+  getWordInfoAction: (payload: FormData) => void;
+  getWordInfoPending: boolean;
 }) {
   return (
-    <form action={wordInfoAction}>
+    <form action={getWordInfoAction}>
       <div className="flex flex-col gap-4 w-[80%] items-center mx-auto">
         <input
           type="text"
@@ -17,7 +17,7 @@ export default function NewWordForm({
         <button
           type="submit"
           className="p-4 bg-blue-500 rounded-xl w-40 font-semibold text-white text-2xl disabled:bg-opacity-50 disabled:bg-gray-400 disabled:cursor-not-allowed"
-          disabled={wordInfoPending}
+          disabled={getWordInfoPending}
         >
           Send
         </button>

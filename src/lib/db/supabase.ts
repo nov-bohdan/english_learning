@@ -107,30 +107,57 @@ export type Database = {
           definition: { definition: string; translation: string };
           examples: { example: string; translation: string }[];
           id: number;
-          part_of_speech: string;
+          part_of_speech:
+            | "noun"
+            | "pronoun"
+            | "verb"
+            | "adjective"
+            | "adverb"
+            | "preposition"
+            | "conjunction"
+            | "interjection";
           synonyms: string[];
           translation: string;
           word: string;
+          created_at: string;
         };
         Insert: {
           collocations: { collocation: string; translation: string }[];
           definition: { definition: string; translation: string };
           examples: { example: string; translation: string }[];
           id?: number;
-          part_of_speech: string;
+          part_of_speech:
+            | "noun"
+            | "pronoun"
+            | "verb"
+            | "adjective"
+            | "adverb"
+            | "preposition"
+            | "conjunction"
+            | "interjection";
           synonyms: string[];
           translation: string;
           word: string;
+          created_at?: string;
         };
         Update: {
           collocations?: { collocation: string; translation: string }[];
           definition?: { definition: string; translation: string };
           examples?: { example: string; translation: string }[];
           id?: number;
-          part_of_speech?: string;
+          part_of_speech?:
+            | "noun"
+            | "pronoun"
+            | "verb"
+            | "adjective"
+            | "adverb"
+            | "preposition"
+            | "conjunction"
+            | "interjection";
           synonyms?: string[];
           translation?: string;
           word?: string;
+          created_at?: string;
         };
         Relationships: [];
       };

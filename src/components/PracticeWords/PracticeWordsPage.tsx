@@ -1,27 +1,49 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import NewWordForm from "./NewWordForm";
 import { getWordInfo } from "@/lib/practiceWords/actions";
 import NewWordInfo from "./NewWordInfo";
-export default function PracticeWordsPage() {
-  const [wordInfoState, wordInfoAction, wordInfoPending] = useActionState(
-    getWordInfo,
-    undefined
-  );
+import { WordInfo } from "@/lib/practiceWords/types";
+import Word from "./Word";
+import { mapRawToWords } from "@/lib/helpers/words";
+
+export default function PracticeWordsPage({ words }: { words: WordInfo[] }) {
+  const [wordsState, setWordsState] = useState<WordInfo[]>(words);
+
+  const [getWordInfoState, getWordInfoAction, getWordInfoPending] =
+    useActionState(getWordInfo, undefined);
+
+  useEffect(() => {
+    if (!getWordInfoState) return;
+
+    const mappedWords = mapRawToWords(getWordInfoState);
+    setWordsState(mappedWords);
+  }, [getWordInfoState]);
+
   return (
-    <div className="flex flex-col gap-4">
-      {/* ADDING NEW WORD */}
-      <div className="bg-gray-200 rounded-md p-4">
-        <NewWordForm
-          wordInfoAction={wordInfoAction}
-          wordInfoPending={wordInfoPending}
-        />
+    <div className="flex flex-row gap-4 w-full">
+      {/* LEFT PANEL */}
+      <div className="bg-gray-200 rounded-md p-4 w-1/4 max-h-[500px]">
+        <h2 className="text-bold text-3xl">Saved words</h2>
+        {words.map((word) => (
+          <Word key={`${word.word}-${word.part_of_speech}`} word={word} />
+        ))}
       </div>
-      {/* NEW WORD INFO */}
-      {wordInfoState?.map((wordInfo, index) => {
-        return <NewWordInfo key={index} wordInfo={wordInfo} />;
-      })}
+      {/* RIGHT PANEL */}
+      <div className="flex flex-col gap-4 w-3/4">
+        {/* ADDING NEW WORD */}
+        <div className="bg-gray-200 rounded-md p-4">
+          <NewWordForm
+            getWordInfoAction={getWordInfoAction}
+            getWordInfoPending={getWordInfoPending}
+          />
+        </div>
+        {/* NEW WORD INFO */}
+        {wordsState?.map((wordInfo, index) => {
+          return <NewWordInfo key={index} wordInfo={wordInfo} />;
+        })}
+      </div>
     </div>
   );
 }

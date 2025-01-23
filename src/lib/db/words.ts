@@ -12,6 +12,15 @@ const saveWord = async (word: RawWordInfo): Promise<RawWordInfo> => {
   return data[0];
 };
 
-const dbWords = { saveWord };
+const getWords = async (): Promise<RawWordInfo[]> => {
+  const { data, error } = await client.from("words").select();
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data as RawWordInfo[];
+};
+
+const dbWords = { saveWord, getWords };
 
 export default dbWords;

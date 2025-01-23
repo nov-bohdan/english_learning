@@ -4,7 +4,10 @@ import dbWords from "../db/words";
 import { openAIGetWordInfo } from "../openai/words";
 import { RawWordInfo, WordInfo } from "./types";
 
-export async function getWordInfo(prevData: unknown, formData: FormData) {
+export async function getWordInfo(
+  prevData: unknown,
+  formData: FormData
+): Promise<RawWordInfo[]> {
   const word = formData.get("word")?.toString();
   if (!word) {
     throw new Error("Word is empty");
@@ -15,5 +18,5 @@ export async function getWordInfo(prevData: unknown, formData: FormData) {
     const savedWord = await dbWords.saveWord(wordInfo);
     savedWords.push(savedWord);
   }
-  return savedWords;
+  return savedWords as RawWordInfo[];
 }
