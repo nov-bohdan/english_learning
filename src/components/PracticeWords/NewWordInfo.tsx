@@ -1,6 +1,10 @@
-import { RawWordInfo } from "@/lib/practiceWords/types";
+import { RawWordInfoRow } from "@/lib/practiceWords/types";
 
-export default function NewWordInfo({ wordInfo }: { wordInfo: RawWordInfo }) {
+export default function NewWordInfo({
+  wordInfo,
+}: {
+  wordInfo: RawWordInfoRow;
+}) {
   return (
     <div className="flex flex-col gap-2 bg-gray-200 rounded-md p-4">
       <h2 className="text-xl font-semibold">{wordInfo.word}</h2>

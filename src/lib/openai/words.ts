@@ -1,7 +1,6 @@
 import { zodResponseFormat } from "openai/helpers/zod.mjs";
 import { openai } from "./openaiClient";
 import { z } from "zod";
-import { WordInfo } from "../practiceWords/types";
 import { DateTime } from "luxon";
 
 const PARTS_OF_SPEECH = [
@@ -19,11 +18,11 @@ export const openAIGetWordInfo = async (
   word: string,
   nativeLanguage: string,
   userLevel: string
-): Promise<WordInfo[]> => {
+) => {
   const WordInfoFormat = z.object({
     response: z.array(
       z.object({
-        word: z.enum([word]),
+        word: z.string(),
         translation: z.string(),
         definition: z.object({
           definition: z.string(),
@@ -50,13 +49,14 @@ export const openAIGetWordInfo = async (
    - 3 popular synonyms of the word (Synonyms are the words with the same meaning. Never use related words. Only with the same meaning);
    - Up to 3 the most popular collocations of the word (For example if a word is 'decision' - you can add 'make a decision'). 
    - Up to 3 scenarios when you can use this word (In which situations). For example, for the word 'Apparently' you can return 'When expressing something that seems true based on visible evidence'
+   - Word should be Capitalized (First letter is big).
    User English level is ${userLevel}, so your definition and examples should be fit for this level. If the word is used in more than one part of speech, add all usages in the response.
   The requested word is: [${word}]`;
 
   console.log(prompt);
 
   const response = await openai.beta.chat.completions.parse({
-    model: "gpt-4o",
+    model: "gpt-4o-mini",
     messages: [{ role: "user", content: prompt }],
     response_format: zodResponseFormat(WordInfoFormat, "wordInfo"),
   });

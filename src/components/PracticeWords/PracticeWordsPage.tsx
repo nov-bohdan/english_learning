@@ -6,7 +6,7 @@ import { getWordInfo } from "@/lib/practiceWords/actions";
 import NewWordInfo from "./NewWordInfo";
 import { WordInfo } from "@/lib/practiceWords/types";
 import Word from "./Word";
-import { mapRawToWords } from "@/lib/helpers/words";
+import { mapRawRowToWords } from "@/lib/helpers/words";
 
 export default function PracticeWordsPage({ words }: { words: WordInfo[] }) {
   const [wordsState, setWordsState] = useState<WordInfo[]>(words);
@@ -17,7 +17,7 @@ export default function PracticeWordsPage({ words }: { words: WordInfo[] }) {
   useEffect(() => {
     if (!getWordInfoState) return;
 
-    const mappedWords = mapRawToWords(getWordInfoState);
+    const mappedWords = mapRawRowToWords(getWordInfoState);
     setWordsState((prevWordsState) => [...prevWordsState, ...mappedWords]);
   }, [getWordInfoState, words]);
 

@@ -1,6 +1,8 @@
-import { RawWordInfo, WordInfo } from "../practiceWords/types";
+import { RawWordInfoRow, WordInfo } from "../practiceWords/types";
 
-export const mapRawToWords = (rawWordsInfo: RawWordInfo[]): WordInfo[] => {
+export const mapRawRowToWords = (
+  rawWordsInfo: RawWordInfoRow[]
+): WordInfo[] => {
   return rawWordsInfo.map((rawWordInfo) => {
     if (!rawWordInfo.id || !rawWordInfo.created_at) {
       console.error(rawWordInfo);

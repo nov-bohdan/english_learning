@@ -1,6 +1,7 @@
 import { Database } from "../db/supabase";
 
-export type RawWordInfo = Database["public"]["Tables"]["words"]["Insert"];
+export type RawWordInfoInsert = Database["public"]["Tables"]["words"]["Insert"];
+export type RawWordInfoRow = Database["public"]["Tables"]["words"]["Row"];
 
 export type WordInfo = {
   id?: number;
