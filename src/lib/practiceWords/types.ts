@@ -19,5 +19,6 @@ export type WordInfo = {
   examples: { example: string; translation: string }[];
   synonyms: string[];
   collocations: { collocation: string; translation: string }[];
+  when_to_use: { scenario: string; translation: string }[];
   created_at: string;
 };

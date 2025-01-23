@@ -18,15 +18,15 @@ export default function PracticeWordsPage({ words }: { words: WordInfo[] }) {
     if (!getWordInfoState) return;
 
     const mappedWords = mapRawToWords(getWordInfoState);
-    setWordsState(mappedWords);
-  }, [getWordInfoState]);
+    setWordsState((prevWordsState) => [...prevWordsState, ...mappedWords]);
+  }, [getWordInfoState, words]);
 
   return (
     <div className="flex flex-row gap-4 w-full">
       {/* LEFT PANEL */}
       <div className="bg-gray-200 rounded-md p-4 w-1/4 max-h-[500px]">
         <h2 className="text-bold text-3xl">Saved words</h2>
-        {words.map((word) => (
+        {wordsState.map((word) => (
           <Word key={`${word.word}-${word.part_of_speech}`} word={word} />
         ))}
       </div>
@@ -40,7 +40,7 @@ export default function PracticeWordsPage({ words }: { words: WordInfo[] }) {
           />
         </div>
         {/* NEW WORD INFO */}
-        {wordsState?.map((wordInfo, index) => {
+        {getWordInfoState?.map((wordInfo, index) => {
           return <NewWordInfo key={index} wordInfo={wordInfo} />;
         })}
       </div>

@@ -1,6 +1,6 @@
-import { WordInfo } from "@/lib/practiceWords/types";
+import { RawWordInfo } from "@/lib/practiceWords/types";
 
-export default function NewWordInfo({ wordInfo }: { wordInfo: WordInfo }) {
+export default function NewWordInfo({ wordInfo }: { wordInfo: RawWordInfo }) {
   return (
     <div className="flex flex-col gap-2 bg-gray-200 rounded-md p-4">
       <h2 className="text-xl font-semibold">{wordInfo.word}</h2>
@@ -35,6 +35,17 @@ export default function NewWordInfo({ wordInfo }: { wordInfo: WordInfo }) {
           return (
             <p key={collocation.collocation}>
               {collocation.collocation} - {collocation.translation}
+            </p>
+          );
+        })}
+      </div>
+      <div>
+        <b>When to use:</b>
+        <br />
+        {wordInfo.when_to_use.map((scenario) => {
+          return (
+            <p key={scenario.scenario}>
+              {scenario.scenario} - {scenario.translation}
             </p>
           );
         })}

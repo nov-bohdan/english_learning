@@ -119,6 +119,7 @@ export type Database = {
           synonyms: string[];
           translation: string;
           word: string;
+          when_to_use: { scenario: string; translation: string }[];
           created_at: string;
         };
         Insert: {
@@ -137,6 +138,7 @@ export type Database = {
             | "interjection";
           synonyms: string[];
           translation: string;
+          when_to_use: { scenario: string; translation: string }[];
           word: string;
           created_at?: string;
         };
@@ -156,6 +158,7 @@ export type Database = {
             | "interjection";
           synonyms?: string[];
           translation?: string;
+          when_to_use?: { scenario: string; translation: string }[];
           word?: string;
           created_at?: string;
         };

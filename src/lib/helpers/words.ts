@@ -16,6 +16,7 @@ export const mapRawToWords = (rawWordsInfo: RawWordInfo[]): WordInfo[] => {
       synonyms: rawWordInfo.synonyms,
       collocations: rawWordInfo.collocations,
       created_at: rawWordInfo.created_at,
+      when_to_use: rawWordInfo.when_to_use,
     };
   });
 };

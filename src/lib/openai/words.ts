@@ -37,11 +37,20 @@ export const openAIGetWordInfo = async (
         collocations: z.array(
           z.object({ collocation: z.string(), translation: z.string() })
         ),
+        when_to_use: z.array(
+          z.object({ scenario: z.string(), translation: z.string() })
+        ),
       })
     ),
   });
 
-  const prompt = `You are an AI English tutor that is created to enahce user learning experience. You will be provided with a word that user wants to learn. Your goal is to return an information about the word. The information includes translation to ${nativeLanguage}, definition of the word, 3 examples of using the word (Everyday sentences with the word), 3 popular synonyms of the word (Synonyms are the words with the same meaning. Never use related words. Only with the same meaning), and up to 3 the most popular collocations of the word (For example if a word is 'decision' - you can add 'make a decision'). User English level is ${userLevel}, so your definition and examples should be fit for this level. If the word is used in more than one part of speech, add all usages in the response.
+  const prompt = `You are an AI English tutor that is created to enahce user learning experience. You will be provided with a word that user wants to learn. Your goal is to return an information about the word. The information includes following:
+   - Translation to ${nativeLanguage}, definition of the word;
+   - 3 examples of using the word (Everyday sentences with the word);
+   - 3 popular synonyms of the word (Synonyms are the words with the same meaning. Never use related words. Only with the same meaning);
+   - Up to 3 the most popular collocations of the word (For example if a word is 'decision' - you can add 'make a decision'). 
+   - Up to 3 scenarios when you can use this word (In which situations). For example, for the word 'Apparently' you can return 'When expressing something that seems true based on visible evidence'
+   User English level is ${userLevel}, so your definition and examples should be fit for this level. If the word is used in more than one part of speech, add all usages in the response.
   The requested word is: [${word}]`;
 
   console.log(prompt);
@@ -51,6 +60,7 @@ export const openAIGetWordInfo = async (
     messages: [{ role: "user", content: prompt }],
     response_format: zodResponseFormat(WordInfoFormat, "wordInfo"),
   });
+  console.log("Got response");
 
   if (!response.choices[0].message.parsed?.response) {
     throw new Error("AI Get WordInfo Error");
