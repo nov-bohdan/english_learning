@@ -17,8 +17,10 @@ export async function getWordInfo(
   const savedWords: RawWordInfoRow[] = [];
   for (const wordInfo of wordInfos) {
     const dateString = DateTime.now().toISO();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { popularity, ...rest } = wordInfo;
     const formattedWordInfo: RawWordInfoInsert = {
-      ...wordInfo,
+      ...rest,
       confident_score: 0.0,
       last_repetitions: { date: dateString, count: 0 },
       created_at: dateString,

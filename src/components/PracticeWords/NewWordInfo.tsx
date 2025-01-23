@@ -7,7 +7,10 @@ export default function NewWordInfo({
 }) {
   return (
     <div className="flex flex-col gap-2 bg-gray-200 rounded-md p-4">
-      <h2 className="text-xl font-semibold">{wordInfo.word}</h2>
+      <h2 className="text-xl font-semibold">
+        {wordInfo.word}{" "}
+        <span className="italic text-sm">({wordInfo.part_of_speech})</span>
+      </h2>
       <p className="font-semibold">{wordInfo.translation}</p>
       <p>
         <b>Definition:</b>
@@ -16,7 +19,6 @@ export default function NewWordInfo({
         <br />
         {wordInfo.definition.translation}
       </p>
-      <p className="italic">{wordInfo.part_of_speech}</p>
       <div>
         <b>Examples:</b>
         {wordInfo.examples.map((example) => {

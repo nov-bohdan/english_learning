@@ -21,6 +21,10 @@ const getWords = async (): Promise<RawWordInfoRow[]> => {
   return data as RawWordInfoRow[];
 };
 
-const dbWords = { saveWord, getWords };
+const getWordsToPractice = async (): Promise<RawWordInfoRow[]> => {
+  return await getWords();
+};
+
+const dbWords = { saveWord, getWords, getWordsToPractice };
 
 export default dbWords;

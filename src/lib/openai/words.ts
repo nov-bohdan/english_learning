@@ -28,6 +28,7 @@ export const openAIGetWordInfo = async (
           translation: z.string(),
         }),
         part_of_speech: z.enum(PARTS_OF_SPEECH),
+        popularity: z.number(),
         examples: z.array(
           z.object({ example: z.string(), translation: z.string() })
         ),
@@ -49,7 +50,9 @@ export const openAIGetWordInfo = async (
    - Up to 3 the most popular collocations of the word (For example if a word is 'decision' - you can add 'make a decision'). 
    - Up to 3 scenarios when you can use this word (In which situations). For example, for the word 'Apparently' you can return 'When expressing something that seems true based on visible evidence'
    - Word should be Capitalized (First letter is big).
-   User English level is ${userLevel}, so your definition and examples should be fit for this level. If the word is used in more than one part of speech, add all usages in the response.
+   - Popularity parameter measures popularity of the given part of speech. For example, if the word is used both as verb and as noun, you can return 70% for verb and 30% for noun. Total must be 100%.
+   - If the word is used in more than one part of speech, add all usages in the response. Even if other parts of speech used much more less, you should return them anyway, to give the user all available information.
+   User English level is ${userLevel}, so your definition and examples should be fit for this level.
   The requested word is: [${word}]`;
 
   console.log(prompt);
@@ -66,5 +69,6 @@ export const openAIGetWordInfo = async (
   }
 
   const parsedResponse = response.choices[0].message.parsed.response;
+  console.log(parsedResponse);
   return parsedResponse;
 };
