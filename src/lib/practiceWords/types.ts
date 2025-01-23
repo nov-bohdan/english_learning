@@ -21,5 +21,7 @@ export type WordInfo = {
   synonyms: string[];
   collocations: { collocation: string; translation: string }[];
   when_to_use: { scenario: string; translation: string }[];
+  confident_score: number;
+  last_repetitions: { date: string; count: number };
   created_at: string;
 };

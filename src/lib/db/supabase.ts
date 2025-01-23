@@ -119,6 +119,8 @@ export type Database = {
           synonyms: string[];
           translation: string;
           word: string;
+          confident_score: number;
+          last_repetitions: { date: string; count: number };
           when_to_use: { scenario: string; translation: string }[];
           created_at: string;
         };
@@ -140,6 +142,8 @@ export type Database = {
           translation: string;
           when_to_use: { scenario: string; translation: string }[];
           word: string;
+          confident_score: number;
+          last_repetitions: { date: string; count: number };
           created_at?: string;
         };
         Update: {
@@ -160,6 +164,8 @@ export type Database = {
           translation?: string;
           when_to_use?: { scenario: string; translation: string }[];
           word?: string;
+          confident_score?: number;
+          last_repetitions?: { date: string; count: number };
           created_at?: string;
         };
         Relationships: [];

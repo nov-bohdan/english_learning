@@ -18,6 +18,8 @@ export const mapRawRowToWords = (
       synonyms: rawWordInfo.synonyms,
       collocations: rawWordInfo.collocations,
       created_at: rawWordInfo.created_at,
+      confident_score: rawWordInfo.confident_score,
+      last_repetitions: rawWordInfo.last_repetitions,
       when_to_use: rawWordInfo.when_to_use,
     };
   });

@@ -1,7 +1,6 @@
 import { zodResponseFormat } from "openai/helpers/zod.mjs";
 import { openai } from "./openaiClient";
 import { z } from "zod";
-import { DateTime } from "luxon";
 
 const PARTS_OF_SPEECH = [
   "noun",
@@ -66,8 +65,6 @@ export const openAIGetWordInfo = async (
     throw new Error("AI Get WordInfo Error");
   }
 
-  const parsedResponse = response.choices[0].message.parsed.response.map(
-    (response) => ({ ...response, created_at: DateTime.now().toISO() })
-  );
+  const parsedResponse = response.choices[0].message.parsed.response;
   return parsedResponse;
 };

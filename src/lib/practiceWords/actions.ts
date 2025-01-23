@@ -1,8 +1,9 @@
 "use server";
 
+import { DateTime } from "luxon";
 import dbWords from "../db/words";
 import { openAIGetWordInfo } from "../openai/words";
-import { RawWordInfoRow, WordInfo } from "./types";
+import { RawWordInfoInsert, RawWordInfoRow } from "./types";
 
 export async function getWordInfo(
   prevData: unknown,
@@ -12,10 +13,17 @@ export async function getWordInfo(
   if (!word) {
     throw new Error("Word is empty");
   }
-  const wordInfos: WordInfo[] = await openAIGetWordInfo(word, "russian", "A2");
+  const wordInfos = await openAIGetWordInfo(word, "russian", "A2");
   const savedWords: RawWordInfoRow[] = [];
   for (const wordInfo of wordInfos) {
-    const savedWord = await dbWords.saveWord(wordInfo);
+    const dateString = DateTime.now().toISO();
+    const formattedWordInfo: RawWordInfoInsert = {
+      ...wordInfo,
+      confident_score: 0.0,
+      last_repetitions: { date: dateString, count: 0 },
+      created_at: dateString,
+    };
+    const savedWord = await dbWords.saveWord(formattedWordInfo);
     savedWords.push(savedWord);
   }
   return savedWords as RawWordInfoRow[];
