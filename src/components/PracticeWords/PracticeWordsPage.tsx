@@ -25,41 +25,43 @@ export default function PracticeWordsPage({ words }: { words: WordInfo[] }) {
 
   return (
     <div className="flex flex-row gap-4 w-full">
-      {/* LEFT PANEL */}
-      <div className="bg-gray-200 rounded-md p-4 w-1/4 max-h-[500px]">
-        <div className="flex flex-row justify-between items-center">
-          <h2 className="text-bold text-3xl">Saved words</h2>
-          <button
-            type="button"
-            className="bg-blue-500 p-2 text-white rounded-xl font-semibold"
-            onClick={() => setIsPracticeMode(true)}
-          >
-            Start practice
-          </button>
-        </div>
-        {wordsState.map((word) => (
-          <Word key={`${word.word}-${word.part_of_speech}`} word={word} />
-        ))}
-      </div>
-      {/* RIGHT PANEL */}
-      <div className="flex flex-col gap-4 w-3/4">
-        {!isPracticeMode && (
-          <>
-            {/* ADDING NEW WORD */}
-            <div className="bg-gray-200 rounded-md p-4">
-              <NewWordForm
-                getWordInfoAction={getWordInfoAction}
-                getWordInfoPending={getWordInfoPending}
-              />
+      {!isPracticeMode && (
+        <>
+          {/* LEFT PANEL */}
+          <div className="bg-gray-200 rounded-md p-4 w-1/4 max-h-[500px]">
+            <div className="flex flex-row justify-between items-center">
+              <h2 className="text-bold text-3xl">Saved words</h2>
+              <button
+                type="button"
+                className="bg-blue-500 p-2 text-white rounded-xl font-semibold"
+                onClick={() => setIsPracticeMode(true)}
+              >
+                Start practice
+              </button>
             </div>
-            {/* NEW WORD INFO */}
-            {getWordInfoState?.map((wordInfo, index) => {
-              return <NewWordInfo key={index} wordInfo={wordInfo} />;
-            })}
-          </>
-        )}
-        {isPracticeMode && <Practice />}
-      </div>
+            {wordsState.map((word) => (
+              <Word key={`${word.word}-${word.part_of_speech}`} word={word} />
+            ))}
+          </div>
+          {/* RIGHT PANEL */}
+          <div className="flex flex-col gap-4 w-3/4">
+            <>
+              {/* ADDING NEW WORD */}
+              <div className="bg-gray-200 rounded-md p-4">
+                <NewWordForm
+                  getWordInfoAction={getWordInfoAction}
+                  getWordInfoPending={getWordInfoPending}
+                />
+              </div>
+              {/* NEW WORD INFO */}
+              {getWordInfoState?.map((wordInfo, index) => {
+                return <NewWordInfo key={index} wordInfo={wordInfo} />;
+              })}
+            </>
+          </div>
+        </>
+      )}
+      {isPracticeMode && <Practice />}
     </div>
   );
 }

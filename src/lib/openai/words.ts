@@ -13,37 +13,37 @@ const PARTS_OF_SPEECH = [
   "interjection",
 ] as const;
 
+const WordInfoFormat = z.object({
+  response: z.array(
+    z.object({
+      word: z.string(),
+      translation: z.string(),
+      definition: z.object({
+        definition: z.string(),
+        translation: z.string(),
+      }),
+      part_of_speech: z.enum(PARTS_OF_SPEECH),
+      popularity: z.number(),
+      examples: z.array(
+        z.object({ example: z.string(), translation: z.string() })
+      ),
+      synonyms: z.array(z.string()),
+      collocations: z.array(
+        z.object({ collocation: z.string(), translation: z.string() })
+      ),
+      when_to_use: z.array(
+        z.object({ scenario: z.string(), translation: z.string() })
+      ),
+    })
+  ),
+});
+
 export const openAIGetWordInfo = async (
   word: string,
   nativeLanguage: string,
   userLevel: string
 ) => {
-  const WordInfoFormat = z.object({
-    response: z.array(
-      z.object({
-        word: z.string(),
-        translation: z.string(),
-        definition: z.object({
-          definition: z.string(),
-          translation: z.string(),
-        }),
-        part_of_speech: z.enum(PARTS_OF_SPEECH),
-        popularity: z.number(),
-        examples: z.array(
-          z.object({ example: z.string(), translation: z.string() })
-        ),
-        synonyms: z.array(z.string()),
-        collocations: z.array(
-          z.object({ collocation: z.string(), translation: z.string() })
-        ),
-        when_to_use: z.array(
-          z.object({ scenario: z.string(), translation: z.string() })
-        ),
-      })
-    ),
-  });
-
-  const prompt = `You are an AI English tutor that is created to enahce user learning experience. You will be provided with a word that user wants to learn. Your goal is to return an information about the word. The information includes following:
+  const prompt = `You are an AI English tutor that is created to enhance user learning experience. You will be provided with a word that user wants to learn. Your goal is to return an information about the word. The information includes following:
    - Translation to ${nativeLanguage}, definition of the word;
    - 3 examples of using the word (Everyday sentences with the word);
    - 3 popular synonyms of the word (Synonyms are the words with the same meaning. Never use related words. Only with the same meaning);
@@ -58,17 +58,45 @@ export const openAIGetWordInfo = async (
   console.log(prompt);
 
   const response = await openai.beta.chat.completions.parse({
-    model: "gpt-4o-mini",
+    model: "gpt-4o",
     messages: [{ role: "user", content: prompt }],
     response_format: zodResponseFormat(WordInfoFormat, "wordInfo"),
   });
-  console.log("Got response");
 
   if (!response.choices[0].message.parsed?.response) {
     throw new Error("AI Get WordInfo Error");
   }
 
   const parsedResponse = response.choices[0].message.parsed.response;
+  console.log(parsedResponse);
+  return parsedResponse;
+};
+
+const TranslationGradeFormat = z.object({
+  explanation: z.string(),
+  grade: z.number(),
+});
+
+export const gradeUserTranslation = async (
+  word: string,
+  partOfSpeech: string,
+  answer: string
+) => {
+  const prompt = `You are an AI English tutor that is created to enhance user learning experience. User is studying new words and their current task is to translate an English word to his native language OR write a definition of the word (on any language). You will be evaluating his answer. You should return a grade on a 100-point scale and your explanation, why you gave that grade. 
+  Requested word is: [${word} (${partOfSpeech})].
+  User's answer is: [${answer}]`;
+
+  const response = await openai.beta.chat.completions.parse({
+    model: "gpt-4o",
+    messages: [{ role: "user", content: prompt }],
+    response_format: zodResponseFormat(TranslationGradeFormat, "gradeFormat"),
+  });
+
+  if (!response.choices[0].message.parsed) {
+    throw new Error("AI gradeUserTranslation Error");
+  }
+
+  const parsedResponse = response.choices[0].message.parsed;
   console.log(parsedResponse);
   return parsedResponse;
 };

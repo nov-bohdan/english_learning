@@ -2,7 +2,7 @@
 
 import { DateTime } from "luxon";
 import dbWords from "../db/words";
-import { openAIGetWordInfo } from "../openai/words";
+import { gradeUserTranslation, openAIGetWordInfo } from "../openai/words";
 import { RawWordInfoInsert, RawWordInfoRow } from "./types";
 
 export async function getWordInfo(
@@ -29,4 +29,19 @@ export async function getWordInfo(
     savedWords.push(savedWord);
   }
   return savedWords as RawWordInfoRow[];
+}
+
+export async function checkWordTranslation(
+  prevData: unknown,
+  formData: FormData
+) {
+  const word = formData.get("word")?.toString();
+  const partOfSpeech = formData.get("part_of_speech")?.toString();
+  const answer = formData.get("definition_or_translation")?.toString();
+  if (!word || !partOfSpeech || !answer) {
+    throw new Error("Invalid word or answer");
+  }
+
+  const result = await gradeUserTranslation(word, partOfSpeech, answer);
+  return result;
 }
