@@ -1,6 +1,7 @@
 "use client";
 
 import { checkWordTranslation } from "@/lib/practiceWords/actions";
+import { createTask } from "@/lib/practiceWords/createTasks";
 import { WordInfo } from "@/lib/practiceWords/types";
 import { useActionState, useEffect, useState } from "react";
 export default function Practice() {
@@ -52,7 +53,8 @@ export default function Practice() {
   return (
     <div className="bg-gray-200 rounded-md p-4 flex flex-col items-center gap-4 w-full">
       <h1 className="font-semibold text-3xl">Practice</h1>
-      <div className="border-2 border-gray-400 rounded-md p-4 flex flex-col items-center bg-blue-200 gap-2">
+      {createTask(currentWord, "EN_RU")}
+      {/* <div className="border-2 border-gray-400 rounded-md p-4 flex flex-col items-center bg-blue-200 gap-2">
         <h2 className="font-semibold">
           Word: {currentWord.word}{" "}
           <span className="italic text-sm font-normal">
@@ -105,23 +107,33 @@ export default function Practice() {
                 </p>
               </div>
             )}
-            <button
-              type="button"
-              className="bg-yellow-500 rounded-md p-4 text-white font-semibold text-lg disabled:bg-gray-400 disabled:bg-opacity-50 disabled:cursor-not-allowed w-full"
-              disabled={checkWordTranslationIsPending}
-              onClick={() => {
-                if (currentPracticeIndex + 1 >= wordsToPractice.length) {
-                  return;
-                }
-                setIsShowingAnswer(false);
-                setCurrentPracticeIndex((i) => i + 1);
-              }}
-            >
-              Next
-            </button>
+            {currentPracticeIndex + 1 >= wordsToPractice.length ? (
+              <button
+                type="button"
+                className="bg-orange-500 rounded-md p-4 text-white font-semibold text-lg w-full"
+                onClick={() => {}}
+              >
+                Finish practice
+              </button>
+            ) : (
+              <button
+                type="button"
+                className="bg-yellow-500 rounded-md p-4 text-white font-semibold text-lg disabled:bg-gray-400 disabled:bg-opacity-50 disabled:cursor-not-allowed w-full"
+                disabled={checkWordTranslationIsPending}
+                onClick={() => {
+                  if (currentPracticeIndex + 1 >= wordsToPractice.length) {
+                    return;
+                  }
+                  setIsShowingAnswer(false);
+                  setCurrentPracticeIndex((i) => i + 1);
+                }}
+              >
+                Next
+              </button>
+            )}
           </>
         )}
-      </div>
+      </div> */}
     </div>
   );
 }

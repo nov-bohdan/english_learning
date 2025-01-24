@@ -73,7 +73,6 @@ export const openAIGetWordInfo = async (
 };
 
 const TranslationGradeFormat = z.object({
-  explanation: z.string(),
   grade: z.number(),
 });
 
@@ -82,7 +81,7 @@ export const gradeUserTranslation = async (
   partOfSpeech: string,
   answer: string
 ) => {
-  const prompt = `You are an AI English tutor that is created to enhance user learning experience. User is studying new words and their current task is to translate an English word to his native language OR write a definition of the word (on any language). You will be evaluating his answer. You should return a grade on a 100-point scale and your explanation, why you gave that grade. 
+  const prompt = `You are an AI English tutor that is created to enhance user learning experience. User is studying new words and their current task is to translate an English word to his native language OR write a definition of the word (on any language). You will be evaluating his answer. You should return a grade on a 100-point scale. 
   Requested word is: [${word} (${partOfSpeech})].
   User's answer is: [${answer}]`;
 
