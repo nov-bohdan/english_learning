@@ -2,7 +2,13 @@ import { useActionState, useEffect, useState } from "react";
 import { WordInfo } from "./types";
 import { checkWordTranslation } from "./actions";
 
-function EnRuTask({ word }: { word: WordInfo }) {
+function EnRuTask({
+  word,
+  callback,
+}: {
+  word: WordInfo;
+  callback: () => void;
+}) {
   const [isShowingAnswer, setIsShowingAnswer] = useState<boolean>(false);
   const [
     checkWordTranslationState,
@@ -13,8 +19,9 @@ function EnRuTask({ word }: { word: WordInfo }) {
   useEffect(() => {
     if (checkWordTranslationState) {
       setIsShowingAnswer(true);
+      callback();
     }
-  }, [checkWordTranslationState]);
+  }, [checkWordTranslationState, callback]);
 
   return (
     <>
@@ -78,9 +85,16 @@ function EnRuTask({ word }: { word: WordInfo }) {
   );
 }
 
-export function createTask(word: WordInfo, taskType: "EN_RU") {
+export function createTask(
+  word: WordInfo,
+  taskType: "EN_RU",
+  callback: () => void,
+  index: number
+) {
   switch (taskType) {
     case "EN_RU":
-      return <EnRuTask word={word} />;
+      return (
+        <EnRuTask key={`${word}-${index}`} word={word} callback={callback} />
+      );
   }
 }
