@@ -119,8 +119,6 @@ export type Database = {
           synonyms: string[];
           translation: string;
           word: string;
-          confident_score: number;
-          last_repetitions: { date: string; count: number };
           when_to_use: { scenario: string; translation: string }[];
           created_at: string;
         };
@@ -142,8 +140,6 @@ export type Database = {
           translation: string;
           when_to_use: { scenario: string; translation: string }[];
           word: string;
-          confident_score: number;
-          last_repetitions: { date: string; count: number };
           created_at?: string;
         };
         Update: {
@@ -164,11 +160,70 @@ export type Database = {
           translation?: string;
           when_to_use?: { scenario: string; translation: string }[];
           word?: string;
-          confident_score?: number;
-          last_repetitions?: { date: string; count: number };
           created_at?: string;
         };
         Relationships: [];
+      };
+      user_task_progress: {
+        Row: {
+          id: number;
+          last_practiced: string;
+          progress_id: number;
+          score: number;
+          task_type: string;
+        };
+        Insert: {
+          id?: number;
+          last_practiced?: string;
+          progress_id: number;
+          score: number;
+          task_type: string;
+        };
+        Update: {
+          id?: number;
+          last_practiced?: string;
+          progress_id?: number;
+          score?: number;
+          task_type?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "user_task_progress_progress_id_fkey";
+            columns: ["progress_id"];
+            isOneToOne: false;
+            referencedRelation: "user_word_progress";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
+      user_word_progress: {
+        Row: {
+          id: number;
+          next_review_date: string;
+          user_id: number;
+          word_id: number;
+        };
+        Insert: {
+          id?: number;
+          next_review_date?: string;
+          user_id: number;
+          word_id: number;
+        };
+        Update: {
+          id?: number;
+          next_review_date?: string;
+          user_id?: number;
+          word_id?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "user_word_progress_word_id_fkey";
+            columns: ["word_id"];
+            isOneToOne: false;
+            referencedRelation: "words";
+            referencedColumns: ["id"];
+          }
+        ];
       };
     };
     Views: {

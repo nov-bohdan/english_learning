@@ -21,8 +21,6 @@ export async function getWordInfo(
     const { popularity, ...rest } = wordInfo;
     const formattedWordInfo: RawWordInfoInsert = {
       ...rest,
-      confident_score: 0.0,
-      last_repetitions: { date: dateString, count: 0 },
       created_at: dateString,
     };
     const savedWord = await dbWords.saveWord(formattedWordInfo);
