@@ -126,7 +126,12 @@ export const gradeRuEnTranslation = async (
 
 const MakeSentenceGradeFormat = z.object({
   grade: z.number(),
-  mistakes: z.array(z.string()),
+  mistakes: z.array(
+    z.object({
+      mistake: z.string(),
+      translation: z.string(),
+    })
+  ),
   correct_sentence: z.string(),
 });
 

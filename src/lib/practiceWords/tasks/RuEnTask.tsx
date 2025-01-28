@@ -49,7 +49,7 @@ export default function RuEnTask({
             <input
               type="text"
               name="translation"
-              className="p-4 border-2 border-gray-200 rounded-md"
+              className="w-full p-4 border-2 border-gray-200 rounded-md"
             />
             <button
               type="submit"
@@ -73,7 +73,7 @@ export default function RuEnTask({
           )}
           {checkWordTranslationState.grade < 80 && (
             <div className="bg-red-400 rounded-md p-4 w-full">
-              <p>
+              <p className="">
                 Your answer is incorrect! Your grade for this answer is{" "}
                 {checkWordTranslationState.grade}%. Correct answer is:{" "}
                 <span className="font-bold">{word.word}</span>

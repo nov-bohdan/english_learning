@@ -1,4 +1,4 @@
-import {nextui} from '@nextui-org/theme';
+// import {nextui} from '@nextui-org/theme';
 import type { Config } from "tailwindcss";
 
 export default {
@@ -6,7 +6,8 @@ export default {
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
-    "./node_modules/@nextui-org/theme/dist/components/(calendar|button|ripple|spinner).js"
+    "./src/lib/practiceWords/**/*.{js,ts,jsx,tsx,mdx}",
+    // "./node_modules/@nextui-org/theme/dist/components/(calendar|button|ripple|spinner).js"
   ],
   theme: {
     extend: {
@@ -16,5 +17,5 @@ export default {
       },
     },
   },
-  plugins: [nextui()],
+  // plugins: [nextui()],
 } satisfies Config;

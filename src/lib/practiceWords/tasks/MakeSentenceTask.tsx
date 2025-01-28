@@ -12,12 +12,7 @@ export default function MakeSentenceTask({
   callback: () => void;
 }) {
   const TASK_DESCRIPTION =
-    `Составьте предложение со словом “${word.word}” (${word.part_of_speech}), упомянув:
-
-    Кто? (кто или что делает)
-    Что происходит?
-    Где это происходит?
-    Когда это происходит?
+    `Составьте предложение со словом “${word.word}” (${word.part_of_speech}), используя минимум 6 слов.
     Пример: “Every morning, I take the early train from my hometown to the city”` as const;
   const [isShowingAnswer, setIsShowingAnswer] = useState<boolean>(false);
   const [
@@ -65,7 +60,7 @@ export default function MakeSentenceTask({
             <input
               type="text"
               name="sentence"
-              className="p-4 border-2 border-gray-200 rounded-md w-full"
+              className="w-full p-4 border-2 border-gray-200 rounded-md"
             />
             <button
               type="submit"
@@ -90,7 +85,9 @@ export default function MakeSentenceTask({
                   <p>Here are some corrections:</p>
                   <ul>
                     {checkWordTranslationState.mistakes.map((mistake) => (
-                      <li key={mistake}>{mistake}</li>
+                      <li key={mistake.mistake}>
+                        {mistake.mistake} - {mistake.translation}
+                      </li>
                     ))}
                   </ul>
                   <p>
@@ -108,7 +105,9 @@ export default function MakeSentenceTask({
                 {checkWordTranslationState.grade}%. Your mistakes:
                 <ul>
                   {checkWordTranslationState.mistakes.map((mistake) => (
-                    <li key={mistake}>{mistake}</li>
+                    <li key={mistake.mistake}>
+                      {mistake.mistake} - {mistake.translation}
+                    </li>
                   ))}
                 </ul>
               </p>

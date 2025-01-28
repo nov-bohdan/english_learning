@@ -39,7 +39,7 @@ export default function EnRuTask({
         </h2>
         {(!checkWordTranslationState || !isShowingAnswer) && (
           <form action={checkWordTranslationAction} autoComplete="off">
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2 items-center">
               <label htmlFor="definition_or_translation">
                 Write a translation or a definition of the word on any language
               </label>
@@ -52,11 +52,11 @@ export default function EnRuTask({
               <input
                 type="text"
                 name="definition_or_translation"
-                className="p-4 border-2 border-gray-200 rounded-md max-w-[400px] w-full"
+                className="w-full p-4 border-2 border-gray-200 rounded-md"
               />
               <button
                 type="submit"
-                className="bg-blue-500 rounded-md p-4 text-white font-semibold text-lg disabled:bg-gray-400 disabled:bg-opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-blue-500 rounded-md p-4 text-white font-semibold text-lg disabled:bg-gray-400 disabled:bg-opacity-50 disabled:cursor-not-allowed"
                 disabled={checkWordTranslationIsPending}
               >
                 Check

@@ -43,24 +43,39 @@ export async function getWordInfo(
   return savedWords as RawWordInfoRow[];
 }
 
+function adjustScore(score: number, grade: number) {
+  const maxGrade = 79; // The highest grade for incorrect answer
+  const maxDeduction = 20; // Deduction when grade = 0
+  const minDeduction = 3; // Deduction when grade = 79
+
+  let newScore = null;
+  if (isAnswerCorrect(grade)) {
+    newScore = score + grade / 5;
+  } else {
+    // Calculate the adjustment factor based on grade
+    const deduction =
+      maxDeduction - (maxDeduction - minDeduction) * (grade / maxGrade);
+
+    // Calculate the new score
+    newScore = score - deduction;
+  }
+
+  return newScore;
+}
+
 async function updateScore(
   taskProgressId: number,
   grade: number,
   score: number
 ) {
-  let newScore = null;
-  if (isAnswerCorrect(grade)) {
-    newScore = score + grade / 5;
-  } else {
-    newScore = score - grade / 5 >= 0 ? score - grade / 5 : 0;
-  }
+  const newScore = adjustScore(score, grade);
   await dbWords.updateUserTaskProgress(taskProgressId, newScore);
   return newScore;
 }
 
 async function updateNextReviewDate(wordProgressId: number, score: number) {
   let newReviewDate = null;
-  if (score < 20) {
+  if (score < 16) {
     newReviewDate = DateTime.now().plus({ minutes: 1 });
   } else if (score < 40) {
     newReviewDate = DateTime.now().plus({ hours: 1 });
