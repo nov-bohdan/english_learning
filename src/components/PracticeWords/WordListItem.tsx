@@ -4,7 +4,7 @@ import { WordInfo } from "@/lib/practiceWords/types";
 import ProgressBar from "./ProgressBar";
 import { DateTime } from "luxon";
 
-export default function Word({ word }: { word: WordInfo }) {
+export default function WordListItem({ word }: { word: WordInfo }) {
   const diff = DateTime.fromISO(word.next_review_date)
     .diffNow(["hours", "minutes"])
     .toObject();

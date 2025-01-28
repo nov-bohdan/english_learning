@@ -40,19 +40,6 @@ export default function Practice({
     { taskName: (typeof TASK_TYPES)[number]; enabled: boolean }[]
   >(TASK_TYPES.map((task_type) => ({ taskName: task_type, enabled: true })));
 
-  // useEffect(() => {
-  //   async function fetchWords() {
-  //     setIsLoading(true);
-  //     const res = await fetch("/get_tasks_to_show");
-  //     const tasks: Task[] = await res.json();
-  //     shuffle(tasks);
-  //     setTasksToPractice(tasks);
-  //     console.log(tasks);
-  //     setIsLoading(false);
-  //   }
-  //   fetchWords();
-  // }, []);
-
   const handleStartPractice = () => {
     async function fetchWords() {
       setIsLoading(true);
