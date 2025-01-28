@@ -2,6 +2,7 @@ import { RawWordInfoRow, Task } from "./types";
 import EnRuTask from "./tasks/EnRuTask";
 import RuEnTask from "./tasks/RuEnTask";
 import MakeSentenceTask from "./tasks/MakeSentenceTask";
+import DefinitionToEnTask from "./tasks/DefinitionToEnTask";
 
 export function createTask(
   word: RawWordInfoRow,
@@ -31,6 +32,15 @@ export function createTask(
     case "MAKE_SENTENCE":
       return (
         <MakeSentenceTask
+          key={`${word}-${index}`}
+          word={word}
+          task={task}
+          callback={callback}
+        />
+      );
+    case "DEFINITION_TO_EN":
+      return (
+        <DefinitionToEnTask
           key={`${word}-${index}`}
           word={word}
           task={task}

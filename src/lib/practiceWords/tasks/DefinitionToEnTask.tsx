@@ -1,8 +1,8 @@
 import { useState, useActionState, useEffect } from "react";
-import { checkEnRuTranslation } from "../actions";
+import { checkDefinitionToEn } from "../actions";
 import { RawWordInfoRow, Task } from "../types";
 
-export default function EnRuTask({
+export default function DefinitionToEnTask({
   word,
   task,
   callback,
@@ -17,7 +17,7 @@ export default function EnRuTask({
     checkUserAnswerAction,
     checkUserAnswerIsPending,
   ] = useActionState(
-    checkEnRuTranslation.bind(null, task.id, task.progress_id, task.score),
+    checkDefinitionToEn.bind(null, task.id, task.progress_id, task.score),
     undefined
   );
 
@@ -32,7 +32,8 @@ export default function EnRuTask({
     <>
       <div className="border-2 border-gray-400 rounded-md p-4 flex flex-col items-center bg-blue-200 gap-2">
         <h2 className="font-semibold">
-          Word: {word.word}{" "}
+          Definition: {word.definition.definition} (
+          {word.definition.translation}){" "}
           <span className="italic text-sm font-normal">
             ({word.part_of_speech})
           </span>
@@ -40,10 +41,14 @@ export default function EnRuTask({
         {(!checkUserAnswerState || !isShowingAnswer) && (
           <form action={checkUserAnswerAction} autoComplete="off">
             <div className="flex flex-col gap-2 items-center">
-              <label htmlFor="definition_or_translation">
-                Write a translation or a definition of the word on any language
+              <label htmlFor="answer">
+                Write an English word that matches this definition
               </label>
-              <input type="hidden" value={word.word} name="word" />
+              <input
+                type="hidden"
+                value={word.definition.definition}
+                name="definition"
+              />
               <input
                 type="hidden"
                 value={word.part_of_speech}
@@ -51,7 +56,7 @@ export default function EnRuTask({
               />
               <input
                 type="text"
-                name="definition_or_translation"
+                name="answer"
                 className="w-full p-4 border-2 border-gray-200 rounded-md"
               />
               <button
@@ -79,7 +84,7 @@ export default function EnRuTask({
                 <p>
                   Your answer is incorrect! Your grade for this answer is{" "}
                   {checkUserAnswerState.grade}%. Correct answer is:{" "}
-                  <span className="font-bold">{word.translation}</span>
+                  <span className="font-bold">{word.word}</span>
                 </p>
               </div>
             )}

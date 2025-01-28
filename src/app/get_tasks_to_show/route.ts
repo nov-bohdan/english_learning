@@ -1,15 +1,16 @@
 import dbWords from "@/lib/db/words";
 import { Task } from "@/lib/practiceWords/types";
-
-const TASK_TYPES = ["EN_RU", "RU_EN", "MAKE_SENTENCE"] as const;
+import { TASK_TYPES } from "@/lib/practiceWords/tasks/TaskTypes";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function GET(request: Request): Promise<Response> {
+export async function POST(request: Request): Promise<Response> {
+  const taskTypesToUse: { task_types: (typeof TASK_TYPES)[number][] } =
+    await request.json();
   const tasksToShow: Task[] = [];
   const wordProgresses = await dbWords.getWordsToPractice();
   for (const wordProgress of wordProgresses) {
     const wordTasks = await dbWords.getWordTaskProgresses(wordProgress.id);
-    for (const taskType of TASK_TYPES) {
+    for (const taskType of taskTypesToUse.task_types) {
       const matchingTask = wordTasks.find(
         (currentTask) => currentTask.task_type === taskType
       );

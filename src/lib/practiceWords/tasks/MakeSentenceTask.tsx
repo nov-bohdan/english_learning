@@ -16,9 +16,9 @@ export default function MakeSentenceTask({
     Пример: “Every morning, I take the early train from my hometown to the city”` as const;
   const [isShowingAnswer, setIsShowingAnswer] = useState<boolean>(false);
   const [
-    checkWordTranslationState,
-    checkWordTranslationAction,
-    checkWordTranslationIsPending,
+    checkUserAnswerState,
+    checkUserAnswerAction,
+    checkUserAnswerIsPending,
   ] = useActionState(
     checkMakeSentence.bind(
       null,
@@ -31,11 +31,11 @@ export default function MakeSentenceTask({
   );
 
   useEffect(() => {
-    if (checkWordTranslationState) {
+    if (checkUserAnswerState) {
       setIsShowingAnswer(true);
       callback();
     }
-  }, [checkWordTranslationState, callback]);
+  }, [checkUserAnswerState, callback]);
 
   return (
     <div className="border-2 border-gray-400 rounded-md p-4 flex flex-col items-center bg-blue-200 gap-2">
@@ -45,8 +45,8 @@ export default function MakeSentenceTask({
           ({word.part_of_speech})
         </span>
       </h2>
-      {(!checkWordTranslationState || !isShowingAnswer) && (
-        <form action={checkWordTranslationAction} autoComplete="off">
+      {(!checkUserAnswerState || !isShowingAnswer) && (
+        <form action={checkUserAnswerAction} autoComplete="off">
           <div className="flex flex-col gap-2 items-center">
             <label htmlFor="translation" className="whitespace-pre-wrap">
               <pre>{TASK_DESCRIPTION}</pre>
@@ -65,55 +65,52 @@ export default function MakeSentenceTask({
             <button
               type="submit"
               className="w-full bg-blue-500 rounded-md p-4 text-white font-semibold text-lg disabled:bg-gray-400 disabled:bg-opacity-50 disabled:cursor-not-allowed"
-              disabled={checkWordTranslationIsPending}
+              disabled={checkUserAnswerIsPending}
             >
               Check
             </button>
           </div>
         </form>
       )}
-      {checkWordTranslationState && isShowingAnswer && (
+      {checkUserAnswerState && isShowingAnswer && (
         <>
-          {checkWordTranslationState.grade >= 80 && (
+          {checkUserAnswerState.grade >= 80 && (
             <div className="bg-green-400 rounded-md p-4 w-full">
               <p>
                 Your answer is correct! Your grade for this answer is{" "}
-                {checkWordTranslationState.grade}%
+                {checkUserAnswerState.grade}%
               </p>
-              {checkWordTranslationState.mistakes.length > 0 && (
+              {checkUserAnswerState.mistakes.length > 0 && (
                 <>
                   <p>Here are some corrections:</p>
                   <ul>
-                    {checkWordTranslationState.mistakes.map((mistake) => (
+                    {checkUserAnswerState.mistakes.map((mistake) => (
                       <li key={mistake.mistake}>
                         {mistake.mistake} - {mistake.translation}
                       </li>
                     ))}
                   </ul>
                   <p>
-                    Corrected sentence:{" "}
-                    {checkWordTranslationState.correct_sentence}
+                    Corrected sentence: {checkUserAnswerState.correct_sentence}
                   </p>
                 </>
               )}
             </div>
           )}
-          {checkWordTranslationState.grade < 80 && (
+          {checkUserAnswerState.grade < 80 && (
             <div className="bg-red-400 rounded-md p-4 w-full">
               <p>
                 Your answer is incorrect! Your grade for this answer is{" "}
-                {checkWordTranslationState.grade}%. Your mistakes:
-                <ul>
-                  {checkWordTranslationState.mistakes.map((mistake) => (
-                    <li key={mistake.mistake}>
-                      {mistake.mistake} - {mistake.translation}
-                    </li>
-                  ))}
-                </ul>
+                {checkUserAnswerState.grade}%. Your mistakes:
               </p>
-              <p>
-                Corrected sentence: {checkWordTranslationState.correct_sentence}
-              </p>
+              <ul>
+                {checkUserAnswerState.mistakes.map((mistake) => (
+                  <li key={mistake.mistake}>
+                    {mistake.mistake} - {mistake.translation}
+                  </li>
+                ))}
+              </ul>
+              <p>Corrected sentence: {checkUserAnswerState.correct_sentence}</p>
             </div>
           )}
         </>

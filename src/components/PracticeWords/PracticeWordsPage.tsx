@@ -63,7 +63,9 @@ export default function PracticeWordsPage({ words }: { words: WordInfo[] }) {
           </div>
         </>
       )}
-      {isPracticeMode && <Practice />}
+      {isPracticeMode && (
+        <Practice onFinishPractice={() => setIsPracticeMode(false)} />
+      )}
     </div>
   );
 }

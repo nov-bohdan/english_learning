@@ -107,7 +107,8 @@ export const gradeRuEnTranslation = async (
 ) => {
   const prompt = `You are an AI English tutor that is created to enhance user learning experience. User is studying new words and their current task is to translate a Russian word to English. You will be evaluating his answer. You should return a grade on a 100-point scale. 
   Requested word is: [${word} (${partOfSpeech})].
-  User's answer is: [${answer}]`;
+  User's answer is: [${answer}]
+  User's answer MUST be on English. If it's in other language, it is incorrect`;
 
   const response = await openai.beta.chat.completions.parse({
     model: "gpt-4o",
@@ -117,6 +118,31 @@ export const gradeRuEnTranslation = async (
 
   if (!response.choices[0].message.parsed) {
     throw new Error("AI gradeUserTranslation Error");
+  }
+
+  const parsedResponse = response.choices[0].message.parsed;
+  console.log(parsedResponse);
+  return parsedResponse;
+};
+
+export const gradeDefinitionToEn = async (
+  definition: string,
+  partOfSpeech: string,
+  answer: string
+) => {
+  const prompt = `You are an AI English tutor that is created to enhance user learning experience. User is studying new words and their current task is to write an English word that matches the given definition. You will be evaluating his answer. You should return a grade on a 100-point scale. 
+  Requested definition is: [${definition} (${partOfSpeech})].
+  User's answer is: [${answer}]
+  User's answer MUST be on English. If it's in other language, it is incorrect`;
+
+  const response = await openai.beta.chat.completions.parse({
+    model: "gpt-4o",
+    messages: [{ role: "user", content: prompt }],
+    response_format: zodResponseFormat(TranslationGradeFormat, "gradeFormat"),
+  });
+
+  if (!response.choices[0].message.parsed) {
+    throw new Error("AI gradeDefinitionToEn Error");
   }
 
   const parsedResponse = response.choices[0].message.parsed;
@@ -143,7 +169,8 @@ export const gradeMakeSentence = async (
 ) => {
   const prompt = `You are an AI English tutor that is created to enhance user learning experience. User is studying new words and their current task is the following: [${taskDescription}]. You will be evaluating his answer. You should return a grade on a 100-point scale. User's English level is A2, so fit your answer to their level.
   Requested word is: [${word} (${partOfSpeech})].
-  User's answer is: [${answer}]`;
+  User's answer is: [${answer}]
+  User's answer MUST be on English. If it's in other language, it is incorrect`;
 
   const response = await openai.beta.chat.completions.parse({
     model: "gpt-4o",

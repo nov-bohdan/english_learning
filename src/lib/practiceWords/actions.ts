@@ -60,7 +60,9 @@ function adjustScore(score: number, grade: number) {
     newScore = score - deduction;
   }
 
-  return newScore;
+  if (newScore < 0) newScore = 0;
+
+  return Math.ceil(newScore);
 }
 
 async function updateScore(
@@ -73,15 +75,19 @@ async function updateScore(
   return newScore;
 }
 
-async function updateNextReviewDate(wordProgressId: number, score: number) {
+async function updateNextReviewDate(wordProgressId: number) {
+  const allTaskProgresses = await dbWords.getWordTaskProgresses(wordProgressId);
+  const lowestScore = Math.min(
+    ...allTaskProgresses.map((taskP) => taskP.score)
+  );
   let newReviewDate = null;
-  if (score < 16) {
+  if (lowestScore < 16) {
     newReviewDate = DateTime.now().plus({ minutes: 1 });
-  } else if (score < 40) {
+  } else if (lowestScore < 40) {
     newReviewDate = DateTime.now().plus({ hours: 1 });
-  } else if (score < 60) {
+  } else if (lowestScore < 60) {
     newReviewDate = DateTime.now().plus({ hours: 3 });
-  } else if (score < 80) {
+  } else if (lowestScore < 80) {
     newReviewDate = DateTime.now().plus({ hours: 12 });
   } else {
     newReviewDate = DateTime.now().plus({ days: 2 });
@@ -108,8 +114,8 @@ export async function checkEnRuTranslation(
   }
 
   const result = await gradeEnRuTranslation(word, partOfSpeech, answer);
-  const newScore = await updateScore(taskProgressId, result.grade, score);
-  await updateNextReviewDate(wordProgressId, newScore);
+  await updateScore(taskProgressId, result.grade, score);
+  await updateNextReviewDate(wordProgressId);
   return result;
 }
 
@@ -130,8 +136,8 @@ export async function checkRuEnTranslation(
     throw new Error("invalid wordProgressId");
   }
   const result = await gradeRuEnTranslation(word, partOfSpeech, answer);
-  const newScore = await updateScore(taskProgressId, result.grade, score);
-  await updateNextReviewDate(wordProgressId, newScore);
+  await updateScore(taskProgressId, result.grade, score);
+  await updateNextReviewDate(wordProgressId);
   return result;
 }
 
@@ -158,7 +164,29 @@ export async function checkMakeSentence(
     answer,
     taskDescription
   );
-  const newScore = await updateScore(taskProgressId, result.grade, score);
-  await updateNextReviewDate(wordProgressId, newScore);
+  await updateScore(taskProgressId, result.grade, score);
+  await updateNextReviewDate(wordProgressId);
+  return result;
+}
+
+export async function checkDefinitionToEn(
+  taskProgressId: number,
+  wordProgressId: number | null,
+  score: number,
+  prevData: unknown,
+  formData: FormData
+) {
+  const definition = formData.get("definition")?.toString();
+  const partOfSpeech = formData.get("part_of_speech")?.toString();
+  const answer = formData.get("answer")?.toString();
+  if (!definition || !partOfSpeech || !answer) {
+    throw new Error("Invalid definition or answer");
+  }
+  if (!wordProgressId) {
+    throw new Error("invalid wordProgressId");
+  }
+  const result = await gradeRuEnTranslation(definition, partOfSpeech, answer);
+  await updateScore(taskProgressId, result.grade, score);
+  await updateNextReviewDate(wordProgressId);
   return result;
 }
