@@ -150,7 +150,7 @@ export default function Practice({
         >
           Next
         </button>
-      ) : (
+      ) : currentTaskCompleted ? (
         <button
           type="button"
           className="bg-orange-500 rounded-md p-4 text-white font-semibold text-lg w-full"
@@ -158,6 +158,8 @@ export default function Practice({
         >
           Finish practice
         </button>
+      ) : (
+        ""
       )}
     </div>
   );

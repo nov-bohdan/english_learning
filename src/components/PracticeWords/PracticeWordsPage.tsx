@@ -5,6 +5,7 @@ import { WordInfo } from "@/lib/practiceWords/types";
 import WordListItem from "./WordListItem";
 import Practice from "./Practice";
 import GetWordInfoPanel from "./GetWordInfoPanel";
+import { redirect } from "next/navigation";
 
 export default function PracticeWordsPage({ words }: { words: WordInfo[] }) {
   const [wordsState, setWordsState] = useState<WordInfo[]>(words);
@@ -40,7 +41,7 @@ export default function PracticeWordsPage({ words }: { words: WordInfo[] }) {
         </>
       )}
       {isPracticeMode && (
-        <Practice onFinishPractice={() => setIsPracticeMode(false)} />
+        <Practice onFinishPractice={() => redirect("/words")} />
       )}
     </div>
   );

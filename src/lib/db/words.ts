@@ -118,7 +118,7 @@ const getWords = async (): Promise<RawWordInfoRow[]> => {
   const { data, error } = await client
     .from("user_word_progress")
     .select(
-      `words (*), user_task_progress!inner(
+      `words (*), user_task_progress!left(
         score
       ), next_review_date`
     )
@@ -126,6 +126,8 @@ const getWords = async (): Promise<RawWordInfoRow[]> => {
   if (error) {
     throw new Error(error.message);
   }
+
+  console.log(data);
 
   const words = data.map((dataItem) => ({
     ...dataItem.words,

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use server";
 
 import { DateTime } from "luxon";
@@ -22,24 +23,40 @@ function isAnswerCorrect(grade: number) {
 export async function getWordInfo(
   prevData: unknown,
   formData: FormData
-): Promise<RawWordInfoRow[]> {
+): Promise<RawWordInfoInsert[]> {
   const word = formData.get("word")?.toString();
   if (!word) {
     throw new Error("Word is empty");
   }
   const wordInfos = await openAIGetWordInfo(word, "russian", "A2");
-  const savedWords: RawWordInfoRow[] = [];
+  const savedWords: RawWordInfoInsert[] = [];
   for (const wordInfo of wordInfos) {
     const dateString = DateTime.now().toISO();
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { popularity, ...rest } = wordInfo;
     const formattedWordInfo: RawWordInfoInsert = {
       ...rest,
       created_at: dateString,
     };
-    const savedWord = await dbWords.saveWord(formattedWordInfo);
+    savedWords.push(formattedWordInfo);
+    // const savedWord = await dbWords.saveWord(formattedWordInfo);
+    // savedWords.push(savedWord);
+  }
+  return savedWords as RawWordInfoInsert[];
+}
+
+export async function saveWords(
+  wordInfo: RawWordInfoInsert[],
+  prevData: unknown,
+  formData: FormData
+) {
+  console.log(`Saving ${JSON.stringify(wordInfo)}`);
+  const savedWords: RawWordInfoRow[] = [];
+  for (const word of wordInfo) {
+    const savedWord = await dbWords.saveWord(word);
+    console.log(savedWord);
     savedWords.push(savedWord);
   }
+
   return savedWords as RawWordInfoRow[];
 }
 
