@@ -25,8 +25,6 @@ export const scheduleActivitiesAction = async (
   prevData: unknown,
   formData: FormData
 ) => {
-  console.log("scheduleActivitiesAction");
-  console.log(dates);
   const scheduleInfo = formData.get("schedule_info") as string;
   const datesFormatted = dates.map((date) => DateTime.fromISO(date));
   const activities: RawActivity[] = await dbActivities.getActivities();

@@ -123,3 +123,37 @@ export const gradeRuEnTranslation = async (
   console.log(parsedResponse);
   return parsedResponse;
 };
+
+const MakeSentenceGradeFormat = z.object({
+  grade: z.number(),
+  mistakes: z.array(z.string()),
+  correct_sentence: z.string(),
+});
+
+export const gradeMakeSentence = async (
+  word: string,
+  partOfSpeech: string,
+  answer: string,
+  taskDescription: string
+) => {
+  const prompt = `You are an AI English tutor that is created to enhance user learning experience. User is studying new words and their current task is the following: [${taskDescription}]. You will be evaluating his answer. You should return a grade on a 100-point scale. User's English level is A2, so fit your answer to their level.
+  Requested word is: [${word} (${partOfSpeech})].
+  User's answer is: [${answer}]`;
+
+  const response = await openai.beta.chat.completions.parse({
+    model: "gpt-4o",
+    messages: [{ role: "user", content: prompt }],
+    response_format: zodResponseFormat(
+      MakeSentenceGradeFormat,
+      "makeSentenceGradeFormat"
+    ),
+  });
+
+  if (!response.choices[0].message.parsed) {
+    throw new Error("AI gradeUserTranslation Error");
+  }
+
+  const parsedResponse = response.choices[0].message.parsed;
+  console.log(parsedResponse);
+  return parsedResponse;
+};

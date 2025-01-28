@@ -32,6 +32,17 @@ const getWord = async (
   return data[0];
 };
 
+const calculateAvgProgress = (
+  userTaskProgress: {
+    score: number;
+  }[]
+) => {
+  return Math.floor(
+    userTaskProgress.reduce((sum, item) => sum + item.score, 0) /
+      userTaskProgress.length
+  );
+};
+
 const saveWord = async (word: RawWordInfoInsert): Promise<RawWordInfoRow> => {
   let savedWord = await getWord(word.word, word.part_of_speech);
   if (!savedWord) {
@@ -106,13 +117,21 @@ const addNewUserWordProgress = async (wordId: number, userId: number) => {
 const getWords = async (): Promise<RawWordInfoRow[]> => {
   const { data, error } = await client
     .from("user_word_progress")
-    .select(`words (*)`)
+    .select(
+      `words (*), user_task_progress!inner(
+        score
+      ), next_review_date`
+    )
     .eq("user_id", 1);
   if (error) {
     throw new Error(error.message);
   }
 
-  const words = data.map((dataItem) => dataItem.words);
+  const words = data.map((dataItem) => ({
+    ...dataItem.words,
+    progress: calculateAvgProgress(dataItem.user_task_progress),
+    next_review_date: dataItem.next_review_date,
+  }));
 
   return words as RawWordInfoRow[];
 };
@@ -159,13 +178,30 @@ const updateUserTaskProgress = async (
   taskProgressId: number,
   score: number
 ) => {
-  console.log(taskProgressId);
-  console.log(score);
   const { data, error } = await client
     .from("user_task_progress")
     .update({ score: score, last_practiced: DateTime.now().toISO() })
     .eq("id", taskProgressId)
     .select();
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data[0];
+};
+
+const updateNextReviewDate = async (
+  wordProgressId: number,
+  reviewDate: string
+) => {
+  const { data, error } = await client
+    .from("user_word_progress")
+    .update({
+      next_review_date: reviewDate,
+    })
+    .eq("id", wordProgressId)
+    .select();
+
   if (error) {
     throw new Error(error.message);
   }
@@ -180,6 +216,7 @@ const dbWords = {
   getWordTaskProgresses,
   createNewUserTaskProgress,
   updateUserTaskProgress,
+  updateNextReviewDate,
 };
 
 export default dbWords;

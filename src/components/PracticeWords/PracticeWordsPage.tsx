@@ -39,9 +39,11 @@ export default function PracticeWordsPage({ words }: { words: WordInfo[] }) {
                 Start practice
               </button>
             </div>
-            {wordsState.map((word) => (
-              <Word key={`${word.word}-${word.part_of_speech}`} word={word} />
-            ))}
+            {wordsState
+              .sort((a, b) => b.progress - a.progress)
+              .map((word) => (
+                <Word key={`${word.word}-${word.part_of_speech}`} word={word} />
+              ))}
           </div>
           {/* RIGHT PANEL */}
           <div className="flex flex-col gap-4 w-3/4">

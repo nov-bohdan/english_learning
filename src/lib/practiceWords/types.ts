@@ -1,7 +1,10 @@
 import { Database } from "../db/supabase";
 
 export type RawWordInfoInsert = Database["public"]["Tables"]["words"]["Insert"];
-export type RawWordInfoRow = Database["public"]["Tables"]["words"]["Row"];
+export type RawWordInfoRow = Database["public"]["Tables"]["words"]["Row"] & {
+  progress?: number;
+  next_review_date?: string;
+};
 
 export type WordInfo = {
   id?: number;
@@ -22,6 +25,8 @@ export type WordInfo = {
   collocations: { collocation: string; translation: string }[];
   when_to_use: { scenario: string; translation: string }[];
   created_at: string;
+  progress: number;
+  next_review_date: string;
 };
 
 export type Task = {

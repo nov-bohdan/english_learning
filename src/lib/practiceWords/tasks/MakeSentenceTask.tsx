@@ -1,8 +1,8 @@
 import { useState, useActionState, useEffect } from "react";
-import { checkRuEnTranslation } from "../actions";
+import { checkMakeSentence } from "../actions";
 import { Task, RawWordInfoRow } from "../types";
 
-export default function RuEnTask({
+export default function MakeSentenceTask({
   word,
   task,
   callback,
@@ -11,13 +11,27 @@ export default function RuEnTask({
   task: Task;
   callback: () => void;
 }) {
+  const TASK_DESCRIPTION =
+    `Составьте предложение со словом “${word.word}” (${word.part_of_speech}), упомянув:
+
+    Кто? (кто или что делает)
+    Что происходит?
+    Где это происходит?
+    Когда это происходит?
+    Пример: “Every morning, I take the early train from my hometown to the city”` as const;
   const [isShowingAnswer, setIsShowingAnswer] = useState<boolean>(false);
   const [
     checkWordTranslationState,
     checkWordTranslationAction,
     checkWordTranslationIsPending,
   ] = useActionState(
-    checkRuEnTranslation.bind(null, task.id, task.progress_id, task.score),
+    checkMakeSentence.bind(
+      null,
+      task.id,
+      task.progress_id,
+      task.score,
+      TASK_DESCRIPTION
+    ),
     undefined
   );
 
@@ -31,7 +45,7 @@ export default function RuEnTask({
   return (
     <div className="border-2 border-gray-400 rounded-md p-4 flex flex-col items-center bg-blue-200 gap-2">
       <h2 className="font-semibold">
-        Word: {word.translation}{" "}
+        Word: {word.word}{" "}
         <span className="italic text-sm font-normal">
           ({word.part_of_speech})
         </span>
@@ -39,7 +53,9 @@ export default function RuEnTask({
       {(!checkWordTranslationState || !isShowingAnswer) && (
         <form action={checkWordTranslationAction} autoComplete="off">
           <div className="flex flex-col gap-2 items-center">
-            <label htmlFor="translation">Translate this word to English</label>
+            <label htmlFor="translation" className="whitespace-pre-wrap">
+              <pre>{TASK_DESCRIPTION}</pre>
+            </label>
             <input type="hidden" value={word.translation} name="word" />
             <input
               type="hidden"
@@ -48,8 +64,8 @@ export default function RuEnTask({
             />
             <input
               type="text"
-              name="translation"
-              className="p-4 border-2 border-gray-200 rounded-md"
+              name="sentence"
+              className="p-4 border-2 border-gray-200 rounded-md w-full"
             />
             <button
               type="submit"
@@ -69,14 +85,35 @@ export default function RuEnTask({
                 Your answer is correct! Your grade for this answer is{" "}
                 {checkWordTranslationState.grade}%
               </p>
+              {checkWordTranslationState.mistakes.length > 0 && (
+                <>
+                  <p>Here are some corrections:</p>
+                  <ul>
+                    {checkWordTranslationState.mistakes.map((mistake) => (
+                      <li key={mistake}>{mistake}</li>
+                    ))}
+                  </ul>
+                  <p>
+                    Corrected sentence:{" "}
+                    {checkWordTranslationState.correct_sentence}
+                  </p>
+                </>
+              )}
             </div>
           )}
           {checkWordTranslationState.grade < 80 && (
             <div className="bg-red-400 rounded-md p-4 w-full">
               <p>
                 Your answer is incorrect! Your grade for this answer is{" "}
-                {checkWordTranslationState.grade}%. Correct answer is:{" "}
-                <span className="font-bold">{word.word}</span>
+                {checkWordTranslationState.grade}%. Your mistakes:
+                <ul>
+                  {checkWordTranslationState.mistakes.map((mistake) => (
+                    <li key={mistake}>{mistake}</li>
+                  ))}
+                </ul>
+              </p>
+              <p>
+                Corrected sentence: {checkWordTranslationState.correct_sentence}
               </p>
             </div>
           )}

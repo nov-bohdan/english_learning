@@ -19,9 +19,17 @@ export async function GET(request: Request): Promise<Response> {
           wordProgress.id,
           taskType
         );
-        tasksToShow.push({ ...createdTask, word: wordProgress.words });
+        tasksToShow.push({
+          ...createdTask,
+          word: wordProgress.words,
+          wordProgressId: wordProgress.id,
+        });
       } else {
-        tasksToShow.push({ ...matchingTask, word: wordProgress.words });
+        tasksToShow.push({
+          ...matchingTask,
+          word: wordProgress.words,
+          wordProgressId: wordProgress.id,
+        });
       }
     }
   }

@@ -19,6 +19,8 @@ export const mapRawRowToWords = (
       collocations: rawWordInfo.collocations,
       created_at: rawWordInfo.created_at,
       when_to_use: rawWordInfo.when_to_use,
+      progress: rawWordInfo.progress || 0,
+      next_review_date: rawWordInfo.next_review_date || "",
     };
   });
 };

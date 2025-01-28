@@ -1,13 +1,13 @@
 import { useState, useActionState, useEffect } from "react";
 import { checkEnRuTranslation } from "../actions";
-import { Task, WordInfo } from "../types";
+import { RawWordInfoRow, Task } from "../types";
 
 export default function EnRuTask({
   word,
   task,
   callback,
 }: {
-  word: WordInfo;
+  word: RawWordInfoRow;
   task: Task;
   callback: () => void;
 }) {
@@ -17,7 +17,7 @@ export default function EnRuTask({
     checkWordTranslationAction,
     checkWordTranslationIsPending,
   ] = useActionState(
-    checkEnRuTranslation.bind(null, task.id, task.score),
+    checkEnRuTranslation.bind(null, task.id, task.progress_id, task.score),
     undefined
   );
 
@@ -38,7 +38,7 @@ export default function EnRuTask({
           </span>
         </h2>
         {(!checkWordTranslationState || !isShowingAnswer) && (
-          <form action={checkWordTranslationAction}>
+          <form action={checkWordTranslationAction} autoComplete="off">
             <div className="flex flex-col gap-2">
               <label htmlFor="definition_or_translation">
                 Write a translation or a definition of the word on any language

@@ -1,9 +1,10 @@
-import { Task, WordInfo } from "./types";
+import { RawWordInfoRow, Task } from "./types";
 import EnRuTask from "./tasks/EnRuTask";
 import RuEnTask from "./tasks/RuEnTask";
+import MakeSentenceTask from "./tasks/MakeSentenceTask";
 
 export function createTask(
-  word: WordInfo,
+  word: RawWordInfoRow,
   task: Task,
   callback: () => void,
   index: number
@@ -21,6 +22,15 @@ export function createTask(
     case "RU_EN":
       return (
         <RuEnTask
+          key={`${word}-${index}`}
+          word={word}
+          task={task}
+          callback={callback}
+        />
+      );
+    case "MAKE_SENTENCE":
+      return (
+        <MakeSentenceTask
           key={`${word}-${index}`}
           word={word}
           task={task}

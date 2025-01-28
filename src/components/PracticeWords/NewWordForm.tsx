@@ -6,7 +6,7 @@ export default function NewWordForm({
   getWordInfoPending: boolean;
 }) {
   return (
-    <form action={getWordInfoAction}>
+    <form action={getWordInfoAction} autoComplete="off">
       <div className="flex flex-col gap-4 w-[80%] items-center mx-auto">
         <input
           type="text"
