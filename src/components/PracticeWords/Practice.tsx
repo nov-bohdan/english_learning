@@ -1,19 +1,19 @@
 "use client";
 
 import { createTask } from "@/lib/practiceWords/createTasks";
-import { WordInfo } from "@/lib/practiceWords/types";
+import { Task } from "@/lib/practiceWords/types";
 import { useEffect, useState } from "react";
 export default function Practice() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [wordsToPractice, setWordsToPractice] = useState<WordInfo[]>([]);
+  const [tasksToPractice, setTasksToPractice] = useState<Task[]>([]);
 
   useEffect(() => {
     async function fetchWords() {
       setIsLoading(true);
-      const res = await fetch("/get_words");
-      console.log(res);
-      const words = await res.json();
-      setWordsToPractice(words);
+      const res = await fetch("/get_tasks_to_show");
+      const tasks = await res.json();
+      setTasksToPractice(tasks);
+      console.log(tasks);
       setIsLoading(false);
     }
     fetchWords();
@@ -21,8 +21,8 @@ export default function Practice() {
 
   const [currentTaskCompleted, setCurrentTaskCompleted] =
     useState<boolean>(false);
-  const tasks = wordsToPractice.map((word, index) =>
-    createTask(word, "EN_RU", () => setCurrentTaskCompleted(true), index)
+  const tasks = tasksToPractice.map((task, index) =>
+    createTask(task.word, task, () => setCurrentTaskCompleted(true), index)
   );
   const [currentTaskIndex, setCurrentTaskIndex] = useState<number>(0);
 
@@ -34,7 +34,7 @@ export default function Practice() {
     );
   }
 
-  if (wordsToPractice.length === 0) {
+  if (tasksToPractice.length === 0) {
     return (
       <div className="bg-gray-200 rounded-md p-4 flex flex-col items-center gap-4 w-full">
         <h1 className="font-semibold text-3xl">No words to practice</h1>

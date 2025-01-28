@@ -167,21 +167,21 @@ export type Database = {
       user_task_progress: {
         Row: {
           id: number;
-          last_practiced: string;
+          last_practiced: string | null;
           progress_id: number;
           score: number;
           task_type: string;
         };
         Insert: {
           id?: number;
-          last_practiced?: string;
+          last_practiced?: string | null;
           progress_id: number;
           score: number;
           task_type: string;
         };
         Update: {
           id?: number;
-          last_practiced?: string;
+          last_practiced?: string | null;
           progress_id?: number;
           score?: number;
           task_type?: string;

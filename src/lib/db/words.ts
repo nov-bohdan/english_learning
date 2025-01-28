@@ -50,6 +50,26 @@ const saveWord = async (word: RawWordInfoInsert): Promise<RawWordInfoRow> => {
   return savedWord;
 };
 
+const getUserWordProgressForPractice = async (userId: number, date: string) => {
+  const { data, error } = await client
+    .from("user_word_progress")
+    .select(`*, words (*)`)
+    .eq("user_id", userId)
+    .lt("next_review_date", date);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  if (data.length === 0) {
+    return null;
+  }
+
+  // const words = data.map((dataItem) => dataItem.words);
+
+  return data;
+};
+
 const getUserWordProgress = async (wordId: number, userId: number) => {
   const { data, error } = await client
     .from("user_word_progress")
@@ -97,10 +117,69 @@ const getWords = async (): Promise<RawWordInfoRow[]> => {
   return words as RawWordInfoRow[];
 };
 
-const getWordsToPractice = async (): Promise<RawWordInfoRow[]> => {
-  return await getWords();
+const getWordsToPractice = async () => {
+  const words = await getUserWordProgressForPractice(1, DateTime.now().toISO());
+  return words || [];
 };
 
-const dbWords = { saveWord, getWords, getWordsToPractice };
+const getWordTaskProgresses = async (progressId: number) => {
+  const { data, error } = await client
+    .from("user_task_progress")
+    .select()
+    .eq("progress_id", progressId);
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data;
+};
+
+const createNewUserTaskProgress = async (
+  progressId: number,
+  taskType: string
+) => {
+  const { data, error } = await client
+    .from("user_task_progress")
+    .insert({
+      progress_id: progressId,
+      task_type: taskType,
+      score: 0,
+      last_practiced: null,
+    })
+    .select();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data[0];
+};
+
+const updateUserTaskProgress = async (
+  taskProgressId: number,
+  score: number
+) => {
+  console.log(taskProgressId);
+  console.log(score);
+  const { data, error } = await client
+    .from("user_task_progress")
+    .update({ score: score, last_practiced: DateTime.now().toISO() })
+    .eq("id", taskProgressId)
+    .select();
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data[0];
+};
+
+const dbWords = {
+  saveWord,
+  getWords,
+  getWordsToPractice,
+  getWordTaskProgresses,
+  createNewUserTaskProgress,
+  updateUserTaskProgress,
+};
 
 export default dbWords;

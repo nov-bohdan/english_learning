@@ -23,3 +23,12 @@ export type WordInfo = {
   when_to_use: { scenario: string; translation: string }[];
   created_at: string;
 };
+
+export type Task = {
+  id: number;
+  last_practiced: string | null;
+  progress_id: number;
+  score: number;
+  task_type: string;
+  word: RawWordInfoRow;
+};
