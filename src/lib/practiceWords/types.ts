@@ -1,5 +1,7 @@
 import { Database } from "../db/supabase";
 
+export type EnglishLevelType = "A1" | "A2" | "B1" | "B2" | "C1" | "C2";
+
 export type RawWordInfoInsert =
   Database["public"]["Tables"]["words"]["Insert"] & {
     isAlreadySaved?: boolean;
@@ -13,6 +15,7 @@ export type WordInfo = {
   id?: number;
   word: string;
   translation: string;
+  english_level: EnglishLevelType;
   definition: { definition: string; translation: string };
   part_of_speech:
     | "noun"

@@ -13,11 +13,14 @@ const PARTS_OF_SPEECH = [
   "interjection",
 ] as const;
 
+const ENGLISH_LEVELS = ["A1", "A2", "B1", "B2", "C1", "C2"] as const;
+
 const WordInfoFormat = z.object({
   response: z.array(
     z.object({
       word: z.string(),
       translation: z.string(),
+      english_level: z.enum(ENGLISH_LEVELS),
       definition: z.object({
         definition: z.string(),
         translation: z.string(),

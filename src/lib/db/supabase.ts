@@ -117,6 +117,7 @@ export type Database = {
             | "conjunction"
             | "interjection";
           synonyms: string[];
+          english_level: "A1" | "A2" | "B1" | "B2" | "C1" | "C2";
           translation: string;
           word: string;
           when_to_use: { scenario: string; translation: string }[];
@@ -137,6 +138,7 @@ export type Database = {
             | "conjunction"
             | "interjection";
           synonyms: string[];
+          english_level: "A1" | "A2" | "B1" | "B2" | "C1" | "C2";
           translation: string;
           when_to_use: { scenario: string; translation: string }[];
           word: string;
@@ -157,6 +159,7 @@ export type Database = {
             | "conjunction"
             | "interjection";
           synonyms?: string[];
+          english_level?: "A1" | "A2" | "B1" | "B2" | "C1" | "C2";
           translation?: string;
           when_to_use?: { scenario: string; translation: string }[];
           word?: string;

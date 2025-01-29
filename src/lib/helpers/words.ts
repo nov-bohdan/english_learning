@@ -12,6 +12,7 @@ export const mapRawRowToWords = (
       id: rawWordInfo.id,
       word: rawWordInfo.word,
       translation: rawWordInfo.translation,
+      english_level: rawWordInfo.english_level,
       definition: rawWordInfo.definition,
       part_of_speech: rawWordInfo.part_of_speech,
       examples: rawWordInfo.examples,
