@@ -16,7 +16,7 @@ export default function PracticeWordsPage({ words }: { words: WordInfo[] }) {
       {!isPracticeMode && (
         <>
           {/* LEFT PANEL */}
-          <div className="bg-gray-200 rounded-md p-4 w-1/4 max-h-[500px]">
+          <div className="bg-gray-200 rounded-md p-4 w-1/4 max-h-screen overflow-y-scroll">
             <div className="flex flex-row justify-between items-center">
               <h2 className="text-bold text-3xl">Saved words</h2>
               <button

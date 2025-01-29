@@ -1,13 +1,7 @@
 import { mapRawRowToWords } from "@/lib/helpers/words";
 import { getWordInfo } from "@/lib/practiceWords/actions";
 import { RawWordInfoRow, WordInfo } from "@/lib/practiceWords/types";
-import {
-  Dispatch,
-  SetStateAction,
-  useActionState,
-  useCallback,
-  useEffect,
-} from "react";
+import { Dispatch, SetStateAction, useActionState, useCallback } from "react";
 import NewWordForm from "./NewWordForm";
 import NewWordInfo from "./NewWordInfo";
 
@@ -18,13 +12,6 @@ export default function GetWordInfoPanel({
 }) {
   const [getWordInfoState, getWordInfoAction, getWordInfoPending] =
     useActionState(getWordInfo, undefined);
-
-  //   useEffect(() => {
-  //     if (!getWordInfoState) return;
-
-  //     const mappedWords = mapRawRowToWords(getWordInfoState);
-  //     setWordsListState((prevWordsState) => [...prevWordsState, ...mappedWords]);
-  //   }, [getWordInfoState, setWordsListState]);
 
   const addNewWordsToList = useCallback((newWords: RawWordInfoRow[]) => {
     const mappedWords = mapRawRowToWords(newWords);
@@ -47,6 +34,7 @@ export default function GetWordInfoPanel({
             key={index}
             wordInfo={wordInfo}
             onAddNewWord={addNewWordsToList}
+            isAlreadySaved={wordInfo.isAlreadySaved || false}
           />
         );
       })}

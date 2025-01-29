@@ -46,6 +46,7 @@ const calculateAvgProgress = (
 const saveWord = async (word: RawWordInfoInsert): Promise<RawWordInfoRow> => {
   let savedWord = await getWord(word.word, word.part_of_speech);
   if (!savedWord) {
+    delete word.isAlreadySaved;
     const { data, error } = await client.from("words").insert(word).select();
     if (error) {
       throw new Error(error.message);
@@ -126,8 +127,6 @@ const getWords = async (): Promise<RawWordInfoRow[]> => {
   if (error) {
     throw new Error(error.message);
   }
-
-  console.log(data);
 
   const words = data.map((dataItem) => ({
     ...dataItem.words,
@@ -212,6 +211,7 @@ const updateNextReviewDate = async (
 };
 
 const dbWords = {
+  getWord,
   saveWord,
   getWords,
   getWordsToPractice,

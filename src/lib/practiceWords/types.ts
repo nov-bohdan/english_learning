@@ -1,6 +1,9 @@
 import { Database } from "../db/supabase";
 
-export type RawWordInfoInsert = Database["public"]["Tables"]["words"]["Insert"];
+export type RawWordInfoInsert =
+  Database["public"]["Tables"]["words"]["Insert"] & {
+    isAlreadySaved?: boolean;
+  };
 export type RawWordInfoRow = Database["public"]["Tables"]["words"]["Row"] & {
   progress?: number;
   next_review_date?: string;

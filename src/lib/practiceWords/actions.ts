@@ -31,11 +31,17 @@ export async function getWordInfo(
   const wordInfos = await openAIGetWordInfo(word, "russian", "A2");
   const savedWords: RawWordInfoInsert[] = [];
   for (const wordInfo of wordInfos) {
+    const wordRow = await dbWords.getWord(
+      wordInfo.word,
+      wordInfo.part_of_speech
+    );
+    console.log(wordRow);
     const dateString = DateTime.now().toISO();
     const { popularity, ...rest } = wordInfo;
     const formattedWordInfo: RawWordInfoInsert = {
       ...rest,
       created_at: dateString,
+      isAlreadySaved: !!wordRow,
     };
     savedWords.push(formattedWordInfo);
     // const savedWord = await dbWords.saveWord(formattedWordInfo);
@@ -49,11 +55,9 @@ export async function saveWords(
   prevData: unknown,
   formData: FormData
 ) {
-  console.log(`Saving ${JSON.stringify(wordInfo)}`);
   const savedWords: RawWordInfoRow[] = [];
   for (const word of wordInfo) {
     const savedWord = await dbWords.saveWord(word);
-    console.log(savedWord);
     savedWords.push(savedWord);
   }
 
