@@ -7,6 +7,7 @@ import Practice from "./Practice";
 import GetWordInfoPanel from "./GetWordInfoPanel";
 import { redirect } from "next/navigation";
 import { DateTime } from "luxon";
+import WordInfoUI from "./WordInfoUI";
 
 const getWordsToPracticeNowCount = (words: WordInfo[]) => {
   let count = 0;
@@ -30,6 +31,7 @@ export default function PracticeWordsPage({ words }: { words: WordInfo[] }) {
   const [isPracticeMode, setIsPracticeMode] = useState<boolean>(false);
   const [wordsToPracticeNowCount, setWordsToPracticeNowCount] =
     useState<number>(getWordsToPracticeNowCount(words));
+  const [showWordDetails, setShowWordDetails] = useState<WordInfo | null>(null);
 
   useEffect(() => {
     setWordsToPracticeNowCount(getWordsToPracticeNowCount(wordsState));
@@ -60,11 +62,24 @@ export default function PracticeWordsPage({ words }: { words: WordInfo[] }) {
                 <WordListItem
                   key={`${word.word}-${word.part_of_speech}`}
                   word={word}
+                  onShowDetails={() => setShowWordDetails(word)}
                 />
               ))}
           </div>
           {/* RIGHT PANEL */}
-          <GetWordInfoPanel setWordsListState={setWordsState} />
+          {showWordDetails ? (
+            <WordInfoUI wordInfo={showWordDetails}>
+              <button
+                type="button"
+                className="bg-blue-500 rounded-md py-4 px-8 font-semibold text-white"
+                onClick={() => setShowWordDetails(null)}
+              >
+                Close
+              </button>
+            </WordInfoUI>
+          ) : (
+            <GetWordInfoPanel setWordsListState={setWordsState} />
+          )}
         </>
       )}
       {isPracticeMode && (

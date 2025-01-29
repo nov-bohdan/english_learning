@@ -15,6 +15,7 @@ export type WordInfo = {
   id?: number;
   word: string;
   translation: string;
+  transcription: string;
   english_level: EnglishLevelType;
   definition: { definition: string; translation: string };
   part_of_speech:
@@ -29,7 +30,7 @@ export type WordInfo = {
   examples: { example: string; translation: string }[];
   synonyms: string[];
   collocations: { collocation: string; translation: string }[];
-  when_to_use: { scenario: string; translation: string }[];
+  // when_to_use: { scenario: string; translation: string }[];
   created_at: string;
   progress: number;
   next_review_date: string;

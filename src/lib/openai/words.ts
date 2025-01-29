@@ -20,6 +20,7 @@ const WordInfoFormat = z.object({
     z.object({
       word: z.string(),
       translation: z.string(),
+      transcription: z.string(),
       english_level: z.enum(ENGLISH_LEVELS),
       definition: z.object({
         definition: z.string(),
@@ -34,9 +35,9 @@ const WordInfoFormat = z.object({
       collocations: z.array(
         z.object({ collocation: z.string(), translation: z.string() })
       ),
-      when_to_use: z.array(
-        z.object({ scenario: z.string(), translation: z.string() })
-      ),
+      // when_to_use: z.array(
+      //   z.object({ scenario: z.string(), translation: z.string() })
+      // ),
     })
   ),
 });
@@ -47,11 +48,12 @@ export const openAIGetWordInfo = async (
   userLevel: string
 ) => {
   const prompt = `You are an AI English tutor that is created to enhance user learning experience. You will be provided with a word that user wants to learn. Your goal is to return an information about the word. The information includes following:
-   - Translation to ${nativeLanguage}, definition of the word;
+   - Translation to ${nativeLanguage}. Make sure the translation is in the right form. For example if the word "obfuscate" is in adjective form, the translation should be "Запутанный", not "Запутать".
+   - Definition of the word;
+   - Transcription in IPA format;
    - 3 examples of using the word (Everyday sentences with the word);
    - 3 popular synonyms of the word (Synonyms are the words with the same meaning. Never use related words. Only with the same meaning);
    - Up to 3 the most popular collocations of the word (For example if a word is 'decision' - you can add 'make a decision'). 
-   - Up to 3 scenarios when you can use this word (In which situations). For example, for the word 'Apparently' you can return 'When expressing something that seems true based on visible evidence'
    - english_level parameter means what English Level does the word matches. For example if the word is primarily used by users with level of B2 or more, then you should return B2 here.
    - Word should be Capitalized (First letter is big).
    - Popularity parameter measures popularity of the given part of speech. For example, if the word is used both as verb and as noun, you can return 70% for verb and 30% for noun. Total must be 100%.

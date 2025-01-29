@@ -5,7 +5,13 @@ import ProgressBar from "./ProgressBar";
 import { DateTime } from "luxon";
 import EnglishLevelIcon from "./EnglishLevelIcon";
 
-export default function WordListItem({ word }: { word: WordInfo }) {
+export default function WordListItem({
+  word,
+  onShowDetails,
+}: {
+  word: WordInfo;
+  onShowDetails: () => void;
+}) {
   const diff = DateTime.fromISO(word.next_review_date)
     .diffNow(["hours", "minutes"])
     .toObject();
@@ -13,10 +19,21 @@ export default function WordListItem({ word }: { word: WordInfo }) {
   const minsDiff = Math.ceil(diff.minutes || 0);
   return (
     <div className="flex flex-col gap-2 border-b-2 border-b-gray-400 p-2">
-      <div className="flex flex-row gap-2 items-center">
-        <h2 className="text-xl font-semibold">{word.word} </h2>
-        <span className="italic text-sm">({word.part_of_speech})</span>
-        <EnglishLevelIcon englishLevel={word.english_level} />
+      <div className="flex flex-row gap-2 items-center justify-between">
+        <div className="flex flex-row gap-2 items-center">
+          <h2 className="text-xl font-semibold">{word.word} </h2>
+          <span className="italic text-sm">({word.part_of_speech})</span>
+          <EnglishLevelIcon englishLevel={word.english_level} />
+        </div>
+        <div className="">
+          <button
+            type="button"
+            className="py-1 px-2 bg-orange-400 rounded-md text-white font-semibold"
+            onClick={onShowDetails}
+          >
+            Details
+          </button>
+        </div>
       </div>
       <div className="flex flex-row ice">
         <ProgressBar progress={word.progress} /> {word.progress}%
