@@ -28,10 +28,10 @@ export default function GetWordInfoPanel({
         />
       </div>
       {/* NEW WORD INFO */}
-      {getWordInfoState?.map((wordInfo, index) => {
+      {getWordInfoState?.map((wordInfo) => {
         return (
           <NewWordInfo
-            key={index}
+            key={`${wordInfo.word}-${wordInfo.part_of_speech}-${wordInfo.translation}`}
             wordInfo={wordInfo}
             onAddNewWord={addNewWordsToList}
             isAlreadySaved={wordInfo.isAlreadySaved || false}

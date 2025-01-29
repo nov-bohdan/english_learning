@@ -29,6 +29,20 @@ async function createTasksForWord(
   return savedTasks;
 }
 
+function shuffle(array: unknown[]) {
+  let currentIndex = array.length;
+
+  while (currentIndex != 0) {
+    const randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex],
+      array[currentIndex],
+    ];
+  }
+}
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function POST(request: Request): Promise<Response> {
   const taskTypesToUse: { task_types: (typeof TASK_TYPES)[number][] } =
@@ -38,7 +52,7 @@ export async function POST(request: Request): Promise<Response> {
   for (const wordProgress of wordProgresses) {
     const wordTasks = await dbWords.getWordTaskProgresses(wordProgress.id);
     const newTasks = await createTasksForWord(wordTasks, wordProgress.id);
-    wordTasks.push(newTasks);
+    wordTasks.push(...newTasks);
     for (const taskType of taskTypesToUse.task_types) {
       const matchingTask = wordTasks.find(
         (currentTask) => currentTask.task_type === taskType
@@ -50,5 +64,6 @@ export async function POST(request: Request): Promise<Response> {
       });
     }
   }
+  shuffle(tasksToShow);
   return Response.json(tasksToShow);
 }

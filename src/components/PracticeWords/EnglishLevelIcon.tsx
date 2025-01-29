@@ -22,7 +22,6 @@ export default function EnglishLevelIcon({
 }: {
   englishLevel: EnglishLevelType;
 }) {
-  englishLevel = "A2";
   return (
     <div
       className={`${determineBgColor(

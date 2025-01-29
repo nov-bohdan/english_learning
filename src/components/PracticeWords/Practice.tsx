@@ -12,20 +12,6 @@ const TASK_TYPES_MAP: Record<(typeof TASK_TYPES)[number], string> = {
   DEFINITION_TO_EN: "Definition to English",
 };
 
-function shuffle(array: unknown[]) {
-  let currentIndex = array.length;
-
-  while (currentIndex != 0) {
-    const randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex--;
-
-    [array[currentIndex], array[randomIndex]] = [
-      array[randomIndex],
-      array[currentIndex],
-    ];
-  }
-}
-
 export default function Practice({
   onFinishPractice,
 }: {
@@ -52,9 +38,8 @@ export default function Practice({
         body: JSON.stringify({ task_types: taskTypesToShow }),
       });
       const tasks: Task[] = await res.json();
-      shuffle(tasks);
-      setTasksToPractice(tasks);
       console.log(tasks);
+      setTasksToPractice(tasks);
       setIsLoading(false);
     }
     fetchWords();
@@ -126,6 +111,17 @@ export default function Practice({
     return (
       <div className="bg-gray-200 rounded-md p-4 flex flex-col items-center gap-4 w-full">
         <h1 className="font-semibold text-3xl">No words to practice</h1>
+      </div>
+    );
+  }
+
+  if (wordsToPractice < 5) {
+    return (
+      <div className="bg-gray-200 rounded-md p-4 flex flex-col items-center gap-4 w-full">
+        <h1 className="font-semibold text-3xl">
+          You have only {wordsToPractice} words to practice right now. You need
+          at least 5 to start practice.
+        </h1>
       </div>
     );
   }

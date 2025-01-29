@@ -11,6 +11,8 @@ export default function EnRuTask({
   task: Task;
   callback: () => void;
 }) {
+  console.log("Task:");
+  console.log(task);
   const [isShowingAnswer, setIsShowingAnswer] = useState<boolean>(false);
   const [
     checkUserAnswerState,

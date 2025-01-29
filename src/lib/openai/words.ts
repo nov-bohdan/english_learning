@@ -52,13 +52,12 @@ export const openAIGetWordInfo = async (
    - 3 popular synonyms of the word (Synonyms are the words with the same meaning. Never use related words. Only with the same meaning);
    - Up to 3 the most popular collocations of the word (For example if a word is 'decision' - you can add 'make a decision'). 
    - Up to 3 scenarios when you can use this word (In which situations). For example, for the word 'Apparently' you can return 'When expressing something that seems true based on visible evidence'
+   - english_level parameter means what English Level does the word matches. For example if the word is primarily used by users with level of B2 or more, then you should return B2 here.
    - Word should be Capitalized (First letter is big).
    - Popularity parameter measures popularity of the given part of speech. For example, if the word is used both as verb and as noun, you can return 70% for verb and 30% for noun. Total must be 100%.
    - If the word is used in more than one part of speech, add all usages in the response. Even if other parts of speech used much more less, you should return them anyway, to give the user all available information.
    User English level is ${userLevel}, so your definition and examples should be fit for this level.
   The requested word is: [${word}]`;
-
-  console.log(prompt);
 
   const response = await openai.beta.chat.completions.parse({
     model: "gpt-4o",
@@ -71,7 +70,6 @@ export const openAIGetWordInfo = async (
   }
 
   const parsedResponse = response.choices[0].message.parsed.response;
-  console.log(parsedResponse);
   return parsedResponse;
 };
 
@@ -99,7 +97,6 @@ export const gradeEnRuTranslation = async (
   }
 
   const parsedResponse = response.choices[0].message.parsed;
-  console.log(parsedResponse);
   return parsedResponse;
 };
 
@@ -124,7 +121,6 @@ export const gradeRuEnTranslation = async (
   }
 
   const parsedResponse = response.choices[0].message.parsed;
-  console.log(parsedResponse);
   return parsedResponse;
 };
 
@@ -149,7 +145,6 @@ export const gradeDefinitionToEn = async (
   }
 
   const parsedResponse = response.choices[0].message.parsed;
-  console.log(parsedResponse);
   return parsedResponse;
 };
 
@@ -189,6 +184,5 @@ export const gradeMakeSentence = async (
   }
 
   const parsedResponse = response.choices[0].message.parsed;
-  console.log(parsedResponse);
   return parsedResponse;
 };

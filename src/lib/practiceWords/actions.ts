@@ -35,7 +35,6 @@ export async function getWordInfo(
       wordInfo.word,
       wordInfo.part_of_speech
     );
-    console.log(wordRow);
     const dateString = DateTime.now().toISO();
     const { popularity, ...rest } = wordInfo;
     const formattedWordInfo: RawWordInfoInsert = {

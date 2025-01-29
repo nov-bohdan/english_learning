@@ -25,6 +25,10 @@ export default function NewWordInfo({
     onAddNewWord(saveWordState);
   }, [saveWordState, onAddNewWord]);
 
+  useEffect(() => {
+    setIsSaved(isAlreadySaved);
+  }, [isAlreadySaved]);
+
   return (
     <div className="flex flex-col gap-2 bg-gray-200 rounded-md p-4">
       <div className="flex flex-row items-center justify-between">
