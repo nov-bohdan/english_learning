@@ -26,6 +26,9 @@ const WordInfoFormat = z.object({
         definition: z.string(),
         translation: z.string(),
       }),
+      additional_senses: z.array(
+        z.object({ sense: z.string(), translation: z.string() })
+      ),
       part_of_speech: z.enum(PARTS_OF_SPEECH),
       popularity: z.number(),
       examples: z.array(
@@ -49,16 +52,18 @@ export const openAIGetWordInfo = async (
 ) => {
   const prompt = `You are an AI English tutor that is created to enhance user learning experience. You will be provided with a word that user wants to learn. Your goal is to return an information about the word. The information includes following:
    - Translation to ${nativeLanguage}. Make sure the translation is in the right form. For example if the word "obfuscate" is in adjective form, the translation should be "Запутанный", not "Запутать".
-   - Definition of the word;
+   - Definition of the word. Try to make it as short as possible. In a way that is easy for user to understand, not academic or scientific format;
    - Transcription in IPA format;
-   - 3 examples of using the word (Everyday sentences with the word);
+   - 3 examples of using the word (Everyday sentences with the word). They should match the definition that you provided for the word;
    - 3 popular synonyms of the word (Synonyms are the words with the same meaning. Never use related words. Only with the same meaning);
    - Up to 3 the most popular collocations of the word (For example if a word is 'decision' - you can add 'make a decision'). 
    - english_level parameter means what English Level does the word matches. For example if the word is primarily used by users with level of B2 or more, then you should return B2 here.
-   - Word should be Capitalized (First letter is big).
+   - Additional senses is an array of additional senses in which the word with the particular part of speech can be used. You should add up to 3 most popular additional senses. Each combination of word + part of speech should have its own array of additional senses. The array is not necessarily should contain 3 items. If the word doesn't have popular additional senses, don't add unpopular ones;
+   - Word should be Capitalized (First letter is big). If the word is verb, the word should start with "To";
    - Popularity parameter measures popularity of the given part of speech. For example, if the word is used both as verb and as noun, you can return 70% for verb and 30% for noun. Total must be 100%.
    - If the word is used in more than one part of speech, add all usages in the response. Even if other parts of speech used much more less, you should return them anyway, to give the user all available information.
    User English level is ${userLevel}, so your definition and examples should be fit for this level.
+   Combinations word + part of speech should be unique. Return only the most popular sense for each combination. Additional senses put in additional_senses array. For example you should return run (verb) only once. 
   The requested word is: [${word}]`;
 
   const response = await openai.beta.chat.completions.parse({
@@ -72,6 +77,7 @@ export const openAIGetWordInfo = async (
   }
 
   const parsedResponse = response.choices[0].message.parsed.response;
+  console.log(parsedResponse[0].additional_senses);
   return parsedResponse;
 };
 

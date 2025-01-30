@@ -1,7 +1,7 @@
 1. Task - user should write a small essay with given words. It should be one of the word's scores
 2. Voice record of a word
 3. User should be able to choose which words to practice now
-4. Filters (to 3 item and in saved words list)
+4. Filters (to item 3 and in saved words list)
 5. Use dictionary api to mitigate AI load
 6. Practice words in a chat with AI. It should be one of the word's scores
 7. +++ Info button next to the words in saved words list. Info panel should open in the right side of a page (When a new word input is located right now)
@@ -12,7 +12,7 @@
 12. Charts in calendar
 13. User will not receive tasks that have 100 score
 14. Show score splitted by tasks in saved words list
-15. Display word new scores after user answered the task
+15. Display word's new scores after user answered the task
 16. Fix redirect on "Finish practice" button
 17. Update "Next review in" in realtime
 18. Find a way to handle words with multiple meanings
