@@ -261,3 +261,33 @@ export async function checkDefinitionToEn(
   await updateNextReviewDate(wordProgressId);
   return result;
 }
+
+export async function checkAudioToWord(
+  taskProgressId: number,
+  wordProgressId: number | null,
+  score: number,
+  prevData: unknown,
+  formData: FormData
+) {
+  const word = formData.get("word")?.toString();
+  const partOfSpeech = formData.get("part_of_speech")?.toString();
+  const answer = formData.get("answer")?.toString();
+  if (!word || !partOfSpeech || !answer) {
+    throw new Error("Invalid word or answer");
+  }
+  if (!wordProgressId) {
+    throw new Error("invalid wordProgressId");
+  }
+  const result = {
+    grade: 0,
+  };
+  if (answer.toLowerCase() === word.toLowerCase()) {
+    result.grade = 100;
+  } else {
+    result.grade = 0;
+  }
+
+  await updateScore(taskProgressId, result.grade, score);
+  await updateNextReviewDate(wordProgressId);
+  return result;
+}

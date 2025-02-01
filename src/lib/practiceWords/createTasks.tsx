@@ -3,6 +3,7 @@ import EnRuTask from "./tasks/EnRuTask";
 import RuEnTask from "./tasks/RuEnTask";
 import MakeSentenceTask from "./tasks/MakeSentenceTask";
 import DefinitionToEnTask from "./tasks/DefinitionToEnTask";
+import AudioToWordTask from "./tasks/AudioToWordTask";
 
 export function createTask(
   word: RawWordInfoRow,
@@ -41,6 +42,15 @@ export function createTask(
     case "DEFINITION_TO_EN":
       return (
         <DefinitionToEnTask
+          key={`${word}-${index}`}
+          word={word}
+          task={task}
+          callback={callback}
+        />
+      );
+    case "AUDIO_TO_WORD":
+      return (
+        <AudioToWordTask
           key={`${word}-${index}`}
           word={word}
           task={task}

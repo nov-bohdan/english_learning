@@ -3,14 +3,10 @@
 import { createTask } from "@/lib/practiceWords/createTasks";
 import { Task } from "@/lib/practiceWords/types";
 import { useState } from "react";
-import { TASK_TYPES } from "@/lib/practiceWords/tasks/TaskTypes";
-
-const TASK_TYPES_MAP: Record<(typeof TASK_TYPES)[number], string> = {
-  EN_RU: "English to Russian",
-  RU_EN: "Russian to English",
-  MAKE_SENTENCE: "Make sentence",
-  DEFINITION_TO_EN: "Definition to English",
-};
+import {
+  TASK_TYPES,
+  TASK_TYPES_MAP,
+} from "@/lib/practiceWords/tasks/TaskTypes";
 
 export default function Practice({
   onFinishPractice,
