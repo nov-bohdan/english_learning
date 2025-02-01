@@ -4,9 +4,14 @@ import { dbClient } from "./dbClient";
 
 const client = dbClient.client;
 
-const getWord = async (
-  word: string,
-  partOfSpeech:
+const getWord = async ({
+  id,
+  word,
+  partOfSpeech,
+}: {
+  id?: number;
+  word?: string;
+  partOfSpeech?:
     | "noun"
     | "pronoun"
     | "verb"
@@ -14,22 +19,32 @@ const getWord = async (
     | "adverb"
     | "preposition"
     | "conjunction"
-    | "interjection"
-): Promise<RawWordInfoRow | null> => {
-  const { data, error } = await client
-    .from("words")
-    .select()
-    .eq("word", word)
-    .eq("part_of_speech", partOfSpeech);
+    | "interjection";
+}): Promise<RawWordInfoRow[] | null> => {
+  let query = client.from("words").select();
+  if (id) {
+    query = query.eq("id", id);
+  }
+  if (word) {
+    query = query.ilikeAnyOf("word", [
+      word,
+      `to ${word}`,
+      word.toLowerCase().replace("to ", ""),
+    ]);
+  }
+  if (partOfSpeech) {
+    query = query.eq("part_of_speech", partOfSpeech);
+  }
+  const { data, error } = await query;
 
   if (error) {
     throw new Error(error.message);
   }
 
-  if (data.length === 0) {
+  if (data === null || data.length === 0) {
     return null;
   }
-  return data[0];
+  return data;
 };
 
 const calculateAvgProgress = (
@@ -44,22 +59,36 @@ const calculateAvgProgress = (
 };
 
 const saveWord = async (word: RawWordInfoInsert): Promise<RawWordInfoRow> => {
-  let savedWord = await getWord(word.word, word.part_of_speech);
+  let savedWord: RawWordInfoRow | RawWordInfoRow[] | null = await getWord({
+    word: word.word,
+    partOfSpeech: word.part_of_speech,
+  });
   if (!savedWord) {
     delete word.isAlreadySaved;
     const { data, error } = await client.from("words").insert(word).select();
     if (error) {
       throw new Error(error.message);
     }
-    savedWord = data[0];
+    savedWord = data;
   }
+  if (!savedWord) {
+    throw new Error("Unknown error in saving word");
+  }
+  savedWord = savedWord[0];
 
-  const userWordProgress = await getUserWordProgress(savedWord.id, 1);
-  if (!userWordProgress) {
-    await addNewUserWordProgress(savedWord.id, 1);
-  }
+  // const userWordProgress = await getUserWordProgress(savedWord.id, 1);
+  // if (!userWordProgress) {
+  //   await addNewUserWordProgress(savedWord.id, 1);
+  // }
 
   return savedWord;
+};
+
+const assignWordToUser = async (wordId: number, userId: number) => {
+  const userWordProgress = await getUserWordProgress(wordId, userId);
+  if (!userWordProgress) {
+    await addNewUserWordProgress(wordId, userId);
+  }
 };
 
 const getUserWordProgressForPractice = async (userId: number, date: string) => {
@@ -115,7 +144,7 @@ const addNewUserWordProgress = async (wordId: number, userId: number) => {
   return data[0];
 };
 
-const getWords = async (): Promise<RawWordInfoRow[]> => {
+const getWords = async (userId: number): Promise<RawWordInfoRow[]> => {
   const { data, error } = await client
     .from("user_word_progress")
     .select(
@@ -123,7 +152,7 @@ const getWords = async (): Promise<RawWordInfoRow[]> => {
         score
       ), next_review_date`
     )
-    .eq("user_id", 1);
+    .eq("user_id", userId);
   if (error) {
     throw new Error(error.message);
   }
@@ -219,6 +248,8 @@ const dbWords = {
   createNewUserTaskProgress,
   updateUserTaskProgress,
   updateNextReviewDate,
+  assignWordToUser,
+  getUserWordProgress,
 };
 
 export default dbWords;

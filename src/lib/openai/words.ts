@@ -74,7 +74,7 @@ export const openAIGetWordInfo = async (
   }
 
   const parsedResponse = response.choices[0].message.parsed.response;
-  return parsedResponse;
+  return parsedResponse.filter((response) => response.popularity > 10);
 };
 
 const TranslationGradeFormat = z.object({

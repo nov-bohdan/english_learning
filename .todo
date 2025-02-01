@@ -20,4 +20,4 @@
 20. Add error handling
 21. When grade is > 80 but < 100, display what could be better in user's answer
 22. New task - AI generates a sentence, user listens and should write it down.
-23. New task - user listens to a word and writes it down.
+23. +++ New task - user listens to a word and writes it down.

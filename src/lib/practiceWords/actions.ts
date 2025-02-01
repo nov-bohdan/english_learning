@@ -73,18 +73,35 @@ function checkAudiosInWord(word: WordInfoFormatWithAudioType) {
 export async function getWordInfo(
   prevData: unknown,
   formData: FormData
-): Promise<RawWordInfoInsert[]> {
+): Promise<RawWordInfoRow[]> {
   const word = formData.get("word")?.toString();
   if (!word) {
     throw new Error("Word is empty");
   }
-  const wordInfos = await openAIGetWordInfo(word, "russian", "A2");
-  const savedWords: RawWordInfoInsert[] = [];
-  for (const wordInfo of wordInfos) {
-    const wordRow = await dbWords.getWord(
-      wordInfo.word,
-      wordInfo.part_of_speech
+  let alreadySavedWords = await dbWords.getWord({ word: word });
+  if (alreadySavedWords) {
+    alreadySavedWords = await Promise.all(
+      alreadySavedWords.map(async (word) => {
+        const isAssigned = await dbWords.getUserWordProgress(word.id, 1);
+        if (isAssigned) {
+          return { ...word, isAlreadySaved: true };
+        } else {
+          return { ...word, isAlreadySaved: false };
+        }
+      })
     );
+    return alreadySavedWords;
+  }
+  // return [];
+
+  const wordInfos = await openAIGetWordInfo(word, "russian", "A2");
+  const newWords: RawWordInfoInsert[] = [];
+  const savedWords: RawWordInfoRow[] = [];
+  for (const wordInfo of wordInfos) {
+    const wordRow = await dbWords.getWord({
+      word: wordInfo.word,
+      partOfSpeech: wordInfo.part_of_speech,
+    });
 
     const dateString = DateTime.now().toISO();
     const wordInfoWithAudio = await fillWordWithAudios(wordInfo);
@@ -95,23 +112,43 @@ export async function getWordInfo(
       created_at: dateString,
       isAlreadySaved: !!wordRow,
     };
-    savedWords.push(formattedWordInfo);
+    newWords.push(formattedWordInfo);
+    if (!wordRow) {
+      const newWord = await dbWords.saveWord(formattedWordInfo);
+      savedWords.push(newWord);
+    }
   }
-  return savedWords as RawWordInfoInsert[];
+  return savedWords as RawWordInfoRow[];
 }
 
 export async function saveWords(
-  wordInfo: RawWordInfoInsert[],
-  prevData: unknown,
-  formData: FormData
+  wordsInfo: RawWordInfoInsert[],
+  prevData?: unknown,
+  formData?: FormData
 ) {
   const savedWords: RawWordInfoRow[] = [];
-  for (const word of wordInfo) {
+  for (const word of wordsInfo) {
     const savedWord = await dbWords.saveWord(word);
     savedWords.push(savedWord);
   }
 
   return savedWords as RawWordInfoRow[];
+}
+
+export async function assignWordToUser(
+  wordId: number | undefined,
+  prevData: unknown,
+  formData: FormData
+) {
+  if (!wordId) {
+    throw new Error("Trying to assign a word without wordId");
+  }
+  await dbWords.assignWordToUser(wordId, 1);
+  const savedWord = await dbWords.getWord({ id: wordId });
+  if (!savedWord) {
+    throw new Error("Unknown error in assigning word to a user");
+  }
+  return savedWord as RawWordInfoRow[];
 }
 
 function adjustScore(score: number, grade: number) {
@@ -281,7 +318,10 @@ export async function checkAudioToWord(
   const result = {
     grade: 0,
   };
-  if (answer.toLowerCase() === word.toLowerCase()) {
+  if (
+    answer.toLowerCase().replace("to ", "") ===
+    word.toLowerCase().replace("to ", "")
+  ) {
     result.grade = 100;
   } else {
     result.grade = 0;

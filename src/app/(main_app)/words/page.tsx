@@ -3,7 +3,7 @@ import dbWords from "@/lib/db/words";
 import { mapRawRowToWords } from "@/lib/helpers/words";
 
 export default async function Page() {
-  const words = await dbWords.getWords();
+  const words = await dbWords.getWords(1);
   const mappedWords = mapRawRowToWords(words);
   return <PracticeWordsPage words={mappedWords} />;
 }

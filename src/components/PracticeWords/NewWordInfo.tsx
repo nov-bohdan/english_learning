@@ -1,4 +1,4 @@
-import { saveWords } from "@/lib/practiceWords/actions";
+import { assignWordToUser } from "@/lib/practiceWords/actions";
 import { RawWordInfoInsert, RawWordInfoRow } from "@/lib/practiceWords/types";
 import { useActionState, useEffect, useState } from "react";
 import WordInfoUI from "./WordInfoUI";
@@ -14,7 +14,7 @@ export default function NewWordInfo({
 }) {
   const [isSaved, setIsSaved] = useState<boolean>(isAlreadySaved);
   const [saveWordState, saveWordAction, saveWordIsPending] = useActionState(
-    saveWords.bind(null, [wordInfo]),
+    assignWordToUser.bind(null, wordInfo.id!),
     undefined
   );
 

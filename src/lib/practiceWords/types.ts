@@ -8,6 +8,7 @@ export type RawWordInfoInsert =
   };
 export type RawWordInfoRow = Database["public"]["Tables"]["words"]["Row"] & {
   progress?: number;
+  isAlreadySaved?: boolean;
   next_review_date?: string;
 };
 
