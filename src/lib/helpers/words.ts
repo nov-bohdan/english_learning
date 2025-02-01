@@ -23,6 +23,7 @@ export const mapRawRowToWords = (
       // when_to_use: rawWordInfo.when_to_use,
       progress: rawWordInfo.progress || 0,
       next_review_date: rawWordInfo.next_review_date || "",
+      word_audio: rawWordInfo.word_audio,
     };
   });
 };

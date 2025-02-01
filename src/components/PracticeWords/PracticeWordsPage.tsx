@@ -8,6 +8,7 @@ import GetWordInfoPanel from "./GetWordInfoPanel";
 import { redirect } from "next/navigation";
 import { DateTime } from "luxon";
 import WordInfoUI from "./WordInfoUI";
+import { generateAudio } from "@/lib/elevenlabs/audio";
 
 const getWordsToPracticeNowCount = (words: WordInfo[]) => {
   let count = 0;
@@ -45,6 +46,19 @@ export default function PracticeWordsPage({ words }: { words: WordInfo[] }) {
           <div className="bg-gray-200 rounded-md p-4 w-1/4 max-h-screen overflow-y-scroll">
             <div className="flex flex-row justify-between items-center">
               <h2 className="text-bold text-3xl">Saved words</h2>
+              <button
+                type="button"
+                onClick={() => generateAudio("Test audio file")}
+              >
+                Get audio
+              </button>
+              {/* <audio controls>
+                <source
+                  src={"audio/tts-5e87b667-f657-44c4-a6ef-49bbdbf1354d.mp3"}
+                  type="audio/mpeg"
+                />
+              </audio> */}
+
               <button
                 type="button"
                 className="bg-blue-500 p-2 text-white rounded-xl font-semibold cursor-pointer disabled:bg-gray-400 disabled:bg-opacity-50 disabled:cursor-not-allowed disabled:text-xs disabled:p-1"

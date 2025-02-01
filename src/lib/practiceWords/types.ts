@@ -27,13 +27,14 @@ export type WordInfo = {
     | "preposition"
     | "conjunction"
     | "interjection";
-  examples: { example: string; translation: string }[];
+  examples: { example: string; translation: string; audio: string }[];
   synonyms: string[];
   collocations: { collocation: string; translation: string }[];
   // when_to_use: { scenario: string; translation: string }[];
   created_at: string;
   progress: number;
   next_review_date: string;
+  word_audio: string;
 };
 
 export type Task = {

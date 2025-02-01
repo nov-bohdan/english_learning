@@ -105,7 +105,7 @@ export type Database = {
         Row: {
           collocations: { collocation: string; translation: string }[];
           definition: { definition: string; translation: string };
-          examples: { example: string; translation: string }[];
+          examples: { example: string; translation: string; audio: string }[];
           id: number;
           part_of_speech:
             | "noun"
@@ -123,11 +123,12 @@ export type Database = {
           // when_to_use: { scenario: string; translation: string }[];
           created_at: string;
           transcription: string;
+          word_audio: string;
         };
         Insert: {
           collocations: { collocation: string; translation: string }[];
           definition: { definition: string; translation: string };
-          examples: { example: string; translation: string }[];
+          examples: { example: string; translation: string; audio: string }[];
           id?: number;
           part_of_speech:
             | "noun"
@@ -145,11 +146,12 @@ export type Database = {
           word: string;
           created_at?: string;
           transcription: string;
+          word_audio: string;
         };
         Update: {
           collocations?: { collocation: string; translation: string }[];
           definition?: { definition: string; translation: string };
-          examples?: { example: string; translation: string }[];
+          examples?: { example: string; translation: string; autio: string }[];
           id?: number;
           part_of_speech?:
             | "noun"
@@ -167,6 +169,7 @@ export type Database = {
           word?: string;
           created_at?: string;
           transcription?: string;
+          word_audio?: string;
         };
         Relationships: [];
       };

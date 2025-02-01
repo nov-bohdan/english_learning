@@ -1,5 +1,6 @@
 import { RawWordInfoInsert, WordInfo } from "@/lib/practiceWords/types";
 import EnglishLevelIcon from "./EnglishLevelIcon";
+import AudioIcon from "../Icons/AudioIcon";
 
 export default function WordInfoUI({
   wordInfo,
@@ -17,8 +18,9 @@ export default function WordInfoUI({
             <span className="italic text-sm">({wordInfo.part_of_speech})</span>
             <EnglishLevelIcon englishLevel={wordInfo.english_level} />
           </div>
-          <div className="">
+          <div className="flex flex-row gap-2">
             <p>{wordInfo.transcription}</p>
+            <AudioIcon audioUrl={wordInfo.word_audio} />
           </div>
         </div>
         {children}
@@ -33,13 +35,18 @@ export default function WordInfoUI({
       </p>
       <div>
         <b>Examples:</b>
-        {wordInfo.examples.map((example) => {
-          return (
-            <p key={example.example}>
-              {example.example} - {example.translation}
-            </p>
-          );
-        })}
+        <div className="flex flex-col gap-2">
+          {wordInfo.examples.map((example) => {
+            return (
+              <div className="flex flex-row gap-2" key={example.example}>
+                <AudioIcon audioUrl={example.audio} />
+                <p>
+                  {example.example} - {example.translation}
+                </p>
+              </div>
+            );
+          })}
+        </div>
       </div>
       <p>
         <b>Synonyms:</b>

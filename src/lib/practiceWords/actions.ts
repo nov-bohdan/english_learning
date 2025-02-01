@@ -8,8 +8,10 @@ import {
   gradeEnRuTranslation,
   openAIGetWordInfo,
   gradeMakeSentence,
+  WordInfoFormatType,
 } from "../openai/words";
 import { RawWordInfoInsert, RawWordInfoRow } from "./types";
+import { generateAudio } from "../elevenlabs/audio";
 
 function isAnswerCorrect(grade: number) {
   if (grade >= 80) {
@@ -18,6 +20,54 @@ function isAnswerCorrect(grade: number) {
   if (grade < 80) {
     return false;
   }
+}
+
+type WordInfoFormatWithAudioType = Omit<WordInfoFormatType, "examples"> & {
+  word_audio?: string;
+  examples: {
+    example: string;
+    translation: string;
+    audio?: string;
+  }[];
+};
+
+type WordInfoFormatWithAudioComplete = Omit<WordInfoFormatType, "examples"> & {
+  word_audio: string;
+  examples: {
+    example: string;
+    translation: string;
+    audio: string;
+  }[];
+};
+
+async function fillWordWithAudios(
+  word: WordInfoFormatWithAudioType
+): Promise<WordInfoFormatWithAudioComplete> {
+  const wordAudioPromise = generateAudio(word.word);
+  const examplesAudioPromises = word.examples.map((example) => {
+    const audioPromise = generateAudio(example.example);
+    return audioPromise;
+  });
+  const [wordAudio, ...examplesAudio] = await Promise.all([
+    wordAudioPromise,
+    ...examplesAudioPromises,
+  ]);
+
+  return {
+    ...word,
+    word_audio: wordAudio,
+    examples: word.examples.map((example, index) => {
+      return { ...example, audio: examplesAudio[index] };
+    }),
+  };
+}
+
+function checkAudiosInWord(word: WordInfoFormatWithAudioType) {
+  word.examples.forEach((example) => {
+    if (!example.audio) {
+      throw new Error("Audio generation error");
+    }
+  });
 }
 
 export async function getWordInfo(
@@ -35,16 +85,17 @@ export async function getWordInfo(
       wordInfo.word,
       wordInfo.part_of_speech
     );
+
     const dateString = DateTime.now().toISO();
-    const { popularity, ...rest } = wordInfo;
+    const wordInfoWithAudio = await fillWordWithAudios(wordInfo);
+    checkAudiosInWord(wordInfoWithAudio);
+    const { popularity, ...rest } = wordInfoWithAudio;
     const formattedWordInfo: RawWordInfoInsert = {
       ...rest,
       created_at: dateString,
       isAlreadySaved: !!wordRow,
     };
     savedWords.push(formattedWordInfo);
-    // const savedWord = await dbWords.saveWord(formattedWordInfo);
-    // savedWords.push(savedWord);
   }
   return savedWords as RawWordInfoInsert[];
 }
