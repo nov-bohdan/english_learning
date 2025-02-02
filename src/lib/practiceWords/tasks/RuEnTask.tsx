@@ -19,6 +19,7 @@ export default function RuEnTask({
       correctAnswer={word.word}
       callback={callback}
       action={checkRuEnTranslation.bind(null, word, task)}
+      playAudio={false}
     />
   );
 }

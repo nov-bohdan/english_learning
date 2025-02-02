@@ -12,6 +12,7 @@ export default function TaskTemplate({
   action,
   correctAnswer,
   isExtendedResult = false,
+  playAudio = true,
 }: {
   word: RawWordInfoRow;
   header: string | React.ReactNode;
@@ -21,6 +22,7 @@ export default function TaskTemplate({
   action: (...args: any[]) => any;
   correctAnswer?: string;
   isExtendedResult?: boolean;
+  playAudio?: boolean;
 }) {
   const [isShowingAnswer, setIsShowingAnswer] = useState<boolean>(false);
   const [
@@ -39,9 +41,11 @@ export default function TaskTemplate({
   }, [checkUserAnswerState, callback]);
 
   useEffect(() => {
-    const audio = new Audio(word.word_audio);
-    audio.play();
-  }, [word.word_audio]);
+    if (playAudio) {
+      const audio = new Audio(word.word_audio);
+      audio.play();
+    }
+  }, [word.word_audio, playAudio]);
 
   return (
     <>

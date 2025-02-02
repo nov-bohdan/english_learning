@@ -20,6 +20,7 @@ export default function DefinitionToEnTask({
       correctAnswer={word.word}
       callback={callback}
       action={checkDefinitionToEn.bind(null, word, task)}
+      playAudio={false}
     />
   );
 }
