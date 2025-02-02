@@ -218,13 +218,10 @@ export async function checkEnRuTranslation(
   task: Task,
   prevData: unknown,
   formData: FormData
-) {
+): Promise<ServerActionResponse<{ grade: number }>> {
   const answer = formData.get("answer")?.toString();
-  if (!word || !answer) {
-    throw new Error("Invalid word or answer");
-  }
-  if (!task.progress_id) {
-    throw new Error("invalid wordProgressId");
+  if (!word || !answer || !task) {
+    return { success: false, error: "Invalid word, task or answer" };
   }
 
   const result = await gradeEnRuTranslation(
@@ -234,7 +231,7 @@ export async function checkEnRuTranslation(
   );
   await updateScore(task.id, result.grade, task.score);
   await updateNextReviewDate(task.progress_id);
-  return result;
+  return { success: true, data: result };
 }
 
 export async function checkRuEnTranslation(
@@ -242,14 +239,12 @@ export async function checkRuEnTranslation(
   task: Task,
   prevData: unknown,
   formData: FormData
-) {
+): Promise<ServerActionResponse<{ grade: number }>> {
   const answer = formData.get("answer")?.toString();
-  if (!word || !answer) {
-    throw new Error("Invalid word or answer");
+  if (!word || !answer || !task) {
+    return { success: false, error: "Invalid word, task or answer" };
   }
-  if (!task.progress_id) {
-    throw new Error("invalid wordProgressId");
-  }
+
   const result = await gradeRuEnTranslation(
     word.word,
     word.part_of_speech,
@@ -257,7 +252,7 @@ export async function checkRuEnTranslation(
   );
   await updateScore(task.id, result.grade, task.score);
   await updateNextReviewDate(task.progress_id);
-  return result;
+  return { success: true, data: result };
 }
 
 export async function checkMakeSentence(
@@ -266,13 +261,10 @@ export async function checkMakeSentence(
   taskDescription: string,
   prevData: unknown,
   formData: FormData
-) {
+): Promise<ServerActionResponse<{ grade: number }>> {
   const answer = formData.get("answer")?.toString();
-  if (!word || !answer) {
-    throw new Error("Invalid word or answer");
-  }
-  if (!task.progress_id) {
-    throw new Error("invalid wordProgressId");
+  if (!word || !answer || !task) {
+    return { success: false, error: "Invalid word, task or answer" };
   }
   const result = await gradeMakeSentence(
     word.word,
@@ -282,7 +274,7 @@ export async function checkMakeSentence(
   );
   await updateScore(task.id, result.grade, task.score);
   await updateNextReviewDate(task.progress_id);
-  return result;
+  return { success: true, data: result };
 }
 
 export async function checkDefinitionToEn(
@@ -290,13 +282,10 @@ export async function checkDefinitionToEn(
   task: Task,
   prevData: unknown,
   formData: FormData
-) {
+): Promise<ServerActionResponse<{ grade: number }>> {
   const answer = formData.get("answer")?.toString();
-  if (!word || !answer) {
-    throw new Error("Invalid word or answer");
-  }
-  if (!task.progress_id) {
-    throw new Error("invalid wordProgressId");
+  if (!word || !answer || !task) {
+    return { success: false, error: "Invalid word, task or answer" };
   }
   const result = await gradeRuEnTranslation(
     word.definition.definition,
@@ -305,7 +294,7 @@ export async function checkDefinitionToEn(
   );
   await updateScore(task.id, result.grade, task.score);
   await updateNextReviewDate(task.progress_id);
-  return result;
+  return { success: true, data: result };
 }
 
 export async function checkAudioToWord(
@@ -313,13 +302,10 @@ export async function checkAudioToWord(
   task: Task,
   prevData: unknown,
   formData: FormData
-) {
+): Promise<ServerActionResponse<{ grade: number }>> {
   const answer = formData.get("answer")?.toString();
-  if (!word || !answer) {
-    throw new Error("Invalid word or answer");
-  }
-  if (!task.progress_id) {
-    throw new Error("invalid wordProgressId");
+  if (!word || !answer || !task) {
+    return { success: false, error: "Invalid word, task or answer" };
   }
   const result = {
     grade: 0,
@@ -335,5 +321,5 @@ export async function checkAudioToWord(
 
   await updateScore(task.id, result.grade, task.score);
   await updateNextReviewDate(task.progress_id);
-  return result;
+  return { success: true, data: result };
 }

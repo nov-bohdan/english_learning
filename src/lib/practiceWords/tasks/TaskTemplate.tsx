@@ -2,6 +2,7 @@ import { useState, useActionState, useEffect } from "react";
 import { RawWordInfoRow } from "../types";
 import CorrectAnswer from "./CorrectAnswer";
 import IncorrectAnswer from "./IncorrectAnswer";
+import Error from "@/components/Errors/Error";
 
 export default function TaskTemplate({
   word,
@@ -29,7 +30,9 @@ export default function TaskTemplate({
   ] = useActionState(action, undefined);
 
   useEffect(() => {
-    if (checkUserAnswerState) {
+    console.log(checkUserAnswerState);
+    if (checkUserAnswerState?.success) {
+      console.log("show");
       setIsShowingAnswer(true);
       callback();
     }
@@ -49,7 +52,10 @@ export default function TaskTemplate({
             ({word.part_of_speech})
           </span>
         </h2>
-        {(!checkUserAnswerState || !isShowingAnswer) && (
+        {checkUserAnswerState?.error && (
+          <Error message={checkUserAnswerState.error} />
+        )}
+        {(!checkUserAnswerState?.data || !isShowingAnswer) && (
           <form action={checkUserAnswerAction} autoComplete="off">
             <div className="flex flex-col gap-2 items-center">
               <label htmlFor="answer">{taskDefinition}</label>
@@ -69,15 +75,15 @@ export default function TaskTemplate({
             </div>
           </form>
         )}
-        {checkUserAnswerState && isShowingAnswer && (
+        {checkUserAnswerState?.success && isShowingAnswer && (
           <>
-            {checkUserAnswerState.grade >= 80 && (
+            {checkUserAnswerState.data.grade >= 80 && (
               <CorrectAnswer
                 isExtended={isExtendedResult}
                 answerState={checkUserAnswerState}
               />
             )}
-            {checkUserAnswerState.grade < 80 && (
+            {checkUserAnswerState.data.grade < 80 && (
               <IncorrectAnswer
                 correctAnswer={correctAnswer}
                 answerState={checkUserAnswerState}

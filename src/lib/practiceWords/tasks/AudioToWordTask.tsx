@@ -16,9 +16,9 @@ export default function AudioToWordTask({
     <TaskTemplate
       word={word}
       header={
-        <span className="flex flex-col gap-1 items-center">
+        <>
           Audio: <AudioIcon audioUrl={word.word_audio} />
-        </span>
+        </>
       }
       taskDefinition="Listen to the word and write it down"
       correctAnswer={word.word}
