@@ -2,7 +2,7 @@
 
 import { createTask } from "@/lib/practiceWords/createTasks";
 import { Task } from "@/lib/practiceWords/types";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   TASK_TYPES,
   TASK_TYPES_MAP,
@@ -63,6 +63,36 @@ export default function Practice({
   const [currentTaskCompleted, setCurrentTaskCompleted] =
     useState<boolean>(false);
   const [currentTaskIndex, setCurrentTaskIndex] = useState<number>(0);
+
+  const handleNextTask = useCallback(() => {
+    if (currentTaskCompleted) {
+      if (currentTaskIndex + 1 < tasksToPractice.length) {
+        setCurrentTaskCompleted(false);
+        setCurrentTaskIndex((i) => i + 1);
+      } else {
+        onFinishPractice();
+      }
+    }
+  }, [
+    currentTaskCompleted,
+    currentTaskIndex,
+    onFinishPractice,
+    tasksToPractice.length,
+  ]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Check if the Enter key is pressed
+      if (e.key === "Enter") {
+        handleNextTask();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [currentTaskCompleted, currentTaskIndex, tasksToPractice, handleNextTask]);
 
   if (!isStarted) {
     return (
@@ -137,13 +167,7 @@ export default function Practice({
         <button
           type="button"
           className="bg-yellow-500 rounded-md p-4 text-white font-semibold text-lg w-full"
-          onClick={() => {
-            if (currentTaskIndex + 1 >= taskElements.length) {
-              return;
-            }
-            setCurrentTaskCompleted(false);
-            setCurrentTaskIndex((i) => i + 1);
-          }}
+          onClick={handleNextTask}
         >
           Next
         </button>
