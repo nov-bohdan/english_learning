@@ -1,6 +1,7 @@
 import { DateTime } from "luxon";
 import { RawWordInfoInsert, RawWordInfoRow } from "../practiceWords/types";
 import { dbClient } from "./dbClient";
+import { TASK_TYPES } from "../practiceWords/tasks/TaskTypes";
 
 const client = dbClient.client;
 
@@ -45,17 +46,6 @@ const getWord = async ({
     return null;
   }
   return data;
-};
-
-const calculateAvgProgress = (
-  userTaskProgress: {
-    score: number;
-  }[]
-) => {
-  return Math.floor(
-    userTaskProgress.reduce((sum, item) => sum + item.score, 0) /
-      userTaskProgress.length
-  );
 };
 
 const saveWord = async (word: RawWordInfoInsert): Promise<RawWordInfoRow> => {
@@ -137,11 +127,42 @@ const addNewUserWordProgress = async (wordId: number, userId: number) => {
   return data[0];
 };
 
+const calculateAvgProgress = (
+  userTaskProgress: {
+    task_type: string;
+    score: number;
+  }[]
+) => {
+  return Math.floor(
+    userTaskProgress.reduce((sum, item) => sum + item.score, 0) /
+      userTaskProgress.length
+  );
+};
+
+type TaskType = (typeof TASK_TYPES)[number];
+
+const isValidTaskType = (value: string): value is TaskType => {
+  return (TASK_TYPES as readonly string[]).includes(value);
+};
+
+const mapProgress = (
+  userTaskProgress: { task_type: string; score: number }[]
+): Record<TaskType, number> => {
+  const taskMap = {} as Record<TaskType, number>;
+  userTaskProgress.forEach(({ task_type, score }) => {
+    if (isValidTaskType(task_type)) {
+      taskMap[task_type] = score;
+    }
+  });
+  return taskMap;
+};
+
 const getWords = async (userId: number): Promise<RawWordInfoRow[]> => {
   const { data, error } = await client
     .from("user_word_progress")
     .select(
       `words (*), user_task_progress!left(
+        task_type,
         score
       ), next_review_date`
     )
@@ -152,7 +173,8 @@ const getWords = async (userId: number): Promise<RawWordInfoRow[]> => {
 
   const words = data.map((dataItem) => ({
     ...dataItem.words,
-    progress: calculateAvgProgress(dataItem.user_task_progress),
+    progress: mapProgress(dataItem.user_task_progress),
+    avgProgress: calculateAvgProgress(dataItem.user_task_progress),
     next_review_date: dataItem.next_review_date,
   }));
 

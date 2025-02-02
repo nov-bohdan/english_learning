@@ -1,4 +1,5 @@
 import { Database } from "../db/supabase";
+import { TASK_TYPES } from "./tasks/TaskTypes";
 
 export type EnglishLevelType = "A1" | "A2" | "B1" | "B2" | "C1" | "C2";
 
@@ -7,7 +8,8 @@ export type RawWordInfoInsert =
     isAlreadySaved?: boolean;
   };
 export type RawWordInfoRow = Database["public"]["Tables"]["words"]["Row"] & {
-  progress?: number;
+  avgProgress?: number;
+  progress?: Record<(typeof TASK_TYPES)[number], number>;
   isAlreadySaved?: boolean;
   next_review_date?: string;
 };
@@ -33,7 +35,8 @@ export type WordInfo = {
   collocations: { collocation: string; translation: string }[];
   // when_to_use: { scenario: string; translation: string }[];
   created_at: string;
-  progress: number;
+  avgProgress: number;
+  progress: Record<(typeof TASK_TYPES)[number], number>;
   next_review_date: string;
   word_audio: string;
 };

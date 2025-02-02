@@ -14,10 +14,16 @@ export default function GetWordInfoPanel({
   const [getWordInfoState, getWordInfoAction, getWordInfoPending] =
     useActionState(getWordInfo, undefined);
 
-  const addNewWordsToList = useCallback((newWords: RawWordInfoRow[]) => {
-    const mappedWords = mapRawRowToWords(newWords);
-    setWordsListState((prevWordsState) => [...prevWordsState, ...mappedWords]);
-  }, []);
+  const addNewWordsToList = useCallback(
+    (newWords: RawWordInfoRow[]) => {
+      const mappedWords = mapRawRowToWords(newWords);
+      setWordsListState((prevWordsState) => [
+        ...prevWordsState,
+        ...mappedWords,
+      ]);
+    },
+    [setWordsListState]
+  );
 
   return (
     <div className="flex flex-col gap-4 w-3/4">

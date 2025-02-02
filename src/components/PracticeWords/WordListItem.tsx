@@ -4,6 +4,24 @@ import { WordInfo } from "@/lib/practiceWords/types";
 import ProgressBar from "./ProgressBar";
 import { DateTime } from "luxon";
 import EnglishLevelIcon from "./EnglishLevelIcon";
+import {
+  TASK_TYPES,
+  TASK_TYPES_MAP,
+} from "@/lib/practiceWords/tasks/TaskTypes";
+import InfoIcon from "../Icons/InfoIcon";
+import TooltipWrapper from "../Tooltip";
+
+const getShapeForProgress = (progress: number) => {
+  let color = "";
+  if (progress < 33) {
+    color = "bg-red-500";
+  } else if (progress < 66) {
+    color = "bg-yellow-500";
+  } else {
+    color = "bg-green-500";
+  }
+  return <span className={`rounded-full w-2 h-2 inline-block ${color}`}></span>;
+};
 
 export default function WordListItem({
   word,
@@ -35,12 +53,43 @@ export default function WordListItem({
           </button>
         </div>
       </div>
-      <div className="flex flex-row ice">
-        <ProgressBar progress={word.progress} /> {word.progress}%
+      <div className="flex flex-col gap-2">
+        <div className="flex flex-row items-center">
+          <ProgressBar progress={word.avgProgress} /> {word.avgProgress}%
+        </div>
+        <div className="flex flex-row gap-2 items-center">
+          {TASK_TYPES.map((taskType) => (
+            <p key={taskType} className="text-xs">
+              {taskType.split("_")[0][0]}
+              {taskType.split("_")[taskType.split("_").length - 1][0]}-
+              {getShapeForProgress(word.progress[taskType])}
+            </p>
+          ))}
+          <TooltipWrapper
+            tooltipContent={
+              <div>
+                {TASK_TYPES.map((taskType) => (
+                  <p key={`${taskType}-2`} className="text-xs">
+                    {TASK_TYPES_MAP[taskType]} - {word.progress[taskType]}/100
+                  </p>
+                ))}
+              </div>
+            }
+            place="top"
+          >
+            <span>
+              <InfoIcon className="cursor-pointer" />
+            </span>
+          </TooltipWrapper>
+        </div>
       </div>
-      <div className="">
-        Next review in:{" "}
-        {minsDiff > 0 ? `${hoursDiff} hr ${minsDiff} mins` : "NOW"}
+      <div className="flex flex-row items-center justify-between">
+        <div className="">
+          <p>
+            Next review in:{" "}
+            {minsDiff > 0 ? `${hoursDiff} hr ${minsDiff} mins` : "NOW"}
+          </p>
+        </div>
       </div>
     </div>
   );

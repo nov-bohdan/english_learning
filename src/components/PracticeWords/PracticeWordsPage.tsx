@@ -31,13 +31,13 @@ export default function PracticeWordsPage({ words }: { words: WordInfo[] }) {
   const [showWordDetails, setShowWordDetails] = useState<WordInfo | null>(null);
 
   const wordsWithLowProgress = wordsState.filter(
-    (word) => word.progress < 33
+    (word) => word.avgProgress < 33
   ).length;
   const wordsWithMediumProgress = wordsState.filter(
-    (word) => word.progress >= 33 && word.progress < 66
+    (word) => word.avgProgress >= 33 && word.avgProgress < 66
   ).length;
   const wordsWithHighProgress = wordsState.filter(
-    (word) => word.progress > 66
+    (word) => word.avgProgress > 66
   ).length;
 
   useEffect(() => {
@@ -85,7 +85,7 @@ export default function PracticeWordsPage({ words }: { words: WordInfo[] }) {
                 </button>
               </div>
               {wordsState
-                .sort((a, b) => b.progress - a.progress)
+                .sort((a, b) => b.avgProgress - a.avgProgress)
                 .map((word) => (
                   <WordListItem
                     key={`${word.word}-${word.part_of_speech}`}

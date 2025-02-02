@@ -8,15 +8,18 @@
 8. Delete button, to delete a word.
 9. +++ Use word info from database if it's already exists (For example other user already saved the word)
 10. Authentication
-11. Stats, notifications
+11. Stats
 12. Charts in calendar
 13. User will not receive tasks that have 100 score
-14. Show score splitted by tasks in saved words list
+14. +++ Show score splitted by tasks in saved words list
 15. Display word's new scores after user answered the task
 16. Fix redirect on "Finish practice" button
 17. Update "Next review in" in realtime
 18. Find a way to handle words with multiple meanings
 19. Improve UI
-20. Add error handling
+20. +++ Add error handling
 21. New task - AI generates a sentence, user listens and should write it down.
 22. +++ New task - user listens to a word and writes it down.
+23. Notifications
+24. Clean code
+25. Next review date for each type task

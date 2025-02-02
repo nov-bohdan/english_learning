@@ -56,7 +56,7 @@ export const openAIGetWordInfo = async (
    - 3 popular synonyms of the word (Synonyms are the words with the same meaning. Never use related words. Only with the same meaning);
    - Up to 3 the most popular collocations of the word (For example if a word is 'decision' - you can add 'make a decision').
    - english_level parameter means what English Level does the word matches. For example if the word is primarily used by users with level of B2 or more, then you should return B2 here.
-   - Word should be Capitalized (First letter is big). If the word is verb, the word should start with "To";
+   - Word should be Capitalized (First letter is big). If the word is verb, the word should start with "To". Add "To" if it's not present already;
    - Popularity parameter measures popularity of the given part of speech. For example, if the word is used both as verb and as noun, you can return 70% for verb and 30% for noun. Total must be 100%.
    - If the word is used in more than one part of speech, add all of them in the response. Even if other parts of speech used much more less, you should return them anyway, to give the user all available information.
    User English level is ${userLevel}, so your definition and examples should be fit for this level.
