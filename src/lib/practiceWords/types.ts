@@ -46,3 +46,9 @@ export type Task = {
   task_type: string;
   word: RawWordInfoRow;
 };
+
+export type ServerActionResponse<T> = {
+  success: boolean;
+  data?: T;
+  error?: string;
+};

@@ -10,7 +10,12 @@ import {
   gradeMakeSentence,
   WordInfoFormatType,
 } from "../openai/words";
-import { RawWordInfoInsert, RawWordInfoRow } from "./types";
+import {
+  RawWordInfoInsert,
+  RawWordInfoRow,
+  ServerActionResponse,
+  Task,
+} from "./types";
 import { generateAudio } from "../elevenlabs/audio";
 
 function isAnswerCorrect(grade: number) {
@@ -43,7 +48,9 @@ type WordInfoFormatWithAudioComplete = Omit<WordInfoFormatType, "examples"> & {
 async function fillWordWithAudios(
   word: WordInfoFormatWithAudioType
 ): Promise<WordInfoFormatWithAudioComplete> {
-  const wordAudioPromise = generateAudio(word.word);
+  const wordAudioPromise = generateAudio(
+    word.word.toLowerCase().replace("to ", "")
+  );
   const examplesAudioPromises = word.examples.map((example) => {
     const audioPromise = generateAudio(example.example);
     return audioPromise;
@@ -73,10 +80,13 @@ function checkAudiosInWord(word: WordInfoFormatWithAudioType) {
 export async function getWordInfo(
   prevData: unknown,
   formData: FormData
-): Promise<RawWordInfoRow[]> {
+): Promise<ServerActionResponse<RawWordInfoRow[]>> {
   const word = formData.get("word")?.toString();
   if (!word) {
-    throw new Error("Word is empty");
+    return {
+      success: false,
+      error: "Word is empty",
+    };
   }
   let alreadySavedWords = await dbWords.getWord({ word: word });
   if (alreadySavedWords) {
@@ -90,9 +100,8 @@ export async function getWordInfo(
         }
       })
     );
-    return alreadySavedWords;
+    return { success: true, data: alreadySavedWords };
   }
-  // return [];
 
   const wordInfos = await openAIGetWordInfo(word, "russian", "A2");
   const newWords: RawWordInfoInsert[] = [];
@@ -118,7 +127,7 @@ export async function getWordInfo(
       savedWords.push(newWord);
     }
   }
-  return savedWords as RawWordInfoRow[];
+  return { success: true, data: savedWords };
 }
 
 export async function saveWords(
@@ -205,114 +214,111 @@ async function updateNextReviewDate(wordProgressId: number) {
 }
 
 export async function checkEnRuTranslation(
-  taskProgressId: number,
-  wordProgressId: number | null,
-  score: number,
+  word: RawWordInfoRow,
+  task: Task,
   prevData: unknown,
   formData: FormData
 ) {
-  const word = formData.get("word")?.toString();
-  const partOfSpeech = formData.get("part_of_speech")?.toString();
-  const answer = formData.get("definition_or_translation")?.toString();
-  if (!word || !partOfSpeech || !answer) {
+  const answer = formData.get("answer")?.toString();
+  if (!word || !answer) {
     throw new Error("Invalid word or answer");
   }
-  if (!wordProgressId) {
+  if (!task.progress_id) {
     throw new Error("invalid wordProgressId");
   }
 
-  const result = await gradeEnRuTranslation(word, partOfSpeech, answer);
-  await updateScore(taskProgressId, result.grade, score);
-  await updateNextReviewDate(wordProgressId);
+  const result = await gradeEnRuTranslation(
+    word.word,
+    word.part_of_speech,
+    answer
+  );
+  await updateScore(task.id, result.grade, task.score);
+  await updateNextReviewDate(task.progress_id);
   return result;
 }
 
 export async function checkRuEnTranslation(
-  taskProgressId: number,
-  wordProgressId: number | null,
-  score: number,
+  word: RawWordInfoRow,
+  task: Task,
   prevData: unknown,
   formData: FormData
 ) {
-  const word = formData.get("word")?.toString();
-  const partOfSpeech = formData.get("part_of_speech")?.toString();
-  const answer = formData.get("translation")?.toString();
-  if (!word || !partOfSpeech || !answer) {
+  const answer = formData.get("answer")?.toString();
+  if (!word || !answer) {
     throw new Error("Invalid word or answer");
   }
-  if (!wordProgressId) {
+  if (!task.progress_id) {
     throw new Error("invalid wordProgressId");
   }
-  const result = await gradeRuEnTranslation(word, partOfSpeech, answer);
-  await updateScore(taskProgressId, result.grade, score);
-  await updateNextReviewDate(wordProgressId);
+  const result = await gradeRuEnTranslation(
+    word.word,
+    word.part_of_speech,
+    answer
+  );
+  await updateScore(task.id, result.grade, task.score);
+  await updateNextReviewDate(task.progress_id);
   return result;
 }
 
 export async function checkMakeSentence(
-  taskProgressId: number,
-  wordProgressId: number | null,
-  score: number,
+  word: RawWordInfoRow,
+  task: Task,
   taskDescription: string,
   prevData: unknown,
   formData: FormData
 ) {
-  const word = formData.get("word")?.toString();
-  const partOfSpeech = formData.get("part_of_speech")?.toString();
-  const answer = formData.get("sentence")?.toString();
-  if (!word || !partOfSpeech || !answer) {
+  const answer = formData.get("answer")?.toString();
+  if (!word || !answer) {
     throw new Error("Invalid word or answer");
   }
-  if (!wordProgressId) {
+  if (!task.progress_id) {
     throw new Error("invalid wordProgressId");
   }
   const result = await gradeMakeSentence(
-    word,
-    partOfSpeech,
+    word.word,
+    word.part_of_speech,
     answer,
     taskDescription
   );
-  await updateScore(taskProgressId, result.grade, score);
-  await updateNextReviewDate(wordProgressId);
+  await updateScore(task.id, result.grade, task.score);
+  await updateNextReviewDate(task.progress_id);
   return result;
 }
 
 export async function checkDefinitionToEn(
-  taskProgressId: number,
-  wordProgressId: number | null,
-  score: number,
+  word: RawWordInfoRow,
+  task: Task,
   prevData: unknown,
   formData: FormData
 ) {
-  const definition = formData.get("definition")?.toString();
-  const partOfSpeech = formData.get("part_of_speech")?.toString();
   const answer = formData.get("answer")?.toString();
-  if (!definition || !partOfSpeech || !answer) {
-    throw new Error("Invalid definition or answer");
+  if (!word || !answer) {
+    throw new Error("Invalid word or answer");
   }
-  if (!wordProgressId) {
+  if (!task.progress_id) {
     throw new Error("invalid wordProgressId");
   }
-  const result = await gradeRuEnTranslation(definition, partOfSpeech, answer);
-  await updateScore(taskProgressId, result.grade, score);
-  await updateNextReviewDate(wordProgressId);
+  const result = await gradeRuEnTranslation(
+    word.definition.definition,
+    word.part_of_speech,
+    answer
+  );
+  await updateScore(task.id, result.grade, task.score);
+  await updateNextReviewDate(task.progress_id);
   return result;
 }
 
 export async function checkAudioToWord(
-  taskProgressId: number,
-  wordProgressId: number | null,
-  score: number,
+  word: RawWordInfoRow,
+  task: Task,
   prevData: unknown,
   formData: FormData
 ) {
-  const word = formData.get("word")?.toString();
-  const partOfSpeech = formData.get("part_of_speech")?.toString();
   const answer = formData.get("answer")?.toString();
-  if (!word || !partOfSpeech || !answer) {
+  if (!word || !answer) {
     throw new Error("Invalid word or answer");
   }
-  if (!wordProgressId) {
+  if (!task.progress_id) {
     throw new Error("invalid wordProgressId");
   }
   const result = {
@@ -320,14 +326,14 @@ export async function checkAudioToWord(
   };
   if (
     answer.toLowerCase().replace("to ", "") ===
-    word.toLowerCase().replace("to ", "")
+    word.word.toLowerCase().replace("to ", "")
   ) {
     result.grade = 100;
   } else {
     result.grade = 0;
   }
 
-  await updateScore(taskProgressId, result.grade, score);
-  await updateNextReviewDate(wordProgressId);
+  await updateScore(task.id, result.grade, task.score);
+  await updateNextReviewDate(task.progress_id);
   return result;
 }

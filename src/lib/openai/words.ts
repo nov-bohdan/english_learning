@@ -73,6 +73,8 @@ export const openAIGetWordInfo = async (
     throw new Error("AI Get WordInfo Error");
   }
 
+  // console.log(JSON.stringify(response));
+
   const parsedResponse = response.choices[0].message.parsed.response;
   return parsedResponse.filter((response) => response.popularity > 10);
 };
@@ -169,7 +171,7 @@ export const gradeMakeSentence = async (
   answer: string,
   taskDescription: string
 ) => {
-  const prompt = `You are an AI English tutor that is created to enhance user learning experience. User is studying new words and their current task is the following: [${taskDescription}]. You will be evaluating his answer. You should return a grade on a 100-point scale. User's English level is A2, so fit your answer to their level.
+  const prompt = `You are an AI English tutor that is created to enhance user learning experience. User is studying new words and their current task is the following: [${taskDescription}]. You will be evaluating his answer. You should return a grade on a 100-point scale. User's English level is A2, so fit your answer to their level. You also should return a list of user's mistakes. Translation is a translation of a mistake to Russian.
   Requested word is: [${word} (${partOfSpeech})].
   User's answer is: [${answer}]
   User's answer MUST be on English. If it's in other language, it is incorrect`;

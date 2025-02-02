@@ -22,6 +22,10 @@ export default function Practice({
     { taskName: (typeof TASK_TYPES)[number]; enabled: boolean }[]
   >(TASK_TYPES.map((task_type) => ({ taskName: task_type, enabled: true })));
 
+  const selectedTasksCount = selectedTasks.filter(
+    (task) => task.enabled
+  ).length;
+
   const handleStartPractice = () => {
     async function fetchWords() {
       setIsLoading(true);
@@ -86,8 +90,9 @@ export default function Practice({
         </div>
         <button
           type="button"
-          className="p-4 bg-blue-500 border-2 border-gray-300 rounded-md text-white text-xl"
+          className="p-4 bg-blue-500 border-2 border-gray-300 rounded-md text-white text-xl cursor-pointer disabled:bg-gray-500 disabled:bg-opacity-50 disabled:cursor-not-allowed"
           onClick={handleStartPractice}
+          disabled={selectedTasksCount === 0}
         >
           Start practice
         </button>

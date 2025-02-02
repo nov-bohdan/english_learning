@@ -76,11 +76,6 @@ const saveWord = async (word: RawWordInfoInsert): Promise<RawWordInfoRow> => {
   }
   savedWord = savedWord[0];
 
-  // const userWordProgress = await getUserWordProgress(savedWord.id, 1);
-  // if (!userWordProgress) {
-  //   await addNewUserWordProgress(savedWord.id, 1);
-  // }
-
   return savedWord;
 };
 
@@ -105,8 +100,6 @@ const getUserWordProgressForPractice = async (userId: number, date: string) => {
   if (data.length === 0) {
     return null;
   }
-
-  // const words = data.map((dataItem) => dataItem.words);
 
   return data;
 };

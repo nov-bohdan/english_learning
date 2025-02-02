@@ -6,7 +6,7 @@
 6. Practice words in a chat with AI. It should be one of the word's scores
 7. +++ Info button next to the words in saved words list. Info panel should open in the right side of a page (When a new word input is located right now)
 8. Delete button, to delete a word.
-9. Use word info from database if it's already exists (For example other user already saved the word)
+9. +++ Use word info from database if it's already exists (For example other user already saved the word)
 10. Authentication
 11. Stats, notifications
 12. Charts in calendar
@@ -18,6 +18,5 @@
 18. Find a way to handle words with multiple meanings
 19. Improve UI
 20. Add error handling
-21. When grade is > 80 but < 100, display what could be better in user's answer
-22. New task - AI generates a sentence, user listens and should write it down.
-23. +++ New task - user listens to a word and writes it down.
+21. New task - AI generates a sentence, user listens and should write it down.
+22. +++ New task - user listens to a word and writes it down.
