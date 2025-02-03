@@ -274,13 +274,15 @@ const updateNextReviewDate = async (
 const getWordsNumberPracticedToday = async (userId: string) => {
   const { data, error } = await client
     .from("user_task_progress")
-    .select(`progress_id, progress_id(*)`)
-    .eq("progress_id.user_id", userId)
+    .select(`user_word_progress!inner(user_id), progress_id(*)`)
+    .eq("user_word_progress.user_id", userId)
     .gte("last_practiced", DateTime.now().toFormat("yyyy-MM-dd"));
 
   if (error) {
     throw new Error(error.message);
   }
+
+  console.log(data);
 
   const count = [...new Set(data.map((dataItem) => dataItem.progress_id.id))]
     .length;

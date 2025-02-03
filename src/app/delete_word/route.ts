@@ -16,4 +16,5 @@ export async function DELETE(request: Request) {
   const wordId = res["wordId"];
   await dbWords.unassignWordToUser(wordId, user.user.id);
   revalidatePath("/words");
+  return Response.json({ success: true });
 }

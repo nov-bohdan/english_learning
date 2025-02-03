@@ -4,7 +4,7 @@ import AuthForm from "@/components/Auth/AuthForm";
 import { useState } from "react";
 
 export default function Page() {
-  const [formType, setFormType] = useState<"signup" | "signin">("signup");
+  const [formType, setFormType] = useState<"signup" | "signin">("signin");
   const changeFormType = (formType: "signup" | "signin") => {
     setFormType(formType);
   };
