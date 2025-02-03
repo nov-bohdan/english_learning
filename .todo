@@ -13,7 +13,7 @@
 13. User will not receive tasks that have 100 score
 14. +++ Show score splitted by tasks in saved words list
 15. Display word's new scores after user answered the task
-16. Fix redirect on "Finish practice" button
+16. +++ Fix redirect on "Finish practice" button
 17. Update "Next review in" in realtime
 18. Improve UI
 19. +++ Add error handling
@@ -22,3 +22,5 @@
 22. Notifications
 23. Clean code
 24. Next review date for each type task
+25. If answer is incorrect, generate this task again and add it to the end of tasks list
+26. Grade % is not showing up in incorrect answer

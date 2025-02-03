@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import PracticeWordsPage from "@/components/PracticeWords/PracticeWordsPage";
 import dbWords from "@/lib/db/words";
 import { mapRawRowToWords } from "@/lib/helpers/words";

@@ -8,6 +8,7 @@ import GetWordInfoPanel from "./GetWordInfoPanel";
 import { DateTime } from "luxon";
 import WordInfoUI from "./WordInfoUI";
 import TopPanel from "./TopPanel";
+import { useRouter } from "next/navigation";
 
 const getWordsToPracticeNowCount = (words: WordInfo[]) => {
   let count = 0;
@@ -32,6 +33,7 @@ export default function PracticeWordsPage({
   wordsNumberPracticedToday: number;
   savedWordsNumberByDate: { date: string; count: number }[];
 }) {
+  const router = useRouter();
   const [wordsState, setWordsState] = useState<WordInfo[]>(words);
   const [isPracticeMode, setIsPracticeMode] = useState<boolean>(false);
   const [wordsToPracticeNowCount, setWordsToPracticeNowCount] =
@@ -41,6 +43,10 @@ export default function PracticeWordsPage({
   useEffect(() => {
     setWordsToPracticeNowCount(getWordsToPracticeNowCount(wordsState));
   }, [wordsState, words]);
+
+  useEffect(() => {
+    setWordsState(words);
+  }, [words]);
 
   const handleDeleteWord = async (word: WordInfo) => {
     const result = await fetch("/delete_word", {
@@ -53,6 +59,11 @@ export default function PracticeWordsPage({
       });
       setShowWordDetails(null);
     }
+  };
+
+  const handleFinishPractice = () => {
+    router.refresh();
+    setIsPracticeMode(false);
   };
 
   return (
@@ -114,9 +125,7 @@ export default function PracticeWordsPage({
             )}
           </>
         )}
-        {isPracticeMode && (
-          <Practice onFinishPractice={() => setIsPracticeMode(false)} />
-        )}
+        {isPracticeMode && <Practice onFinishPractice={handleFinishPractice} />}
       </div>
     </div>
   );
