@@ -47,6 +47,12 @@ export default function PracticeWordsPage({
     setWordsState(words);
   }, [words]);
 
+  const handleShowWordDetails = (word: WordInfo) => {
+    const audio = new Audio(word.word_audio);
+    audio.play();
+    setShowWordDetails(word);
+  };
+
   const handleDeleteWord = async (word: WordInfo) => {
     const result = await fetch("/delete_word", {
       method: "DELETE",
@@ -103,7 +109,7 @@ export default function PracticeWordsPage({
                   <WordListItem
                     key={`${word.word}-${word.part_of_speech}`}
                     word={word}
-                    onShowDetails={() => setShowWordDetails(word)}
+                    onShowDetails={() => handleShowWordDetails(word)}
                   />
                 ))}
             </div>

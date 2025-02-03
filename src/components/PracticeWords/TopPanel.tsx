@@ -58,7 +58,8 @@ export default function TopPanel({
           </p>
           <p className="text-lg">
             <span className="font-semibold">New Words Today:</span>{" "}
-            {savedWordsNumberByDate[0]?.count ?? 0}
+            {savedWordsNumberByDate[savedWordsNumberByDate.length - 1]?.count ??
+              0}
           </p>
         </div>
 

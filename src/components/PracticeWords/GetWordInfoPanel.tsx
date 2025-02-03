@@ -1,7 +1,13 @@
 import { mapRawRowToWords } from "@/lib/helpers/words";
 import { getWordInfo } from "@/lib/practiceWords/actions";
 import { RawWordInfoRow, WordInfo } from "@/lib/practiceWords/types";
-import { Dispatch, SetStateAction, useActionState, useCallback } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useActionState,
+  useCallback,
+  useEffect,
+} from "react";
 import NewWordForm from "./NewWordForm";
 import NewWordInfo from "./NewWordInfo";
 import Error from "../Errors/Error";
@@ -24,6 +30,14 @@ export default function GetWordInfoPanel({
     },
     [setWordsListState]
   );
+
+  useEffect(() => {
+    if (getWordInfoState?.data) {
+      const wordAudio = getWordInfoState?.data[0].word_audio;
+      const audio = new Audio(wordAudio);
+      audio.play();
+    }
+  }, [getWordInfoState]);
 
   return (
     <div className="flex flex-col gap-6">
