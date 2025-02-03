@@ -76,6 +76,20 @@ const assignWordToUser = async (wordId: number, userId: number) => {
   }
 };
 
+const unassignWordToUser = async (wordId: number, userId: number) => {
+  const { error } = await client
+    .from("user_word_progress")
+    .delete()
+    .eq("user_id", userId)
+    .eq("word_id", wordId);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return true;
+};
+
 const getUserWordProgressForPractice = async (userId: number, date: string) => {
   const { data, error } = await client
     .from("user_word_progress")
@@ -318,6 +332,7 @@ const dbWords = {
   getUserWordProgress,
   getWordsNumberPracticedToday,
   getSavedWordsNumberByDate,
+  unassignWordToUser,
 };
 
 export default dbWords;

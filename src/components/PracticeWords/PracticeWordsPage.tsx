@@ -43,6 +43,19 @@ export default function PracticeWordsPage({
     setWordsToPracticeNowCount(getWordsToPracticeNowCount(wordsState));
   }, [wordsState, words]);
 
+  const handleDeleteWord = async (word: WordInfo) => {
+    const result = await fetch("/delete_word", {
+      method: "DELETE",
+      body: JSON.stringify({ wordId: word.id }),
+    });
+    if (result) {
+      setWordsState((oldWords) => {
+        return oldWords.filter((oldWord) => oldWord.id !== word.id);
+      });
+      setShowWordDetails(null);
+    }
+  };
+
   return (
     <div className="flex flex-col gap-4 w-full">
       {/* TOP PANEL */}
@@ -85,7 +98,10 @@ export default function PracticeWordsPage({
             </div>
             {/* RIGHT PANEL */}
             {showWordDetails ? (
-              <WordInfoUI wordInfo={showWordDetails}>
+              <WordInfoUI
+                wordInfo={showWordDetails}
+                handleDeleteWord={handleDeleteWord}
+              >
                 <button
                   type="button"
                   className="bg-blue-500 rounded-md py-4 px-8 font-semibold text-white"

@@ -5,10 +5,10 @@
 5. Use dictionary api to mitigate AI load
 6. Practice words in a chat with AI. It should be one of the word's scores
 7. +++ Info button next to the words in saved words list. Info panel should open in the right side of a page (When a new word input is located right now)
-8. Delete button, to delete a word.
+8. +++ Delete button, to delete a word.
 9. +++ Use word info from database if it's already exists (For example other user already saved the word)
 10. Authentication
-11. Stats
+11. +++ Stats
 12. Charts in calendar
 13. User will not receive tasks that have 100 score
 14. +++ Show score splitted by tasks in saved words list
