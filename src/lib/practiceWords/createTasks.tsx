@@ -9,7 +9,8 @@ export function createTask(
   word: RawWordInfoRow,
   task: Task,
   callback: () => void,
-  index: number
+  index: number,
+  addNewTaskToCurrentPractice: () => Promise<void>
 ) {
   switch (task.task_type) {
     case "EN_RU":
@@ -19,6 +20,7 @@ export function createTask(
           word={word}
           task={task}
           callback={callback}
+          addNewTaskToCurrentPractice={addNewTaskToCurrentPractice}
         />
       );
     case "RU_EN":
@@ -28,6 +30,7 @@ export function createTask(
           word={word}
           task={task}
           callback={callback}
+          addNewTaskToCurrentPractice={addNewTaskToCurrentPractice}
         />
       );
     case "MAKE_SENTENCE":
@@ -37,6 +40,7 @@ export function createTask(
           word={word}
           task={task}
           callback={callback}
+          addNewTaskToCurrentPractice={addNewTaskToCurrentPractice}
         />
       );
     case "DEFINITION_TO_EN":
@@ -46,6 +50,7 @@ export function createTask(
           word={word}
           task={task}
           callback={callback}
+          addNewTaskToCurrentPractice={addNewTaskToCurrentPractice}
         />
       );
     case "AUDIO_TO_WORD":
@@ -55,6 +60,7 @@ export function createTask(
           word={word}
           task={task}
           callback={callback}
+          addNewTaskToCurrentPractice={addNewTaskToCurrentPractice}
         />
       );
     default:
@@ -64,6 +70,7 @@ export function createTask(
           word={word}
           task={task}
           callback={callback}
+          addNewTaskToCurrentPractice={addNewTaskToCurrentPractice}
         />
       );
   }

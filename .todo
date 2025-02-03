@@ -15,12 +15,12 @@
 15. Display word's new scores after user answered the task
 16. +++ Fix redirect on "Finish practice" button
 17. Update "Next review in" in realtime
-18. Improve UI
+18. +++ Improve UI
 19. +++ Add error handling
 20. New task - AI generates a sentence, user listens and should write it down.
 21. +++ New task - user listens to a word and writes it down.
 22. Notifications
 23. Clean code
 24. Next review date for each type task
-25. If answer is incorrect, generate this task again and add it to the end of tasks list
+25. +++ If answer is incorrect, generate this task again and add it to the end of tasks list
 26. +++ Grade % is not showing up in incorrect answer

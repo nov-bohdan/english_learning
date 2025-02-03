@@ -6,10 +6,12 @@ export default function EnRuTask({
   word,
   task,
   callback,
+  addNewTaskToCurrentPractice,
 }: {
   word: RawWordInfoRow;
   task: Task;
   callback: () => void;
+  addNewTaskToCurrentPractice: () => Promise<void>;
 }) {
   return (
     <TaskTemplate
@@ -19,6 +21,7 @@ export default function EnRuTask({
       correctAnswer={word.translation}
       callback={callback}
       action={checkEnRuTranslation.bind(null, word, task)}
+      addNewTaskToCurrentPractice={addNewTaskToCurrentPractice}
     />
   );
 }

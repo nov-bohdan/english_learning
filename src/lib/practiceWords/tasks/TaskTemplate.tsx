@@ -11,6 +11,7 @@ export default function TaskTemplate({
   callback,
   action,
   correctAnswer,
+  addNewTaskToCurrentPractice,
   isExtendedResult = false,
   playAudio = true,
 }: {
@@ -23,7 +24,9 @@ export default function TaskTemplate({
   correctAnswer?: string;
   isExtendedResult?: boolean;
   playAudio?: boolean;
+  addNewTaskToCurrentPractice: () => Promise<void>;
 }) {
+  const [hasAddedNewTask, setHasAddedNewTask] = useState(false);
   const [isShowingAnswer, setIsShowingAnswer] = useState<boolean>(false);
   const [
     checkUserAnswerState,
@@ -32,11 +35,20 @@ export default function TaskTemplate({
   ] = useActionState(action, undefined);
 
   useEffect(() => {
-    if (checkUserAnswerState?.success) {
+    if (checkUserAnswerState?.success && !hasAddedNewTask) {
       setIsShowingAnswer(true);
+      if (checkUserAnswerState.data.grade < 80) {
+        addNewTaskToCurrentPractice();
+        setHasAddedNewTask(true);
+      }
       callback();
     }
-  }, [checkUserAnswerState, callback]);
+  }, [
+    checkUserAnswerState,
+    callback,
+    addNewTaskToCurrentPractice,
+    hasAddedNewTask,
+  ]);
 
   useEffect(() => {
     if (playAudio) {

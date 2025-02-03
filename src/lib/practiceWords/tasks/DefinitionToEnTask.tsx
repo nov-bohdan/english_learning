@@ -6,10 +6,12 @@ export default function DefinitionToEnTask({
   word,
   task,
   callback,
+  addNewTaskToCurrentPractice,
 }: {
   word: RawWordInfoRow;
   task: Task;
   callback: () => void;
+  addNewTaskToCurrentPractice: () => Promise<void>;
 }) {
   return (
     <TaskTemplate
@@ -21,6 +23,7 @@ export default function DefinitionToEnTask({
       callback={callback}
       action={checkDefinitionToEn.bind(null, word, task)}
       playAudio={false}
+      addNewTaskToCurrentPractice={addNewTaskToCurrentPractice}
     />
   );
 }

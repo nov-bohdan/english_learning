@@ -178,6 +178,7 @@ function adjustScore(score: number, grade: number) {
   }
 
   if (newScore < 0) newScore = 0;
+  if (newScore > 100) newScore = 100;
 
   return Math.ceil(newScore);
 }

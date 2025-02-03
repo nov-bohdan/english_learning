@@ -1,7 +1,7 @@
 "use client";
 
 import { createTask } from "@/lib/practiceWords/createTasks";
-import { Task } from "@/lib/practiceWords/types";
+import { RawWordInfoRow, Task } from "@/lib/practiceWords/types";
 import { useCallback, useEffect, useState } from "react";
 import {
   TASK_TYPES,
@@ -57,12 +57,36 @@ export default function Practice({
     });
   };
 
+  const addNewTaskToCurrentPractice = useCallback(
+    async (taskType: string, wordProgressId: number, word: RawWordInfoRow) => {
+      const res = await fetch("/get_tasks_to_show", {
+        method: "POST",
+        body: JSON.stringify({
+          task_types: [taskType],
+          wordProgressId: wordProgressId,
+          word: word,
+        }),
+      });
+
+      const task: Task = (await res.json())[0];
+      setTasksToPractice((oldTasks) => [...oldTasks, task]);
+    },
+    []
+  );
+
   const [currentTaskCompleted, setCurrentTaskCompleted] =
     useState<boolean>(false);
   const [currentTaskIndex, setCurrentTaskIndex] = useState<number>(0);
 
   const taskElements = tasksToPractice.map((task, index) =>
-    createTask(task.word, task, () => setCurrentTaskCompleted(true), index)
+    createTask(
+      task.word,
+      task,
+      () => setCurrentTaskCompleted(true),
+      index,
+      () =>
+        addNewTaskToCurrentPractice(task.task_type, task.progress_id, task.word)
+    )
   );
 
   const handleNextTask = useCallback(() => {

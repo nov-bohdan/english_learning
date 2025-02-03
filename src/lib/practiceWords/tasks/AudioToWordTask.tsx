@@ -7,10 +7,12 @@ export default function AudioToWordTask({
   word,
   task,
   callback,
+  addNewTaskToCurrentPractice,
 }: {
   word: RawWordInfoRow;
   task: Task;
   callback: () => void;
+  addNewTaskToCurrentPractice: () => Promise<void>;
 }) {
   return (
     <TaskTemplate
@@ -24,6 +26,7 @@ export default function AudioToWordTask({
       correctAnswer={word.word}
       callback={callback}
       action={checkAudioToWord.bind(null, word, task)}
+      addNewTaskToCurrentPractice={addNewTaskToCurrentPractice}
     />
   );
 }

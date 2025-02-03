@@ -6,10 +6,12 @@ export default function MakeSentenceTask({
   word,
   task,
   callback,
+  addNewTaskToCurrentPractice,
 }: {
   word: RawWordInfoRow;
   task: Task;
   callback: () => void;
+  addNewTaskToCurrentPractice: () => Promise<void>;
 }) {
   const TASK_DESCRIPTION =
     `Составьте предложение со словом “${word.word}” (${word.part_of_speech}), используя минимум 6 слов.
@@ -23,6 +25,7 @@ export default function MakeSentenceTask({
       callback={callback}
       action={checkMakeSentence.bind(null, word, task, TASK_DESCRIPTION)}
       isExtendedResult={true}
+      addNewTaskToCurrentPractice={addNewTaskToCurrentPractice}
     />
   );
 }
