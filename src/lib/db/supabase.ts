@@ -211,18 +211,21 @@ export type Database = {
           next_review_date: string;
           user_id: number;
           word_id: number;
+          created_at: string;
         };
         Insert: {
           id?: number;
           next_review_date?: string;
           user_id: number;
           word_id: number;
+          created_at?: string;
         };
         Update: {
           id?: number;
           next_review_date?: string;
           user_id?: number;
           word_id?: number;
+          created_at?: string;
         };
         Relationships: [
           {

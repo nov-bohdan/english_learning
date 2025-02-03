@@ -254,6 +254,57 @@ const updateNextReviewDate = async (
   return data[0];
 };
 
+const getWordsNumberPracticedToday = async (userId: number) => {
+  const { data, error } = await client
+    .from("user_task_progress")
+    .select(`progress_id, progress_id(*)`)
+    .eq("progress_id.user_id", userId)
+    .gte("last_practiced", DateTime.now().toFormat("yyyy-MM-dd"));
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  const count = [...new Set(data.map((dataItem) => dataItem.progress_id.id))]
+    .length;
+
+  return count;
+};
+
+const getSavedWordsNumberByDate = async (
+  userId: number
+): Promise<{ date: string; count: number }[]> => {
+  const { data, error } = await client
+    .from("user_word_progress")
+    .select(`created_at`)
+    .eq("user_id", userId)
+    .order("created_at", { ascending: true });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  const uniqueDates = new Set([
+    ...data.map((dataItem) =>
+      DateTime.fromISO(dataItem.created_at).toFormat("yyyy-MM-dd")
+    ),
+  ]);
+  const countByDates: { date: string; count: number }[] = [];
+  uniqueDates.forEach((date) => {
+    countByDates.push({
+      date: date,
+      count: data.filter((dataItem) =>
+        DateTime.fromISO(dataItem.created_at).hasSame(
+          DateTime.fromFormat(date, "yyyy-MM-dd"),
+          "day"
+        )
+      ).length,
+    });
+  });
+
+  return countByDates;
+};
+
 const dbWords = {
   getWord,
   saveWord,
@@ -265,6 +316,8 @@ const dbWords = {
   updateNextReviewDate,
   assignWordToUser,
   getUserWordProgress,
+  getWordsNumberPracticedToday,
+  getSavedWordsNumberByDate,
 };
 
 export default dbWords;
