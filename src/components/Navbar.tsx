@@ -25,10 +25,10 @@ export default function Navbar() {
               Settings
             </Link>
             <Link
-              href="/logout"
+              href="/signout"
               className="px-3 py-2 rounded-md text-base font-bold transition-colors hover:bg-blue-700"
             >
-              Logout
+              Sign out
             </Link>
           </div>
         </div>

@@ -1,26 +1,26 @@
 1. Task - user should write a small essay with given words. It should be one of the word's scores
 2. +++ Voice record of a word
-3. User should be able to choose which words to practice now
-4. Filters (to item 3 and in saved words list)
-5. Use dictionary api to mitigate AI load
-6. Practice words in a chat with AI. It should be one of the word's scores
-7. +++ Info button next to the words in saved words list. Info panel should open in the right side of a page (When a new word input is located right now)
-8. +++ Delete button, to delete a word.
-9. +++ Use word info from database if it's already exists (For example other user already saved the word)
-10. Authentication
-11. +++ Stats
-12. Charts in calendar
-13. User will not receive tasks that have 100 score
-14. +++ Show score splitted by tasks in saved words list
-15. Display word's new scores after user answered the task
-16. +++ Fix redirect on "Finish practice" button
-17. Update "Next review in" in realtime
-18. +++ Improve UI
-19. +++ Add error handling
-20. New task - AI generates a sentence, user listens and should write it down.
-21. +++ New task - user listens to a word and writes it down.
-22. Notifications
-23. Clean code
-24. Next review date for each type task
-25. +++ If answer is incorrect, generate this task again and add it to the end of tasks list
-26. +++ Grade % is not showing up in incorrect answer
+3. Filters (in saved words list)
+4. Use dictionary api to mitigate AI load
+5. Practice words in a chat with AI. It should be one of the word's scores
+6. +++ Info button next to the words in saved words list. Info panel should open in the right side of a page (When a new word input is located right now)
+7. +++ Delete button, to delete a word.
+8. +++ Use word info from database if it's already exists (For example other user already saved the word)
+9. Authentication
+10. +++ Stats
+11. Charts in calendar
+12. User will not receive tasks that have 100 score
+13. +++ Show score splitted by tasks in saved words list
+14. Display word's new scores after user answered the task
+15. +++ Fix redirect on "Finish practice" button
+16. Update "Next review in" in realtime
+17. +++ Improve UI
+18. +++ Add error handling
+19. New task - AI generates a sentence, user listens and should write it down.
+20. +++ New task - user listens to a word and writes it down.
+21. Notifications
+22. Clean code
+23. Next review date for each type task
+24. +++ If answer is incorrect, generate this task again and add it to the end of tasks list
+25. +++ Grade % is not showing up in incorrect answer
+26. List of new words that a user can choose from

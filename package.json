@@ -16,6 +16,7 @@
     "@nextui-org/calendar": "^2.2.9",
     "@nextui-org/system": "^2.4.6",
     "@nextui-org/theme": "^2.4.5",
+    "@supabase/ssr": "^0.5.2",
     "@supabase/supabase-js": "^2.47.16",
     "axios": "^1.7.9",
     "base64-arraybuffer": "^1.0.2",
