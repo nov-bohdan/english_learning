@@ -285,6 +285,10 @@ const getWordsNumberPracticedToday = async (userId: number) => {
   return count;
 };
 
+// const getUniqueDates = (dates: string[]) => {
+//   const;
+// };
+
 const getSavedWordsNumberByDate = async (
   userId: number
 ): Promise<{ date: string; count: number }[]> => {
@@ -303,6 +307,7 @@ const getSavedWordsNumberByDate = async (
       DateTime.fromISO(dataItem.created_at).toFormat("yyyy-MM-dd")
     ),
   ]);
+
   const countByDates: { date: string; count: number }[] = [];
   uniqueDates.forEach((date) => {
     countByDates.push({

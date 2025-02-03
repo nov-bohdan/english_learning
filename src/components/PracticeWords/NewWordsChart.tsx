@@ -1,10 +1,10 @@
 import { LineChart } from "@mui/x-charts/LineChart";
 import { DateTime } from "luxon";
 
-const getLast7Days = () => {
+const getLastXDays = (daysToShow: number) => {
   const today = DateTime.now();
   const days = [];
-  for (let i = 6; i > 0; i--) {
+  for (let i = daysToShow - 1; i > 0; i--) {
     days.push(today.minus({ days: i }).toFormat("yyyy-MM-dd"));
   }
   days.push(today.toFormat("yyyy-MM-dd"));
@@ -22,19 +22,20 @@ export default function NewWordsChart({
   xAxisDataKey: string;
   seriesDataKey: string;
 }) {
-  const last7Days = getLast7Days();
-  last7Days.forEach((day, index) => {
+  // console.log(data);
+  const DAYS_TO_SHOW = 14;
+  const lastXDays = getLastXDays(DAYS_TO_SHOW);
+  lastXDays.forEach((day, index) => {
     const dayExistsInData = data.find((dateItem) => dateItem.date === day);
     if (!dayExistsInData) {
       data.splice(index, 0, { date: day, count: 0 });
     }
   });
-
   return (
     <LineChart
       xAxis={[
         {
-          data: last7Days,
+          data: lastXDays,
           scaleType: "point",
           label: label,
           disableLine: true,

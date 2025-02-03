@@ -15,11 +15,10 @@
 15. Display word's new scores after user answered the task
 16. Fix redirect on "Finish practice" button
 17. Update "Next review in" in realtime
-18. Find a way to handle words with multiple meanings
-19. Improve UI
-20. +++ Add error handling
-21. New task - AI generates a sentence, user listens and should write it down.
-22. +++ New task - user listens to a word and writes it down.
-23. Notifications
-24. Clean code
-25. Next review date for each type task
+18. Improve UI
+19. +++ Add error handling
+20. New task - AI generates a sentence, user listens and should write it down.
+21. +++ New task - user listens to a word and writes it down.
+22. Notifications
+23. Clean code
+24. Next review date for each type task

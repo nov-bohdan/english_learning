@@ -8,11 +8,11 @@ export default function WordInfoUI({
   children,
 }: {
   wordInfo: RawWordInfoInsert | WordInfo;
-  handleDeleteWord: (word: WordInfo) => void;
+  handleDeleteWord?: (word: WordInfo) => void;
   children?: React.ReactNode;
 }) {
   const onDelete = async () => {
-    if (children) {
+    if (handleDeleteWord) {
       handleDeleteWord(wordInfo as WordInfo);
     }
   };
@@ -33,7 +33,7 @@ export default function WordInfoUI({
         </div>
         <div className="flex flex-col gap-2">
           {children}
-          {children && (
+          {handleDeleteWord && (
             <button
               type="button"
               className="bg-red-500 rounded-md p-2 text-white font-semibold"

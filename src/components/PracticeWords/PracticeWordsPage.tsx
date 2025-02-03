@@ -5,7 +5,6 @@ import { WordInfo } from "@/lib/practiceWords/types";
 import WordListItem from "./WordListItem";
 import Practice from "./Practice";
 import GetWordInfoPanel from "./GetWordInfoPanel";
-import { redirect } from "next/navigation";
 import { DateTime } from "luxon";
 import WordInfoUI from "./WordInfoUI";
 import TopPanel from "./TopPanel";
@@ -116,7 +115,7 @@ export default function PracticeWordsPage({
           </>
         )}
         {isPracticeMode && (
-          <Practice onFinishPractice={() => redirect("/words")} />
+          <Practice onFinishPractice={() => setIsPracticeMode(false)} />
         )}
       </div>
     </div>
