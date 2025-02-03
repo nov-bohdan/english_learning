@@ -34,7 +34,6 @@ export default function TaskTemplate({
   useEffect(() => {
     console.log(checkUserAnswerState);
     if (checkUserAnswerState?.success) {
-      console.log("show");
       setIsShowingAnswer(true);
       callback();
     }
@@ -84,13 +83,13 @@ export default function TaskTemplate({
             {checkUserAnswerState.data.grade >= 80 && (
               <CorrectAnswer
                 isExtended={isExtendedResult}
-                answerState={checkUserAnswerState}
+                answerState={checkUserAnswerState.data}
               />
             )}
             {checkUserAnswerState.data.grade < 80 && (
               <IncorrectAnswer
                 correctAnswer={correctAnswer}
-                answerState={checkUserAnswerState}
+                answerState={checkUserAnswerState.data}
                 isExtended={isExtendedResult}
               />
             )}

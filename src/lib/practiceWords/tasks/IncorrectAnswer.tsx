@@ -11,6 +11,7 @@ export default function IncorrectAnswer({
   correctAnswer?: string;
   isExtended?: boolean;
 }) {
+  console.log(answerState);
   if (isExtended) {
     return (
       <div className="bg-red-400 rounded-md p-4 w-full">
@@ -32,8 +33,7 @@ export default function IncorrectAnswer({
   return (
     <div className="bg-red-400 rounded-md p-4 w-full">
       <p>
-        Your answer is incorrect! Your grade for this answer is{" "}
-        {answerState.grade}%. Correct answer is:{" "}
+        Your answer is incorrect! Correct answer is:{" "}
         <span className="font-bold">{correctAnswer}</span>
       </p>
     </div>
