@@ -38,7 +38,6 @@ export default function Practice({
         body: JSON.stringify({ task_types: taskTypesToShow }),
       });
       const tasks: Task[] = await res.json();
-      console.log(tasks);
       setTasksToPractice(tasks);
       setIsLoading(false);
     }

@@ -17,6 +17,7 @@ import {
   Task,
 } from "./types";
 import { generateAudio } from "../elevenlabs/audio";
+import { getUser } from "../auth/auth";
 
 function isAnswerCorrect(grade: number) {
   if (grade >= 80) {
@@ -88,11 +89,23 @@ export async function getWordInfo(
       error: "Word is empty",
     };
   }
+  let user;
+  try {
+    user = await getUser();
+  } catch {
+    return {
+      success: false,
+      error: "User is not authorized",
+    };
+  }
   let alreadySavedWords = await dbWords.getWord({ word: word });
   if (alreadySavedWords) {
     alreadySavedWords = await Promise.all(
       alreadySavedWords.map(async (word) => {
-        const isAssigned = await dbWords.getUserWordProgress(word.id, 1);
+        const isAssigned = await dbWords.getUserWordProgress(
+          word.id,
+          user.user.id
+        );
         if (isAssigned) {
           return { ...word, isAlreadySaved: true };
         } else {
@@ -152,12 +165,21 @@ export async function assignWordToUser(
   if (!wordId) {
     throw new Error("Trying to assign a word without wordId");
   }
-  await dbWords.assignWordToUser(wordId, 1);
+  let user;
+  try {
+    user = await getUser();
+  } catch {
+    return {
+      success: false,
+      error: "User is not authorized",
+    };
+  }
+  await dbWords.assignWordToUser(wordId, user.user.id);
   const savedWord = await dbWords.getWord({ id: wordId });
   if (!savedWord) {
     throw new Error("Unknown error in assigning word to a user");
   }
-  return savedWord as RawWordInfoRow[];
+  return { success: true, data: savedWord as RawWordInfoRow[] };
 }
 
 function adjustScore(score: number, grade: number) {

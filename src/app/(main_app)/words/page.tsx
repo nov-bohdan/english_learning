@@ -8,12 +8,14 @@ import { mapRawRowToWords } from "@/lib/helpers/words";
 export default async function Page() {
   const user = await getUser();
   console.log(user);
-  const words = await dbWords.getWords(1);
+  const words = await dbWords.getWords(user.user.id);
   const mappedWords = mapRawRowToWords(words);
   const wordsNumberPracticedToday = await dbWords.getWordsNumberPracticedToday(
-    1
+    user.user.id
   );
-  const savedWordsNumberByDate = await dbWords.getSavedWordsNumberByDate(1);
+  const savedWordsNumberByDate = await dbWords.getSavedWordsNumberByDate(
+    user.user.id
+  );
   return (
     <PracticeWordsPage
       words={mappedWords}

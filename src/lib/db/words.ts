@@ -69,14 +69,14 @@ const saveWord = async (word: RawWordInfoInsert): Promise<RawWordInfoRow> => {
   return savedWord;
 };
 
-const assignWordToUser = async (wordId: number, userId: number) => {
+const assignWordToUser = async (wordId: number, userId: string) => {
   const userWordProgress = await getUserWordProgress(wordId, userId);
   if (!userWordProgress) {
     await addNewUserWordProgress(wordId, userId);
   }
 };
 
-const unassignWordToUser = async (wordId: number, userId: number) => {
+const unassignWordToUser = async (wordId: number, userId: string) => {
   const { error } = await client
     .from("user_word_progress")
     .delete()
@@ -90,7 +90,7 @@ const unassignWordToUser = async (wordId: number, userId: number) => {
   return true;
 };
 
-const getUserWordProgressForPractice = async (userId: number, date: string) => {
+const getUserWordProgressForPractice = async (userId: string, date: string) => {
   const { data, error } = await client
     .from("user_word_progress")
     .select(`*, words (*)`)
@@ -108,7 +108,7 @@ const getUserWordProgressForPractice = async (userId: number, date: string) => {
   return data;
 };
 
-const getUserWordProgress = async (wordId: number, userId: number) => {
+const getUserWordProgress = async (wordId: number, userId: string) => {
   const { data, error } = await client
     .from("user_word_progress")
     .select()
@@ -125,7 +125,7 @@ const getUserWordProgress = async (wordId: number, userId: number) => {
   return data[0];
 };
 
-const addNewUserWordProgress = async (wordId: number, userId: number) => {
+const addNewUserWordProgress = async (wordId: number, userId: string) => {
   const { data, error } = await client
     .from("user_word_progress")
     .insert({
@@ -171,7 +171,7 @@ const mapProgress = (
   return taskMap;
 };
 
-const getWords = async (userId: number): Promise<RawWordInfoRow[]> => {
+const getWords = async (userId: string): Promise<RawWordInfoRow[]> => {
   const { data, error } = await client
     .from("user_word_progress")
     .select(
@@ -195,8 +195,11 @@ const getWords = async (userId: number): Promise<RawWordInfoRow[]> => {
   return words as RawWordInfoRow[];
 };
 
-const getWordsToPractice = async () => {
-  const words = await getUserWordProgressForPractice(1, DateTime.now().toISO());
+const getWordsToPractice = async (userId: string) => {
+  const words = await getUserWordProgressForPractice(
+    userId,
+    DateTime.now().toISO()
+  );
   return words || [];
 };
 
@@ -268,7 +271,7 @@ const updateNextReviewDate = async (
   return data[0];
 };
 
-const getWordsNumberPracticedToday = async (userId: number) => {
+const getWordsNumberPracticedToday = async (userId: string) => {
   const { data, error } = await client
     .from("user_task_progress")
     .select(`progress_id, progress_id(*)`)
@@ -285,12 +288,8 @@ const getWordsNumberPracticedToday = async (userId: number) => {
   return count;
 };
 
-// const getUniqueDates = (dates: string[]) => {
-//   const;
-// };
-
 const getSavedWordsNumberByDate = async (
-  userId: number
+  userId: string
 ): Promise<{ date: string; count: number }[]> => {
   const { data, error } = await client
     .from("user_word_progress")

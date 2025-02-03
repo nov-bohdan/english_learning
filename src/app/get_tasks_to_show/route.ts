@@ -1,6 +1,7 @@
 import dbWords from "@/lib/db/words";
 import { RawWordInfoRow, Task } from "@/lib/practiceWords/types";
 import { TASK_TYPES } from "@/lib/practiceWords/tasks/TaskTypes";
+import { getUser } from "@/lib/auth/auth";
 
 async function createTasksForWord(
   wordTasks: {
@@ -45,15 +46,24 @@ function shuffle(array: unknown[]) {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function POST(request: Request): Promise<Response> {
+  let user;
+  try {
+    user = await getUser();
+  } catch {
+    return Response.json({
+      success: false,
+      error: "User is not authorized",
+    });
+  }
   const data: {
     task_types: (typeof TASK_TYPES)[number][];
-    wordProgressId?: number[];
+    wordProgressId?: number;
     word?: RawWordInfoRow;
   } = await request.json();
   const tasksToShow: Task[] = [];
   let wordProgresses = null;
-  if (!data.wordProgressId) {
-    wordProgresses = await dbWords.getWordsToPractice();
+  if (!data.wordProgressId || !data.word) {
+    wordProgresses = await dbWords.getWordsToPractice(user.user.id);
   } else {
     wordProgresses = [{ id: data.wordProgressId, words: data.word }];
   }
@@ -65,15 +75,15 @@ export async function POST(request: Request): Promise<Response> {
       const matchingTask = wordTasks.find(
         (currentTask) => currentTask.task_type === taskType
       );
-      tasksToShow.push({
-        ...matchingTask,
-        word: wordProgress.words,
-        wordProgressId: wordProgress.id,
-      });
+      if (matchingTask) {
+        tasksToShow.push({
+          ...matchingTask,
+          word: wordProgress.words,
+          progress_id: wordProgress.id,
+        });
+      }
     }
   }
   shuffle(tasksToShow);
-  console.log("Returning tasks:");
-  console.log(tasksToShow);
   return Response.json(tasksToShow);
 }

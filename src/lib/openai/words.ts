@@ -73,8 +73,6 @@ export const openAIGetWordInfo = async (
     throw new Error("AI Get WordInfo Error");
   }
 
-  // console.log(JSON.stringify(response));
-
   const parsedResponse = response.choices[0].message.parsed.response;
   return parsedResponse.filter((response) => response.popularity > 10);
 };

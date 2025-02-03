@@ -209,21 +209,21 @@ export type Database = {
         Row: {
           id: number;
           next_review_date: string;
-          user_id: number;
+          user_id: string;
           word_id: number;
           created_at: string;
         };
         Insert: {
           id?: number;
           next_review_date?: string;
-          user_id: number;
+          user_id: string;
           word_id: number;
           created_at?: string;
         };
         Update: {
           id?: number;
           next_review_date?: string;
-          user_id?: number;
+          user_id?: string;
           word_id?: number;
           created_at?: string;
         };

@@ -11,10 +11,6 @@ export default function IncorrectAnswer({
   correctAnswer?: string;
   isExtended?: boolean;
 }) {
-  // Optional: Remove console.log in production
-  console.log(answerState);
-
-  // Common styling for the error container
   const containerClasses =
     "rounded-lg shadow-md p-6 w-full transition-all duration-300 bg-red-50 border border-red-300";
 

@@ -19,10 +19,10 @@ export default function NewWordInfo({
   );
 
   useEffect(() => {
-    if (!saveWordState) return;
+    if (!saveWordState?.data) return;
 
     setIsSaved(true);
-    onAddNewWord(saveWordState);
+    onAddNewWord(saveWordState.data);
   }, [saveWordState, onAddNewWord]);
 
   useEffect(() => {

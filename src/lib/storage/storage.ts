@@ -14,6 +14,5 @@ export const uploadFile = async (base64FileData: string, fileName: string) => {
     throw new Error(error.message);
   }
 
-  console.log(data);
   return data.path;
 };
