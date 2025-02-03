@@ -55,7 +55,7 @@ export default function WordListItem({
       </div>
       <div className="flex flex-col gap-2">
         <div className="flex flex-row items-center">
-          <ProgressBar progress={word.avgProgress} /> {word.avgProgress}%
+          <ProgressBar progress={word.avgProgress} />
         </div>
         <div className="flex flex-row gap-2 items-center">
           {TASK_TYPES.map((taskType) => (

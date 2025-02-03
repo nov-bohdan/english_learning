@@ -14,6 +14,7 @@ const getLastXDays = (daysToShow: number) => {
 export default function NewWordsChart({
   data,
   label,
+  xAxisDataKey,
   seriesDataKey,
 }: {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -22,15 +23,15 @@ export default function NewWordsChart({
   xAxisDataKey: string;
   seriesDataKey: string;
 }) {
-  // console.log(data);
   const DAYS_TO_SHOW = 14;
   const lastXDays = getLastXDays(DAYS_TO_SHOW);
-  lastXDays.forEach((day, index) => {
-    const dayExistsInData = data.find((dateItem) => dateItem.date === day);
-    if (!dayExistsInData) {
-      data.splice(index, 0, { date: day, count: 0 });
-    }
+
+  // Build a new array that ensures each day has an entry
+  const chartData = lastXDays.map((day) => {
+    const found = data.find((item) => item[xAxisDataKey] === day);
+    return found || { [xAxisDataKey]: day, [seriesDataKey]: 0 };
   });
+
   return (
     <LineChart
       xAxis={[
@@ -43,7 +44,7 @@ export default function NewWordsChart({
       ]}
       series={[
         {
-          data: data.map((dataItem) => dataItem[seriesDataKey]),
+          data: chartData.map((item) => item[seriesDataKey]),
           color: "#fdb462",
           area: true,
           baseline: 0,

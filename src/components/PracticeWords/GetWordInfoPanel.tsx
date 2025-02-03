@@ -26,26 +26,35 @@ export default function GetWordInfoPanel({
   );
 
   return (
-    <div className="flex flex-col gap-4 w-3/4">
-      {/* ADDING NEW WORD */}
-      <div className="bg-gray-200 rounded-md p-4">
-        {getWordInfoState?.error && <Error message={getWordInfoState.error} />}
+    <div className="flex flex-col gap-6">
+      {/* Adding New Word */}
+      <div className="bg-white rounded-xl shadow-lg p-6 transition-transform duration-300">
+        {getWordInfoState?.error && (
+          <div className="mb-4">
+            <Error message={getWordInfoState.error} />
+          </div>
+        )}
         <NewWordForm
           getWordInfoAction={getWordInfoAction}
           getWordInfoPending={getWordInfoPending}
         />
       </div>
-      {/* NEW WORD INFO */}
-      {getWordInfoState?.data?.map((wordInfo) => {
-        return (
-          <NewWordInfo
+
+      {/* New Word Info List */}
+      <div className="flex flex-col gap-4">
+        {getWordInfoState?.data?.map((wordInfo) => (
+          <div
             key={`${wordInfo.word}-${wordInfo.part_of_speech}-${wordInfo.translation}`}
-            wordInfo={wordInfo}
-            onAddNewWord={addNewWordsToList}
-            isAlreadySaved={wordInfo.isAlreadySaved || false}
-          />
-        );
-      })}
+            className="bg-white rounded-xl shadow-md p-4 transition-transform duration-300"
+          >
+            <NewWordInfo
+              wordInfo={wordInfo}
+              onAddNewWord={addNewWordsToList}
+              isAlreadySaved={wordInfo.isAlreadySaved || false}
+            />
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

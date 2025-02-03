@@ -6,18 +6,22 @@ export default function NewWordForm({
   getWordInfoPending: boolean;
 }) {
   return (
-    <form action={getWordInfoAction} autoComplete="off">
-      <div className="flex flex-col gap-4 w-[80%] items-center mx-auto">
+    <form
+      action={getWordInfoAction}
+      autoComplete="off"
+      className="flex items-center justify-center"
+    >
+      <div className="flex flex-col gap-6 w-full max-w-md bg-white p-8 rounded-xl shadow-md transform transition-all">
         <input
           type="text"
           name="word"
           placeholder="Input a word..."
-          className="p-4 border-2 border-gray-400 outline-none rounded-xl w-1/2"
-        ></input>
+          className="w-full p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 transition-colors"
+        />
         <button
           type="submit"
-          className="p-4 bg-blue-500 rounded-xl w-40 font-semibold text-white text-2xl disabled:bg-opacity-50 disabled:bg-gray-400 disabled:cursor-not-allowed"
           disabled={getWordInfoPending}
+          className="w-full p-4 bg-blue-500 hover:bg-blue-600 transition-colors rounded-xl font-semibold text-white text-xl disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Send
         </button>

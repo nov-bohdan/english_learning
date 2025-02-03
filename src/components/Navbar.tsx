@@ -2,31 +2,37 @@ import Link from "next/link";
 
 export default function Navbar() {
   return (
-    <div className="bg-blue-500 text-white p-2 flex flex-row gap-4 rounded-md font-bold items-center">
-      <Link
-        href="/dashboard"
-        className="cursor-pointer hover:bg-blue-600 p-2 rounded-md flex flex-col items-center"
-      >
-        Calendar
-      </Link>
-      <Link
-        href="/words"
-        className="cursor-pointer hover:bg-blue-600 p-2 rounded-md flex flex-col items-center"
-      >
-        Practice words
-      </Link>
-      <Link
-        href="/settings"
-        className="cursor-pointer hover:bg-blue-600 p-2 rounded-md flex flex-col items-center"
-      >
-        Settings
-      </Link>
-      <Link
-        href="/logout"
-        className="cursor-pointer hover:bg-blue-600 p-2 rounded-md flex flex-col items-center"
-      >
-        Logout
-      </Link>
-    </div>
+    <nav className="bg-blue-600 text-white shadow-md">
+      <div className="max-w-7xl mx-auto px-4">
+        <div className="flex items-center justify-between h-16">
+          <div className="flex items-center space-x-4">
+            <Link
+              href="/dashboard"
+              className="px-3 py-2 rounded-md text-base font-bold transition-colors hover:bg-blue-700"
+            >
+              Calendar
+            </Link>
+            <Link
+              href="/words"
+              className="px-3 py-2 rounded-md text-base font-bold transition-colors hover:bg-blue-700"
+            >
+              Practice Words
+            </Link>
+            <Link
+              href="/settings"
+              className="px-3 py-2 rounded-md text-base font-bold transition-colors hover:bg-blue-700"
+            >
+              Settings
+            </Link>
+            <Link
+              href="/logout"
+              className="px-3 py-2 rounded-md text-base font-bold transition-colors hover:bg-blue-700"
+            >
+              Logout
+            </Link>
+          </div>
+        </div>
+      </div>
+    </nav>
   );
 }

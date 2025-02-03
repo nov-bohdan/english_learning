@@ -57,12 +57,13 @@ export default function Practice({
     });
   };
 
-  const taskElements = tasksToPractice.map((task, index) =>
-    createTask(task.word, task, () => setCurrentTaskCompleted(true), index)
-  );
   const [currentTaskCompleted, setCurrentTaskCompleted] =
     useState<boolean>(false);
   const [currentTaskIndex, setCurrentTaskIndex] = useState<number>(0);
+
+  const taskElements = tasksToPractice.map((task, index) =>
+    createTask(task.word, task, () => setCurrentTaskCompleted(true), index)
+  );
 
   const handleNextTask = useCallback(() => {
     if (currentTaskCompleted) {
@@ -94,19 +95,27 @@ export default function Practice({
     };
   }, [currentTaskCompleted, currentTaskIndex, tasksToPractice, handleNextTask]);
 
+  // Common container classes used across states
+  const containerClasses =
+    "w-full max-w-2xl mx-auto p-6 rounded-xl shadow-lg transition-all duration-300";
+  const bgGradient = "bg-gradient-to-br from-gray-100 to-gray-200";
+
   if (!isStarted) {
     return (
-      <div className="bg-gray-200 rounded-md p-4 flex flex-col items-center gap-4 w-full">
-        <h2 className="text-semibold text-xl">
-          Choose what types of tasks you want to practice now
+      <div
+        className={`${containerClasses} ${bgGradient} flex flex-col items-center gap-6`}
+      >
+        <h2 className="font-semibold text-2xl text-gray-800 text-center">
+          Choose what types of tasks you want to practice
         </h2>
-        <div className="flex flex-row gap-4">
+        <div className="flex flex-wrap gap-4 justify-center">
           {selectedTasks.map((task) => (
-            <div key={task.taskName} className="flex flex-row gap-2">
-              <label htmlFor={task.taskName}>
-                {TASK_TYPES_MAP[task.taskName]}
-              </label>
+            <div
+              key={task.taskName}
+              className="flex items-center gap-2 bg-white p-2 rounded-md shadow-sm"
+            >
               <input
+                id={task.taskName}
                 type="checkbox"
                 value={task.taskName}
                 checked={task.enabled}
@@ -114,17 +123,21 @@ export default function Practice({
                 onChange={() =>
                   handleSelectedTasksChange(task.taskName, !task.enabled)
                 }
+                className="h-5 w-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
               />
+              <label htmlFor={task.taskName} className="text-gray-700">
+                {TASK_TYPES_MAP[task.taskName]}
+              </label>
             </div>
           ))}
         </div>
         <button
           type="button"
-          className="p-4 bg-blue-500 border-2 border-gray-300 rounded-md text-white text-xl cursor-pointer disabled:bg-gray-500 disabled:bg-opacity-50 disabled:cursor-not-allowed"
           onClick={handleStartPractice}
           disabled={selectedTasksCount === 0}
+          className="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-xl font-medium transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
         >
-          Start practice
+          Start Practice
         </button>
       </div>
     );
@@ -132,24 +145,32 @@ export default function Practice({
 
   if (isLoading) {
     return (
-      <div className="bg-gray-200 rounded-md p-4 flex flex-col items-center gap-4 w-full">
-        <h1 className="font-semibold text-3xl">Loading...</h1>
+      <div
+        className={`${containerClasses} ${bgGradient} flex flex-col items-center gap-6`}
+      >
+        <h1 className="font-semibold text-3xl text-gray-800">Loading...</h1>
       </div>
     );
   }
 
   if (tasksToPractice.length === 0) {
     return (
-      <div className="bg-gray-200 rounded-md p-4 flex flex-col items-center gap-4 w-full">
-        <h1 className="font-semibold text-3xl">No words to practice</h1>
+      <div
+        className={`${containerClasses} ${bgGradient} flex flex-col items-center gap-6`}
+      >
+        <h1 className="font-semibold text-3xl text-gray-800">
+          No words to practice
+        </h1>
       </div>
     );
   }
 
   if (wordsToPractice < 5) {
     return (
-      <div className="bg-gray-200 rounded-md p-4 flex flex-col items-center gap-4 w-full">
-        <h1 className="font-semibold text-3xl">
+      <div
+        className={`${containerClasses} ${bgGradient} flex flex-col items-center gap-6`}
+      >
+        <h1 className="font-semibold text-3xl text-gray-800 text-center">
           You have only {wordsToPractice} words to practice right now. You need
           at least 5 to start practice.
         </h1>
@@ -158,30 +179,35 @@ export default function Practice({
   }
 
   return (
-    <div className="bg-gray-200 rounded-md p-4 flex flex-col items-center gap-4 w-full">
-      <h1 className="font-semibold text-3xl">
+    <div
+      className={`${containerClasses} ${bgGradient} flex flex-col items-center gap-6`}
+    >
+      <h1 className="font-bold text-3xl text-gray-900">
         Practice ({wordsToPractice} words)
       </h1>
-      {taskElements[currentTaskIndex]}
-      {currentTaskCompleted && currentTaskIndex + 1 < tasksToPractice.length ? (
-        <button
-          type="button"
-          className="bg-yellow-500 rounded-md p-4 text-white font-semibold text-lg w-full"
-          onClick={handleNextTask}
-        >
-          Next
-        </button>
-      ) : currentTaskCompleted ? (
-        <button
-          type="button"
-          className="bg-orange-500 rounded-md p-4 text-white font-semibold text-lg w-full"
-          onClick={onFinishPractice}
-        >
-          Finish practice
-        </button>
-      ) : (
-        ""
-      )}
+      <div className="w-full transition-opacity duration-500">
+        {taskElements[currentTaskIndex]}
+      </div>
+      {currentTaskCompleted &&
+        currentTaskIndex + 1 < tasksToPractice.length && (
+          <button
+            type="button"
+            onClick={handleNextTask}
+            className="w-full px-8 py-3 bg-yellow-500 hover:bg-yellow-600 text-white rounded-md text-lg font-semibold transition-colors"
+          >
+            Next
+          </button>
+        )}
+      {currentTaskCompleted &&
+        currentTaskIndex + 1 >= tasksToPractice.length && (
+          <button
+            type="button"
+            onClick={onFinishPractice}
+            className="w-full px-8 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-md text-lg font-semibold transition-colors"
+          >
+            Finish Practice
+          </button>
+        )}
     </div>
   );
 }

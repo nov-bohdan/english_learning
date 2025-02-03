@@ -14,6 +14,8 @@ function determineBgColor(englishLevel: EnglishLevelType) {
       return "bg-green-500";
     case "C2":
       return "bg-green-700";
+    default:
+      return "bg-gray-500";
   }
 }
 
@@ -26,7 +28,7 @@ export default function EnglishLevelIcon({
     <div
       className={`${determineBgColor(
         englishLevel
-      )} py-1 px-2 rounded-full text-white font-semibold text-sm`}
+      )} py-1 px-3 rounded-full text-white font-bold text-sm shadow`}
     >
       {englishLevel}
     </div>

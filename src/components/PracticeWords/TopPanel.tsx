@@ -23,33 +23,47 @@ export default function TopPanel({
   ).length;
 
   return (
-    <div className="p-0 w-full bg-gray-200 rounded-md">
-      <div className="flex flex-row gap-10 justify-center items-center">
-        <div className="flex flex-col gap-4 items-center">
-          <div className="flex flex-row justify-center items-center w-full text-xl font-semibold gap-6">
-            <p className="flex flex-row gap-2 items-center">
-              <span className="rounded-full w-4 h-4 bg-red-500 block"></span>
-              <span> Words: {wordsWithLowProgress}</span>
-            </p>
-            <p className="flex flex-row gap-2 items-center">
-              <span className="rounded-full w-4 h-4 bg-yellow-500 block"></span>
-              <span> Words: {wordsWithMediumProgress}</span>
-            </p>
-            <p className="flex flex-row gap-2 items-center">
-              <span className="rounded-full w-4 h-4 bg-green-500 block"></span>
-              <span> Words: {wordsWithHighProgress}</span>
-            </p>
+    <div className="w-full bg-gradient-to-r from-gray-100 to-gray-200 rounded-lg p-6 shadow-md">
+      <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+        {/* Left Panel: Word Progress Counts */}
+        <div className="flex flex-col items-center gap-4">
+          <div className="flex flex-row items-center gap-6 text-lg font-semibold text-gray-800">
+            <div className="flex items-center gap-2">
+              <span className="rounded-full w-4 h-4 bg-red-500"></span>
+              <span>Low: {wordsWithLowProgress}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="rounded-full w-4 h-4 bg-yellow-500"></span>
+              <span>Medium: {wordsWithMediumProgress}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="rounded-full w-4 h-4 bg-green-500"></span>
+              <span>High: {wordsWithHighProgress}</span>
+            </div>
           </div>
-          <p className="text-2xl font-semibold">Total: {words.length}</p>
+          <p className="text-2xl font-bold text-gray-900">
+            Total Words: {words.length}
+          </p>
         </div>
 
-        <div className="flex flex-col justify-between italic">
-          <p>Words ready to practice now: {wordsToPracticeNowCount}</p>
-          <p>Words practiced today: {wordsNumberPracticedToday}</p>
-          <p>New words added today: {savedWordsNumberByDate[0].count}</p>
+        {/* Middle Panel: Practice Stats */}
+        <div className="flex flex-col gap-2 text-center text-gray-700">
+          <p className="text-lg">
+            <span className="font-semibold">Ready to Practice:</span>{" "}
+            {wordsToPracticeNowCount}
+          </p>
+          <p className="text-lg">
+            <span className="font-semibold">Practiced Today:</span>{" "}
+            {wordsNumberPracticedToday}
+          </p>
+          <p className="text-lg">
+            <span className="font-semibold">New Words Today:</span>{" "}
+            {savedWordsNumberByDate[0]?.count ?? 0}
+          </p>
         </div>
 
-        <div className="">
+        {/* Right Panel: New Words Chart */}
+        <div className="w-full md:w-auto">
           <NewWordsChart
             data={savedWordsNumberByDate}
             label="New words added"

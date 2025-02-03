@@ -35,7 +35,7 @@ export default function NewWordInfo({
         <button
           type="submit"
           disabled={saveWordIsPending || isSaved}
-          className="bg-blue-500 p-2 rounded-md text-lg text-white disabled:bg-gray-400 disabled:bg-opacity-50 disabled:cursor-not-allowed font-semibold"
+          className="bg-blue-500 p-2 rounded-md text-lg text-white font-semibold transition-colors duration-200 hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
         >
           {isSaved ? "Already saved" : "Save word"}
         </button>

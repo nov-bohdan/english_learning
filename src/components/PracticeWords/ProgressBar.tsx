@@ -5,16 +5,21 @@ export default function ProgressBar({ progress }: { progress: number }) {
     return "bg-green-500"; // Green for high progress
   };
 
-  if (progress === 0) {
-    progress = 1;
-  }
+  // Compute a value to use for width display; if progress is 0, show 1% so that the bar is visible.
+  const computedProgress =
+    progress === 0 ? 1 : Math.max(0, Math.min(progress, 100));
 
   return (
-    <div className="w-full bg-gray-200 rounded-lg h-4 overflow-hidden">
+    <div className="relative w-full bg-gray-200 rounded-lg h-4 overflow-hidden">
       <div
-        className={`${getColor()} h-full rounded-lg transition-all duration-300`}
-        style={{ width: `${Math.max(0, Math.min(progress, 100))}%` }}
+        className={`${getColor()} h-full transition-all duration-300 rounded-l-lg ${
+          computedProgress === 100 ? "rounded-r-lg" : ""
+        }`}
+        style={{ width: `${computedProgress}%` }}
       />
+      <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-white">
+        {progress}%
+      </span>
     </div>
   );
 }

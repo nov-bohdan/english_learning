@@ -20,7 +20,6 @@ const getWordsToPracticeNowCount = (words: WordInfo[]) => {
     if (!wordNextReviewDateMilis || wordNextReviewDateMilis <= timeNowMillis)
       count++;
   }
-
   return count;
 };
 
@@ -54,9 +53,9 @@ export default function PracticeWordsPage({
       body: JSON.stringify({ wordId: word.id }),
     });
     if (result) {
-      setWordsState((oldWords) => {
-        return oldWords.filter((oldWord) => oldWord.id !== word.id);
-      });
+      setWordsState((oldWords) =>
+        oldWords.filter((oldWord) => oldWord.id !== word.id)
+      );
       setShowWordDetails(null);
     }
   };
@@ -67,34 +66,36 @@ export default function PracticeWordsPage({
   };
 
   return (
-    <div className="flex flex-col gap-4 w-full">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6 rounded-md">
       {/* TOP PANEL */}
-      <TopPanel
-        words={wordsState}
-        wordsToPracticeNowCount={wordsToPracticeNowCount}
-        wordsNumberPracticedToday={wordsNumberPracticedToday}
-        savedWordsNumberByDate={savedWordsNumberByDate}
-      />
-      {/* TOP PANEL END */}
-      <div className="flex flex-row gap-4 w-full">
+      {!isPracticeMode && (
+        <TopPanel
+          words={wordsState}
+          wordsToPracticeNowCount={wordsToPracticeNowCount}
+          wordsNumberPracticedToday={wordsNumberPracticedToday}
+          savedWordsNumberByDate={savedWordsNumberByDate}
+        />
+      )}
+      {/* MAIN CONTENT */}
+      <div className="flex flex-col lg:flex-row gap-6 mt-6">
         {!isPracticeMode && (
           <>
-            {/* LEFT PANEL */}
-            <div className="bg-gray-200 rounded-md p-4 w-1/4 max-h-screen overflow-y-scroll">
-              <div className="flex flex-col gap-2 border-b-2 border-b-gray-400 pb-2">
-                <div className="flex flex-row justify-between items-center">
-                  <h2 className="text-bold text-3xl">Saved words</h2>
-                  <button
-                    type="button"
-                    className="bg-blue-500 p-2 text-white rounded-xl font-semibold cursor-pointer disabled:bg-gray-400 disabled:bg-opacity-50 disabled:cursor-not-allowed disabled:text-xs disabled:p-1"
-                    onClick={() => setIsPracticeMode(true)}
-                    disabled={wordsToPracticeNowCount < 5}
-                  >
-                    {wordsToPracticeNowCount < 5
-                      ? "You need 5 words to start practice"
-                      : "Start practice"}
-                  </button>
-                </div>
+            {/* LEFT PANEL: Saved Words */}
+            <div className="bg-white rounded-xl shadow-lg p-6 flex-1 max-h-screen overflow-y-auto transition-transform duration-300">
+              <div className="flex items-center justify-between pb-4 border-b border-gray-300 mb-4">
+                <h2 className="text-3xl font-bold text-gray-800">
+                  Saved Words
+                </h2>
+                <button
+                  type="button"
+                  onClick={() => setIsPracticeMode(true)}
+                  disabled={wordsToPracticeNowCount < 5}
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+                >
+                  {wordsToPracticeNowCount < 5
+                    ? "Need 5 words to practice"
+                    : "Start Practice"}
+                </button>
               </div>
               {wordsState
                 .sort((a, b) => b.avgProgress - a.avgProgress)
@@ -106,26 +107,32 @@ export default function PracticeWordsPage({
                   />
                 ))}
             </div>
-            {/* RIGHT PANEL */}
-            {showWordDetails ? (
-              <WordInfoUI
-                wordInfo={showWordDetails}
-                handleDeleteWord={handleDeleteWord}
-              >
-                <button
-                  type="button"
-                  className="bg-blue-500 rounded-md py-4 px-8 font-semibold text-white"
-                  onClick={() => setShowWordDetails(null)}
+            {/* RIGHT PANEL: Word Details / GetWordInfoPanel */}
+            <div className="flex-1">
+              {showWordDetails ? (
+                <WordInfoUI
+                  wordInfo={showWordDetails}
+                  handleDeleteWord={handleDeleteWord}
                 >
-                  Close
-                </button>
-              </WordInfoUI>
-            ) : (
-              <GetWordInfoPanel setWordsListState={setWordsState} />
-            )}
+                  <button
+                    type="button"
+                    className="mt-4 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-md font-semibold transition-colors"
+                    onClick={() => setShowWordDetails(null)}
+                  >
+                    Close
+                  </button>
+                </WordInfoUI>
+              ) : (
+                <GetWordInfoPanel setWordsListState={setWordsState} />
+              )}
+            </div>
           </>
         )}
-        {isPracticeMode && <Practice onFinishPractice={handleFinishPractice} />}
+        {isPracticeMode && (
+          <div className="flex-1">
+            <Practice onFinishPractice={handleFinishPractice} />
+          </div>
+        )}
       </div>
     </div>
   );

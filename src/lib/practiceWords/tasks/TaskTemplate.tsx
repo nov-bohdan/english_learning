@@ -32,7 +32,6 @@ export default function TaskTemplate({
   ] = useActionState(action, undefined);
 
   useEffect(() => {
-    console.log(checkUserAnswerState);
     if (checkUserAnswerState?.success) {
       setIsShowingAnswer(true);
       callback();
@@ -47,55 +46,63 @@ export default function TaskTemplate({
   }, [word.word_audio, playAudio]);
 
   return (
-    <>
-      <div className="border-2 border-gray-400 rounded-md p-4 flex flex-col items-center bg-blue-200 gap-2">
-        <h2 className="font-semibold flex flex-row items-center gap-1">
-          {header}{" "}
-          <span className="italic text-sm font-normal">
-            ({word.part_of_speech})
-          </span>
-        </h2>
-        {checkUserAnswerState?.error && (
+    <div className="bg-gradient-to-r from-blue-100 to-blue-300 rounded-lg p-6 shadow-lg transition transform hover:shadow-xl flex flex-col items-center gap-6">
+      <h2 className="text-2xl font-bold flex items-center gap-2">
+        {header}{" "}
+        <span className="italic text-sm font-normal">
+          ({word.part_of_speech})
+        </span>
+      </h2>
+
+      {checkUserAnswerState?.error && (
+        <div className="w-full">
           <Error message={checkUserAnswerState.error} />
-        )}
-        {(!checkUserAnswerState?.data || !isShowingAnswer) && (
-          <form action={checkUserAnswerAction} autoComplete="off">
-            <div className="flex flex-col gap-2 items-center">
-              <label htmlFor="answer">{taskDefinition}</label>
-              <input
-                type="text"
-                name="answer"
-                id="answer"
-                className="w-full p-4 border-2 border-gray-200 rounded-md"
-              />
-              <button
-                type="submit"
-                className="w-full bg-blue-500 rounded-md p-4 text-white font-semibold text-lg disabled:bg-gray-400 disabled:bg-opacity-50 disabled:cursor-not-allowed"
-                disabled={checkUserAnswerIsPending}
-              >
-                Check
-              </button>
-            </div>
-          </form>
-        )}
-        {checkUserAnswerState?.success && isShowingAnswer && (
-          <>
-            {checkUserAnswerState.data.grade >= 80 && (
-              <CorrectAnswer
-                isExtended={isExtendedResult}
-                answerState={checkUserAnswerState.data}
-              />
-            )}
-            {checkUserAnswerState.data.grade < 80 && (
-              <IncorrectAnswer
-                correctAnswer={correctAnswer}
-                answerState={checkUserAnswerState.data}
-                isExtended={isExtendedResult}
-              />
-            )}
-          </>
-        )}
-      </div>
-    </>
+        </div>
+      )}
+
+      {(!checkUserAnswerState?.data || !isShowingAnswer) && (
+        <form
+          action={checkUserAnswerAction}
+          autoComplete="off"
+          className="w-full"
+        >
+          <div className="flex flex-col gap-4 items-center">
+            <label htmlFor="answer" className="text-lg font-medium">
+              {taskDefinition}
+            </label>
+            <input
+              type="text"
+              name="answer"
+              id="answer"
+              className="w-full p-3 border-2 border-gray-300 rounded-md transition focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+            <button
+              type="submit"
+              className="w-full bg-blue-500 hover:bg-blue-600 transition ease-in-out duration-300 text-white font-semibold rounded-md p-3 disabled:bg-gray-400 disabled:cursor-not-allowed"
+              disabled={checkUserAnswerIsPending}
+            >
+              Check
+            </button>
+          </div>
+        </form>
+      )}
+
+      {checkUserAnswerState?.success && isShowingAnswer && (
+        <div className="w-full transition-opacity duration-500 ease-in-out">
+          {checkUserAnswerState.data.grade >= 80 ? (
+            <CorrectAnswer
+              isExtended={isExtendedResult}
+              answerState={checkUserAnswerState.data}
+            />
+          ) : (
+            <IncorrectAnswer
+              correctAnswer={correctAnswer}
+              answerState={checkUserAnswerState.data}
+              isExtended={isExtendedResult}
+            />
+          )}
+        </div>
+      )}
+    </div>
   );
 }
