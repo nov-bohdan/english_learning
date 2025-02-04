@@ -48,20 +48,32 @@ export const openAIGetWordInfo = async (
   nativeLanguage: string,
   userLevel: string
 ) => {
-  const prompt = `You are an AI English tutor that is created to enhance user learning experience. You will be provided with a word that user wants to learn. Your goal is to return an information about the word. The information includes following:
-   - Translation to ${nativeLanguage}. Make sure the translation is in the right form. For example if the word "obfuscate" is in adjective form, the translation should be "Запутанный", not "Запутать".
-   - Definition of the word. Try to make it as short as possible. In a way that is easy for user to understand, not academic or scientific format. Use the most popular word's meaning, if there are more than one;
-   - Transcription in IPA format;
-   - 3 examples of using the word (Everyday sentences with the word). They should match the definition that you provided for the word. Try to make them as diverse as possible to show the using of a word in different contexts;
-   - 3 popular synonyms of the word (Synonyms are the words with the same meaning. Never use related words. Only with the same meaning);
-   - Up to 3 the most popular collocations of the word (For example if a word is 'decision' - you can add 'make a decision').
-   - english_level parameter means what English Level does the word matches. For example if the word is primarily used by users with level of B2 or more, then you should return B2 here.
-   - Word should be Capitalized (First letter is big). If the word is verb, the word should start with "To". Add "To" if it's not present already;
-   - Popularity parameter measures popularity of the given part of speech. For example, if the word is used both as verb and as noun, you can return 70% for verb and 30% for noun. Total must be 100%.
-   - If the word is used in more than one part of speech, add all of them in the response. Even if other parts of speech used much more less, you should return them anyway, to give the user all available information.
-   User English level is ${userLevel}, so your definition and examples should be fit for this level.
-   Combinations word + part of speech should be unique. Return only the most popular sense for each combination. Additional meanings put in additional_meanings array. For example you should return run (verb) only once.
-  The requested word is: [${word}]`;
+  const prompt = `You are an AI English tutor. Your task is to return detailed information about a given word, tailored for a user with English level ${userLevel}. Follow these instructions precisely:
+
+1. **Translation:** Provide the translation of the word to ${nativeLanguage}. Ensure that the translation reflects the correct grammatical form. For example, if the word "obfuscate" is used as an adjective, the translation should be in adjective form (e.g., "Запутанный"), not the verb form.
+
+2. **Definition:** Offer a short, clear definition that explains the most popular meaning of the word. The definition must be easy to understand (avoid academic or technical language) and appropriate for a ${userLevel} learner. Also, include the translation of the definition.
+
+3. **Transcription:** Provide the IPA transcription of the word.
+
+4. **Examples:** Supply exactly 3 everyday example sentences that use the word, each accompanied by its translation. Ensure these examples illustrate the definition you provided.
+
+5. **Synonyms:** List exactly 3 precise synonyms (words with the same meaning). Do not include loosely related words.
+
+6. **Collocations:** Provide up to 3 of the most popular collocations for the word (e.g., for "decision", include "make a decision"). Each collocation should include both the collocation phrase and its translation.
+
+7. **English Level:** Specify the English level that best matches the word's usage (e.g., A2, B2, etc.).
+
+8. **Word Formatting:**  
+   - The word must be Capitalized (first letter uppercase).  
+   - If the word is a verb, it must begin with "To". If "To" is not already present, prepend it.
+
+9. **Popularity:**  
+   - For words that have multiple parts of speech, return separate objects for each unique combination of word and part of speech.  
+   - Each object must include a "popularity" number indicating the usage frequency.  
+   - If the same word appears in multiple parts of speech, the sum of their popularity percentages must equal 100.
+
+The word you need to process is: [${word}]`;
 
   const response = await openai.beta.chat.completions.parse({
     model: "gpt-4o",
@@ -74,6 +86,7 @@ export const openAIGetWordInfo = async (
   }
 
   const parsedResponse = response.choices[0].message.parsed.response;
+  console.log(parsedResponse);
   return parsedResponse.filter((response) => response.popularity > 10);
 };
 

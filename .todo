@@ -6,7 +6,7 @@
 6. +++ Info button next to the words in saved words list. Info panel should open in the right side of a page (When a new word input is located right now)
 7. +++ Delete button, to delete a word.
 8. +++ Use word info from database if it's already exists (For example other user already saved the word)
-9. Authentication
+9. +++ Authentication
 10. +++ Stats
 11. Charts in calendar
 12. User will not receive tasks that have 100 score

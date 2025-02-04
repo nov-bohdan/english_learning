@@ -282,8 +282,6 @@ const getWordsNumberPracticedToday = async (userId: string) => {
     throw new Error(error.message);
   }
 
-  console.log(data);
-
   const count = [...new Set(data.map((dataItem) => dataItem.progress_id.id))]
     .length;
 
