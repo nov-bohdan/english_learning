@@ -47,13 +47,22 @@ export default function WordToReview({
         <p>
           {word.word} ({word.part_of_speech})
         </p>
-        <button
-          type="button"
-          className="bg-blue-500 py-2 px-4 font-semibold text-white rounded-lg hover:bg-blue-600"
-          onClick={() => setIsShowingDetails(!isShowingDetails)}
-        >
-          Details
-        </button>
+        <div className="flex flex-row gap-2">
+          <button
+            type="button"
+            className="bg-blue-500 py-2 px-4 font-semibold text-white rounded-lg hover:bg-blue-600"
+            onClick={() => setIsShowingDetails(!isShowingDetails)}
+          >
+            Details
+          </button>
+          <button
+            type="button"
+            className="bg-red-500 py-2 px-4 font-semibold text-white rounded-lg hover:bg-red-600"
+            onClick={() => deleteWordToReview(word.id)}
+          >
+            Не хочу учить
+          </button>
+        </div>
       </div>
       {isShowingDetails && (
         <WordInfoUI wordInfo={word}>

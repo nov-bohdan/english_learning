@@ -1,7 +1,4 @@
-import {
-  markWordAsNeverShow,
-  markWordAsToLearn,
-} from "@/lib/practiceWords/actions";
+import { markWordAsNeverShow } from "@/lib/practiceWords/actions";
 import { useState } from "react";
 
 type WordCardType = {
@@ -24,7 +21,6 @@ export default function WordCard({ word }: { word: WordCardType }) {
   const handleToLearn = async () => {
     console.log(`Handle to learn word: ${word.word}`);
     setStatus("saving");
-    // await markWordAsToLearn(word.id, word.word);
     await fetch("/mark_word_to_learn", {
       method: "POST",
       body: JSON.stringify({ word: word.word, wordId: word.id }),
