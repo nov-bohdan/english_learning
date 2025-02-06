@@ -4,14 +4,14 @@ import {
 } from "@/lib/practiceWords/actions";
 import { useState } from "react";
 
-type WordCard = {
+type WordCardType = {
   id: number;
   word: string;
   level: string;
   translation: string;
 };
 
-export default function WordCard({ word }: { word: WordCard }) {
+export default function WordCard({ word }: { word: WordCardType }) {
   const [status, setStatus] = useState<
     "to_learn" | "never_show" | "saving" | null
   >(null);
@@ -22,43 +22,51 @@ export default function WordCard({ word }: { word: WordCard }) {
   };
 
   const handleToLearn = async () => {
+    console.log(`Handle to learn word: ${word.word}`);
     setStatus("saving");
-    await markWordAsToLearn(word.id, word.word);
+    // await markWordAsToLearn(word.id, word.word);
+    await fetch("/mark_word_to_learn", {
+      method: "POST",
+      body: JSON.stringify({ word: word.word, wordId: word.id }),
+    });
     setStatus("to_learn");
   };
 
-  const isArchivedStyles =
+  const bgColor =
     status === "never_show"
-      ? "bg-gray-500"
+      ? "bg-gray-300"
       : status === "to_learn"
       ? "bg-green-100"
       : "bg-white";
 
   return (
     <div
-      className={`p-4 rounded-lg shadow-sm shadow-gray-500 flex flex-col gap-3 w-full ${isArchivedStyles}`}
+      className={`p-4 rounded-lg shadow-sm flex flex-col gap-3 w-full transition-colors duration-300 ${bgColor}`}
     >
-      <div className="flex flex-row justify-between items-center font-semibold">
+      <div className="flex justify-between items-center font-semibold text-gray-800">
         <p>{word.word}</p>
         <p>{word.translation}</p>
       </div>
-      <hr />
-      <div className="flex flex-row justify-between items-center gap-2 text-xs">
+      <hr className="border-gray-300" />
+      <div className="flex justify-between items-center gap-2 text-sm">
         <button
-          className="bg-red-200 text-red-600 rounded-lg py-4 px-4 font-semibold disabled:bg-gray-800 disabled:bg-opacity-50 disabled:cursor-not-allowed"
+          className="bg-red-200 text-red-700 rounded-md py-2 px-4 font-semibold transition-colors duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed"
           onClick={handleNeverShow}
-          disabled={["never_show", "saving"].includes(status || "")}
+          disabled={status === "never_show" || status === "saving"}
         >
           Больше не показывать
         </button>
         <button
-          className="bg-green-200 text-green-600 rounded-lg py-4 px-4 font-semibold disabled:bg-gray-800 disabled:bg-opacity-50 disabled:cursor-not-allowed disabled:text-white"
+          className="bg-green-200 text-green-700 rounded-md py-2 px-4 font-semibold transition-colors duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed"
           onClick={handleToLearn}
-          disabled={["to_learn", "saving"].includes(status || "")}
+          disabled={status === "to_learn" || status === "saving"}
+          type="button"
         >
-          {status === "saving" && "Сохранение..."}
-          {status === "to_learn" && "Сохранено"}
-          {status === "never_show" || (status === null && "Хочу выучить")}
+          {status === "saving"
+            ? "Сохранение..."
+            : status === "to_learn"
+            ? "Сохранено"
+            : "Хочу выучить"}
         </button>
       </div>
     </div>

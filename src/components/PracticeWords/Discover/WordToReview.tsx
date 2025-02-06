@@ -27,7 +27,7 @@ export default function WordToReview({
       if (!saveWordState?.data) return;
       await deleteWordToReview(word.id);
 
-      //   setIsSaved(true);
+      setIsSaved(true);
       onAddNewWord(saveWordState.data);
     };
 

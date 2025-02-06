@@ -14,9 +14,6 @@ function findCefrLevel(
   );
   if (matchingWords) {
     const lowestLevel = matchingWords.sort()[matchingWords.length - 1];
-    const highestLevel = matchingWords.sort()[0];
-    console.log(`lowestLevel: ${lowestLevel.level}`);
-    console.log(`highestLevel: ${highestLevel.level}`);
     return lowestLevel.level as "A1" | "A2" | "B1" | "B2" | "C1" | "C2";
   } else {
     return null;

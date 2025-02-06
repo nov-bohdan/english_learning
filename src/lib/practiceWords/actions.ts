@@ -82,7 +82,10 @@ function checkAudiosInWord(word: WordInfoFormatWithAudioType) {
   });
 }
 
-async function processGetWordInfoAndSave(word: string, user: { user: User }) {
+export async function processGetWordInfoAndSave(
+  word: string,
+  user: { user: User }
+) {
   let alreadySavedWords = await dbWords.getWord({ word: word });
   if (alreadySavedWords) {
     alreadySavedWords = await Promise.all(
@@ -366,7 +369,9 @@ export async function discoverNewVords(
     translation: string;
   }[]
 > {
-  const level = "B2";
+  const level = formData
+    .get("level")
+    ?.toString() as Database["public"]["Enums"]["ENGLISH_LEVELS"];
   const count = 15;
 
   let words: {
@@ -404,6 +409,7 @@ export async function markWordAsNeverShow(wordId: number) {
 }
 
 export async function markWordAsToLearn(wordId: number, word: string) {
+  console.log(`markWordAsToLearn. word: ${word}`);
   let user;
   try {
     user = await getUser();
