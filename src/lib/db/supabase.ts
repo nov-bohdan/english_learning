@@ -237,6 +237,79 @@ export type Database = {
           }
         ];
       };
+      words_to_learn: {
+        Row: {
+          id: number;
+          level: Database["public"]["Enums"]["ENGLISH_LEVELS"];
+          word: string;
+        };
+        Insert: {
+          id?: number;
+          level: Database["public"]["Enums"]["ENGLISH_LEVELS"];
+          word: string;
+        };
+        Update: {
+          id?: number;
+          level?: Database["public"]["Enums"]["ENGLISH_LEVELS"];
+          word?: string;
+        };
+        Relationships: [];
+      };
+      words_to_learn_users: {
+        Row: {
+          status: string;
+          id: number;
+          user_id: string;
+          word_to_learn_id: number;
+        };
+        Insert: {
+          status: string;
+          id?: number;
+          user_id: string;
+          word_to_learn_id: number;
+        };
+        Update: {
+          status?: string;
+          id?: number;
+          user_id?: string;
+          word_to_learn_id?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "words_to_learn_users_word_to_learn_id_fkey";
+            columns: ["word_to_learn_id"];
+            isOneToOne: false;
+            referencedRelation: "words_to_learn";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
+      words_to_review_user: {
+        Row: {
+          id: number;
+          user_id: string;
+          word_id: number;
+        };
+        Insert: {
+          id?: number;
+          user_id: string;
+          word_id: number;
+        };
+        Update: {
+          id?: number;
+          user_id?: string;
+          word_id?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "words_to_review_user_word_id_fkey";
+            columns: ["word_id"];
+            isOneToOne: false;
+            referencedRelation: "words";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
     };
     Views: {
       [_ in never]: never;
@@ -245,7 +318,7 @@ export type Database = {
       [_ in never]: never;
     };
     Enums: {
-      [_ in never]: never;
+      ENGLISH_LEVELS: "A1" | "A2" | "B1" | "B2" | "C1" | "C2";
     };
     CompositeTypes: {
       [_ in never]: never;

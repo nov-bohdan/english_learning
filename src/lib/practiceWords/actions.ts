@@ -9,6 +9,7 @@ import {
   openAIGetWordInfo,
   gradeMakeSentence,
   WordInfoFormatType,
+  translateWord,
 } from "../openai/words";
 import {
   RawWordInfoInsert,
@@ -18,6 +19,9 @@ import {
 } from "./types";
 import { generateAudio } from "../elevenlabs/audio";
 import { getUser } from "../auth/auth";
+import { Database } from "../db/supabase";
+import { User } from "@supabase/supabase-js";
+import { revalidatePath } from "next/cache";
 
 function isAnswerCorrect(grade: number) {
   if (grade >= 80) {
@@ -78,26 +82,7 @@ function checkAudiosInWord(word: WordInfoFormatWithAudioType) {
   });
 }
 
-export async function getWordInfo(
-  prevData: unknown,
-  formData: FormData
-): Promise<ServerActionResponse<RawWordInfoRow[]>> {
-  const word = formData.get("word")?.toString();
-  if (!word) {
-    return {
-      success: false,
-      error: "Word is empty",
-    };
-  }
-  let user;
-  try {
-    user = await getUser();
-  } catch {
-    return {
-      success: false,
-      error: "User is not authorized",
-    };
-  }
+async function processGetWordInfoAndSave(word: string, user: { user: User }) {
   let alreadySavedWords = await dbWords.getWord({ word: word });
   if (alreadySavedWords) {
     alreadySavedWords = await Promise.all(
@@ -141,6 +126,29 @@ export async function getWordInfo(
     }
   }
   return { success: true, data: savedWords };
+}
+
+export async function getWordInfo(
+  prevData: unknown,
+  formData: FormData
+): Promise<ServerActionResponse<RawWordInfoRow[]>> {
+  const word = formData.get("word")?.toString();
+  if (!word) {
+    return {
+      success: false,
+      error: "Word is empty",
+    };
+  }
+  let user;
+  try {
+    user = await getUser();
+  } catch {
+    return {
+      success: false,
+      error: "User is not authorized",
+    };
+  }
+  return await processGetWordInfoAndSave(word, user);
 }
 
 export async function saveWords(
@@ -345,4 +353,92 @@ export async function checkAudioToWord(
   await updateScore(task.id, result.grade, task.score);
   await updateNextReviewDate(task.progress_id);
   return { success: true, data: result };
+}
+
+export async function discoverNewVords(
+  prevData: unknown,
+  formData: FormData
+): Promise<
+  {
+    id: number;
+    level: Database["public"]["Enums"]["ENGLISH_LEVELS"];
+    word: string;
+    translation: string;
+  }[]
+> {
+  const level = "B2";
+  const count = 15;
+
+  let words: {
+    id: number;
+    level: Database["public"]["Enums"]["ENGLISH_LEVELS"];
+    word: string;
+    translation?: string;
+  }[] = await dbWords.getRandomWordsToLearn(count, level);
+  words = await Promise.all(
+    words.map(async (word) => {
+      word.translation = await translateWord(word.word);
+      return word;
+    })
+  );
+  return words as {
+    id: number;
+    level: Database["public"]["Enums"]["ENGLISH_LEVELS"];
+    word: string;
+    translation: string;
+  }[];
+}
+
+export async function markWordAsNeverShow(wordId: number) {
+  let user;
+  try {
+    user = await getUser();
+  } catch {
+    return {
+      success: false,
+      error: "User is not authorized",
+    };
+  }
+
+  await dbWords.markWordAsNeverShow(user.user.id, wordId);
+}
+
+export async function markWordAsToLearn(wordId: number, word: string) {
+  let user;
+  try {
+    user = await getUser();
+  } catch {
+    return {
+      success: false,
+      error: "User is not authorized",
+    };
+  }
+
+  dbWords.markWordsAsWantToLearn(user.user.id, wordId);
+  const linkedWords = await processGetWordInfoAndSave(word, user);
+  linkedWords.data.forEach((word) => {
+    dbWords.addNewWordToReview(user.user.id, word.id);
+  });
+  revalidatePath("/words");
+}
+
+export async function deleteWordToReview(wordId: number | undefined) {
+  if (!wordId) {
+    return {
+      success: false,
+      error: "Invalid wordId",
+    };
+  }
+  let user;
+  try {
+    user = await getUser();
+  } catch {
+    return {
+      success: false,
+      error: "User is not authorized",
+    };
+  }
+
+  await dbWords.deleteWordToReview(wordId, user.user.id);
+  revalidatePath("/words");
 }

@@ -2,6 +2,7 @@ import { DateTime } from "luxon";
 import { RawWordInfoInsert, RawWordInfoRow } from "../practiceWords/types";
 import { dbClient } from "./dbClient";
 import { TASK_TYPES } from "../practiceWords/tasks/TaskTypes";
+import { Database } from "./supabase";
 
 const client = dbClient.client;
 
@@ -323,6 +324,120 @@ const getSavedWordsNumberByDate = async (
   return countByDates;
 };
 
+function shuffle(array: unknown[]) {
+  let currentIndex = array.length;
+
+  while (currentIndex != 0) {
+    const randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex],
+      array[currentIndex],
+    ];
+  }
+}
+
+const getRandomWordsToLearn = async (
+  count: number,
+  level: Database["public"]["Enums"]["ENGLISH_LEVELS"]
+) => {
+  const { data, error } = await client
+    .from("words_to_learn")
+    .select(`*, words_to_learn_users(id)`)
+    .eq("level", level);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  shuffle(data);
+  const filteredData = data.filter(
+    (dataItem) => dataItem.words_to_learn_users.length === 0
+  );
+  return filteredData.slice(0, count);
+};
+
+const markWordAsNeverShow = async (userId: string, wordId: number) => {
+  const { data, error } = await client
+    .from("words_to_learn_users")
+    .upsert(
+      {
+        word_to_learn_id: wordId,
+        user_id: userId,
+        status: "NEVER_SHOW",
+      },
+      { onConflict: "word_to_learn_id,user_id" }
+    )
+    .select();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data[0];
+};
+
+const markWordsAsWantToLearn = async (userId: string, wordId: number) => {
+  const { data, error } = await client
+    .from("words_to_learn_users")
+    .upsert(
+      {
+        word_to_learn_id: wordId,
+        user_id: userId,
+        status: "TO_LEARN",
+      },
+      {
+        onConflict: "word_to_learn_id,user_id",
+      }
+    )
+    .select(`*, words_to_learn(*)`);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data[0];
+};
+
+const addNewWordToReview = async (userId: string, wordId: number) => {
+  const { data, error } = await client
+    .from("words_to_review_user")
+    .insert({ word_id: wordId, user_id: userId })
+    .select();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data[0];
+};
+
+const getWordsToReview = async (userId: string) => {
+  const { data, error } = await client
+    .from("words_to_review_user")
+    .select(`*, word:words(*)`)
+    .eq("user_id", userId);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data;
+};
+
+const deleteWordToReview = async (wordId: number, userId: string) => {
+  const { error } = await client
+    .from("words_to_review_user")
+    .delete()
+    .eq("word_id", wordId)
+    .eq("user_id", userId);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+};
+
 const dbWords = {
   getWord,
   saveWord,
@@ -337,6 +452,12 @@ const dbWords = {
   getWordsNumberPracticedToday,
   getSavedWordsNumberByDate,
   unassignWordToUser,
+  getRandomWordsToLearn,
+  markWordAsNeverShow,
+  markWordsAsWantToLearn,
+  addNewWordToReview,
+  getWordsToReview,
+  deleteWordToReview,
 };
 
 export default dbWords;

@@ -16,7 +16,7 @@
 16. Update "Next review in" in realtime
 17. +++ Improve UI
 18. +++ Add error handling
-19. New task - AI generates a sentence, user listens and should write it down.
+19. New task - AI generates a sentence, user listens and should write it down (Or choose a correct one among 3 incorrects)
 20. +++ New task - user listens to a word and writes it down.
 21. Notifications
 22. Clean code
@@ -24,3 +24,5 @@
 24. +++ If answer is incorrect, generate this task again and add it to the end of tasks list
 25. +++ Grade % is not showing up in incorrect answer
 26. List of new words that a user can choose from
+27. Fix bugs with progresses in list of words
+28. Create unique constraints in supabase

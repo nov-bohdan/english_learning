@@ -1,6 +1,27 @@
 import { zodResponseFormat } from "openai/helpers/zod.mjs";
 import { openai } from "./openaiClient";
 import { z } from "zod";
+import allwords from "./allwords.json";
+
+const ENGLISH_LEVELS = ["A1", "A2", "B1", "B2", "C1", "C2"] as const;
+
+function findCefrLevel(
+  word: string
+): "A1" | "A2" | "B1" | "B2" | "C1" | "C2" | null {
+  const matchingWords = allwords.filter(
+    (dataItem: { word: string; level: string }) =>
+      dataItem.word.toLowerCase() === word.toLowerCase()
+  );
+  if (matchingWords) {
+    const lowestLevel = matchingWords.sort()[matchingWords.length - 1];
+    const highestLevel = matchingWords.sort()[0];
+    console.log(`lowestLevel: ${lowestLevel.level}`);
+    console.log(`highestLevel: ${highestLevel.level}`);
+    return lowestLevel.level as "A1" | "A2" | "B1" | "B2" | "C1" | "C2";
+  } else {
+    return null;
+  }
+}
 
 const PARTS_OF_SPEECH = [
   "noun",
@@ -12,8 +33,6 @@ const PARTS_OF_SPEECH = [
   "conjunction",
   "interjection",
 ] as const;
-
-const ENGLISH_LEVELS = ["A1", "A2", "B1", "B2", "C1", "C2"] as const;
 
 const WordInfoFormat = z.object({
   response: z.array(
@@ -52,7 +71,7 @@ export const openAIGetWordInfo = async (
 
 1. **Translation:** Provide the translation of the word to ${nativeLanguage}. Ensure that the translation reflects the correct grammatical form. For example, if the word "obfuscate" is used as an adjective, the translation should be in adjective form (e.g., "Запутанный"), not the verb form.
 
-2. **Definition:** Offer a short, clear definition that explains the most popular meaning of the word. The definition must be easy to understand (avoid academic or technical language) and appropriate for a ${userLevel} learner. Also, include the translation of the definition.
+2. **Definition:** Offer a short, clear definition that explains the most popular meaning of the word. The definition must be easy to understand (avoid academic or technical language) and appropriate for an beginner-intermediate learner. Also, include the translation of the definition.
 
 3. **Transcription:** Provide the IPA transcription of the word.
 
@@ -62,7 +81,7 @@ export const openAIGetWordInfo = async (
 
 6. **Collocations:** Provide up to 3 of the most popular collocations for the word (e.g., for "decision", include "make a decision"). Each collocation should include both the collocation phrase and its translation.
 
-7. **English Level:** Specify the English level that best matches the word's usage (e.g., A2, B2, etc.).
+7. **English Level:** Specify for which learner's CEFR level this word is. For example, words like "accused" is for C1 level, while "furniture" is for A2. Do not underestimate words.
 
 8. **Word Formatting:**  
    - The word must be Capitalized (first letter uppercase).  
@@ -85,8 +104,20 @@ The word you need to process is: [${word}]`;
     throw new Error("AI Get WordInfo Error");
   }
 
-  const parsedResponse = response.choices[0].message.parsed.response;
-  console.log(parsedResponse);
+  let parsedResponse = response.choices[0].message.parsed.response;
+  parsedResponse = parsedResponse.map((response) => {
+    const cefrLevel = findCefrLevel(
+      response.word.toLowerCase().replace("to ", "")
+    );
+    if (cefrLevel) {
+      return {
+        ...response,
+        english_level: cefrLevel,
+      };
+    } else {
+      return response;
+    }
+  });
   return parsedResponse.filter((response) => response.popularity > 10);
 };
 
@@ -202,4 +233,25 @@ export const gradeMakeSentence = async (
 
   const parsedResponse = response.choices[0].message.parsed;
   return parsedResponse;
+};
+
+const TranslationFormat = z.object({
+  translation: z.string(),
+});
+
+export const translateWord = async (word: string) => {
+  const prompt = `Translate word ${word} to Russian.`;
+
+  const response = await openai.beta.chat.completions.parse({
+    model: "gpt-4o-mini",
+    messages: [{ role: "user", content: prompt }],
+    response_format: zodResponseFormat(TranslationFormat, "TranslationFormat"),
+  });
+
+  if (!response.choices[0].message.parsed) {
+    throw new Error("AI translateWord Error");
+  }
+
+  const parsedResponse = response.choices[0].message.parsed;
+  return parsedResponse.translation;
 };

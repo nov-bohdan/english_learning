@@ -38,7 +38,10 @@ export const mapRawRowToWords = (
       collocations: rawWordInfo.collocations,
       created_at: rawWordInfo.created_at,
       // when_to_use: rawWordInfo.when_to_use,
-      progress: rawWordInfo.progress || mapDefaultProgress(),
+      progress:
+        !rawWordInfo.progress || Object.keys(rawWordInfo.progress).length === 0
+          ? mapDefaultProgress()
+          : rawWordInfo.progress,
       avgProgress: rawWordInfo.avgProgress || 0,
       next_review_date: rawWordInfo.next_review_date || "",
       word_audio: rawWordInfo.word_audio,
