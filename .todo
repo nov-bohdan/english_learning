@@ -23,6 +23,6 @@
 23. Next review date for each type task
 24. +++ If answer is incorrect, generate this task again and add it to the end of tasks list
 25. +++ Grade % is not showing up in incorrect answer
-26. List of new words that a user can choose from
-27. Fix bugs with progresses in list of words
+26. +++ List of new words that a user can choose from
+27. +++ Fix bugs with progresses in list of words
 28. Create unique constraints in supabase

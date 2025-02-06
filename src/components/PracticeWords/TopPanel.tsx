@@ -6,16 +6,18 @@ export default function TopPanel({
   wordsToPracticeNowCount,
   wordsNumberPracticedToday,
   savedWordsNumberByDate,
-  startDiscoverMode,
-  startReviewMode,
+  setDiscoverMode,
+  setReviewMode,
+  currentMode,
   wordsToReviewCount,
 }: {
   words: WordInfo[];
   wordsToPracticeNowCount: number;
   wordsNumberPracticedToday: number;
   savedWordsNumberByDate: { date: string; count: number }[];
-  startDiscoverMode: () => void;
-  startReviewMode: () => void;
+  setDiscoverMode: () => void;
+  setReviewMode: () => void;
+  currentMode: "practice" | "discover" | "review" | null;
   wordsToReviewCount: number;
 }) {
   const wordsWithLowProgress = words.filter(
@@ -34,15 +36,19 @@ export default function TopPanel({
         <div className="flex flex-row items-center gap-4">
           <button
             type="button"
-            onClick={startDiscoverMode}
-            className="bg-blue-500 py-4 px-8 rounded-lg hover:bg-blue-600 transition-all text-white font-semibold"
+            onClick={setDiscoverMode}
+            className={`py-4 px-8 rounded-lg hover:bg-blue-600 transition-all text-white font-semibold ${
+              currentMode === "discover" ? "bg-blue-700" : "bg-blue-500"
+            }`}
           >
             Discover new words
           </button>
           <button
             type="button"
-            onClick={startReviewMode}
-            className="bg-blue-500 py-4 px-8 rounded-lg hover:bg-blue-600 transition-all text-white font-semibold"
+            onClick={setReviewMode}
+            className={`py-4 px-8 rounded-lg hover:bg-blue-600 transition-all text-white font-semibold  ${
+              currentMode === "review" ? "bg-blue-700" : "bg-blue-500"
+            }`}
           >
             Review new words ({wordsToReviewCount})
           </button>

@@ -77,6 +77,13 @@ export default function PracticeWordsPage({
     setCurrentMode(null);
   };
 
+  const setDiscoverMode = () => {
+    setCurrentMode((oldMode) => (oldMode === "discover" ? null : "discover"));
+  };
+  const setReviewMode = () => {
+    setCurrentMode((oldMode) => (oldMode === "review" ? null : "review"));
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6 rounded-md">
       {/* TOP PANEL */}
@@ -86,8 +93,9 @@ export default function PracticeWordsPage({
           wordsToPracticeNowCount={wordsToPracticeNowCount}
           wordsNumberPracticedToday={wordsNumberPracticedToday}
           savedWordsNumberByDate={savedWordsNumberByDate}
-          startDiscoverMode={() => setCurrentMode("discover")}
-          startReviewMode={() => setCurrentMode("review")}
+          setDiscoverMode={setDiscoverMode}
+          setReviewMode={setReviewMode}
+          currentMode={currentMode}
           wordsToReviewCount={wordsToReview.length}
         />
       )}
