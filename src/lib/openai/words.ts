@@ -13,7 +13,7 @@ function findCefrLevel(
       dataItem.word.toLowerCase() === word.toLowerCase()
   );
   if (matchingWords) {
-    const lowestLevel = matchingWords.sort()[matchingWords.length - 1];
+    const lowestLevel = matchingWords.sort()[0];
     return lowestLevel.level as "A1" | "A2" | "B1" | "B2" | "C1" | "C2";
   } else {
     return null;
