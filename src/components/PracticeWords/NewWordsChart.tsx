@@ -50,7 +50,7 @@ export default function NewWordsChart({
           baseline: 0,
         },
       ]}
-      width={400}
+      width={300}
       height={200}
     />
   );

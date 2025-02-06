@@ -33,7 +33,7 @@ export default function TopPanel({
   return (
     <div className="w-full bg-gradient-to-r from-gray-100 to-gray-200 rounded-lg p-6 shadow-md">
       <div className="flex flex-col gap-0">
-        <div className="flex flex-row items-center gap-4">
+        <div className="flex flex-col md:flex-row items-center gap-4">
           <button
             type="button"
             onClick={setDiscoverMode}

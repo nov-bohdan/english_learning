@@ -44,7 +44,6 @@ function shuffle(array: unknown[]) {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function POST(request: Request): Promise<Response> {
   let user;
   try {
