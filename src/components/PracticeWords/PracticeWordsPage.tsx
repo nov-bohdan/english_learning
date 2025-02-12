@@ -53,10 +53,17 @@ export default function PracticeWordsPage({
     setWordsState(words);
   }, [words]);
 
+  useEffect(() => {
+    if (currentMode !== null) {
+      setShowWordDetails(null);
+    }
+  }, [currentMode]);
+
   const handleShowWordDetails = (word: WordInfo) => {
+    setCurrentMode(null);
+    setShowWordDetails(word);
     const audio = new Audio(word.word_audio);
     audio.play();
-    setShowWordDetails(word);
   };
 
   const handleDeleteWord = async (word: WordInfo) => {

@@ -13,7 +13,9 @@ function findCefrLevel(
       dataItem.word.toLowerCase() === word.toLowerCase()
   );
   if (matchingWords) {
-    const lowestLevel = matchingWords.sort()[0];
+    const lowestLevel = matchingWords.sort((a, b) =>
+      a.level.localeCompare(b.level)
+    )[0];
     return lowestLevel.level as "A1" | "A2" | "B1" | "B2" | "C1" | "C2";
   } else {
     return null;
@@ -64,6 +66,8 @@ export const openAIGetWordInfo = async (
   nativeLanguage: string,
   userLevel: string
 ) => {
+  // const wordExpectedLevel = findCefrLevel(word.toLowerCase());
+
   const prompt = `You are an AI English tutor. Your task is to return detailed information about a given word, tailored for a user with English level ${userLevel}. Follow these instructions precisely:
 
 1. **Translation:** Provide the translation of the word to ${nativeLanguage}. Ensure that the translation reflects the correct grammatical form. For example, if the word "obfuscate" is used as an adjective, the translation should be in adjective form (e.g., "Запутанный"), not the verb form.
@@ -237,7 +241,7 @@ const TranslationFormat = z.object({
 });
 
 export const translateWord = async (word: string) => {
-  const prompt = `Translate word ${word} to Russian.`;
+  const prompt = `Translate word to Russian: [${word}]`;
 
   const response = await openai.beta.chat.completions.parse({
     model: "gpt-4o-mini",
