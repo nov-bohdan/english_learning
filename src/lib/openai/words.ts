@@ -12,7 +12,7 @@ function findCefrLevel(
     (dataItem: { word: string; level: string }) =>
       dataItem.word.toLowerCase() === word.toLowerCase()
   );
-  if (matchingWords) {
+  if (matchingWords.length > 0) {
     const lowestLevel = matchingWords.sort((a, b) =>
       a.level.localeCompare(b.level)
     )[0];
