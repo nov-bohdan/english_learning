@@ -26,3 +26,6 @@
 26. +++ List of new words that a user can choose from
 27. +++ Fix bugs with progresses in list of words
 28. Create unique constraints in supabase
+29. First task for a word is a card (Somehow learn new words first, before practicing them)
+30. Skip button
+31. Make sentence better grading (mistakes)
